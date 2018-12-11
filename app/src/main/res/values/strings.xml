@@ -1,0 +1,126 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">嘀哩嘀哩</string>
+    <string name="app_sub_name" tools:ignore="ExtraTranslation">新番时间表</string>
+    <string name="search">搜索</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- 权限文本 -->
+    <string name="permissions">为了正常使用,需要以下权限!</string>
+    <string name="permissions_error">未能获取到相关权限!</string>
+    <!-- Home Title -->
+    <string name="home_title">新番时间表</string>
+    <string name="home_tag_title">条件筛选</string>
+    <string name="home_recommend_title">动漫推荐</string>
+    <string name="home_favorite_title">我的收藏</string>
+    <string name="huaji">嘤嘤嘤嘤嘤~</string>
+    <string name="week1">周一</string>
+    <string name="week2">周二</string>
+    <string name="week3">周三</string>
+    <string name="week4">周四</string>
+    <string name="week5">周五</string>
+    <string name="week6">周六</string>
+    <string name="week7">周日</string>
+    <string name="menu_load_error">加载失败</string>
+    <string name="exit_app">是否退出应用?</string>
+    <string name="exit">退出</string>
+    <string name="search_hint">请输入动漫名</string>
+    <!-- 主页dialog文本 -->
+    <string name="x5_info_title">注意</string>
+    <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用。</string>
+    <string name="x5_info_positive">OJBK</string>
+    <!-- 错误文本 -->
+    <string name="home_error">解析方法失效\n也许是网站UI改版\n等待作者修复(也许)</string>
+    <string name="method_error">方法貌似已失效,解析失败,等待作者修复(也许)</string>
+    <string name="list_empty_error">解析失败,解析代码不适用\n等待作者修复(也许)</string>
+    <string name="source_address_error">源地址解析失败\n等待作者修复(也许)</string>
+    <string name="empty_error">解析失败\n解析代码不适用此番\n等待作者修复(也许)</string>
+    <string name="empty_network_error">连接服务器超时\n请稍后重试</string>
+    <string name="empty_search_error">没有搜索到相关动漫</string>
+    <string name="government_error">根据国家相关部门规定\n本动画不准上架\n请支持正版观看\n谢谢</string>
+    <string name="ceshi_error">该地址无法解析,请更换其他结果</string>
+    <!-- 启动页文本 -->
+    <!--<string name="start">什么都\n没有\n的\n启动界面</string>-->
+    <string name="start">嘀哩嘀哩</string>
+    <!-- 空文本 -->
+    <string name="empty">未能获取到任何信息!</string>
+    <!-- 解析相关文本 -->
+    <string name="source_title">选择解析线路</string>
+    <string name="source_1">线路①</string>
+    <string name="source_2">线路②</string>
+    <string name="source_3">线路③</string>
+    <string name="source_4">线路④</string>
+    <string name="source_5">线路⑤</string>
+    <string name="source_6">线路⑥</string>
+    <string name="source_7">自定义接口</string>
+    <string name="source_8">访问原页面</string>
+    <string name="source_9">打开视频源</string>
+    <!-- 加载文本 -->
+    <string name="loading">加载中...</string>
+    <string name="load_error">加载失败</string>
+    <!-- btn文本 -->
+    <string name="no_resources">没有资源</string>
+    <!-- msg文本 -->
+    <string name="error_700">网络错误,请重试!</string>
+    <string name="error_800">未能获取到播放地址!\n1.解析方法不支持\n2.播放地址不存在\n可以尝试打开原页面去播放.</string>
+    <string name="join_ok">已加入我的收藏</string>
+    <string name="join_error">已从我的收藏中移除</string>
+    <!-- 播放地址未找到 -->
+    <string name="play_not_found_title">解析失败</string>
+    <string name="play_not_found_positive">访问原页面</string>
+    <string name="play_not_found_negative">取消</string>
+    <!-- 播放地址未找到文本 -->
+    <string name="play_url_title">解析失败</string>
+    <string name="play_url_positive">访问原页面</string>
+    <string name="play_url_negative">取消</string>
+    <!-- drawer文本 -->
+    <string name="recommend_title">推荐动漫-补番(考古)专用</string>
+    <string name="tag_title">筛选</string>
+    <string name="favorite_title">我的收藏</string>
+    <string name="setting_title">自定义</string>
+    <!-- 设置界面文本 -->
+    <string name="set_api">自定义解析接口</string>
+    <string name="api">0</string>
+    <string name="page_title">设置参数</string>
+    <string name="page_positive">确定</string>
+    <string name="page_positive_edit">修改</string>
+    <string name="page_negative">取消</string>
+    <string name="api_error_1">参数不能为空</string>
+    <string name="api_error_2">参数格式不正确</string>
+    <string name="player">视频播放器</string>
+    <string name="player_default">内置</string>
+    <!-- api -->
+    <string name="api_title">自定义解析API</string>
+    <!-- menu通用文本 -->
+    <string name="module">剧集</string>
+    <string name="page">跳转</string>
+    <string name="line">线路1</string>
+    <string name="favorite">未收藏</string>
+    <string name="favorite_yes">已收藏</string>
+    <!-- 收藏相关文本 -->
+    <string name="empty_favorite">收藏为空</string>
+    <string name="remove_favorite">移除收藏</string>
+    <string name="remove_api">移除</string>
+    <!-- 关于相关文本 -->
+    <string name="about">关于</string>
+    <string name="open_source_library">开源相关</string>
+    <string name="source">数据来源</string>
+    <string name="source_desc">dilidili</string>
+    <string name="statement">声明</string>
+    <string name="statement_desc">仅供学习交流\n禁止非法传播或用于商业用途</string>
+    <string name="test_model">测试</string>
+    <string name="test_model_desc">OnePlus 6T : Android 9</string>
+    <string name="now_version">当前版本</string>
+    <string name="check_update">检测更新</string>
+    <string name="final_compile">最后编译</string>
+    <string name="final_compile_time">2018年12月11日15:14:50</string>
+    <string name="cache">缓存目录</string>
+    <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
+    <!-- 快捷方式文本 -->
+    <string name="disableMsg">不可用</string>
+    <string name="tagShortName">条件筛选</string>
+    <string name="tagLongName">条件筛选</string>
+    <string name="favoriteShortName">我的收藏</string>
+    <string name="favoriteLongName">我的收藏</string>
+    <string name="recommendShortName">推荐动漫</string>
+    <string name="recommendLongName">推荐动漫</string>
+</resources>

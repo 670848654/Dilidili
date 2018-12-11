@@ -1,0 +1,202 @@
+package anime.project.dilidili.main.setting.user;
+
+import android.content.DialogInterface;
+import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.r0adkll.slidr.Slidr;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import anime.project.dilidili.R;
+import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.adapter.ApiAdapter;
+import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.main.base.BaseView;
+import anime.project.dilidili.bean.ApiBean;
+import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.Utils;
+import butterknife.BindView;
+import butterknife.OnClick;
+
+public class ApiActivity extends BaseActivity implements BaseView, ApiView {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.rv_list)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.mSwipe)
+    SwipeRefreshLayout mSwipe;
+    private ApiAdapter adapter;
+    private List<ApiBean> apiList = new ArrayList<>();
+    //dialog
+    private AlertDialog alertDialog;
+    private ApiPresenter presenter;
+
+    @Override
+    protected int setLayoutRes() {
+        return R.layout.activity_api;
+    }
+
+    @Override
+    protected void init() {
+        StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.night), 0);
+        Slidr.attach(this, Utils.defaultInit());
+        initViews(mRecyclerView);
+        initToolbar();
+        initSwipe();
+        initAdapter();
+        presenter = new ApiPresenter(this, this);
+        presenter.loadData(true);
+    }
+
+    @Override
+    protected void initBeforView() {
+
+    }
+
+    public void initToolbar() {
+        toolbar.setTitle(Utils.getString(getApplicationContext(), R.string.api_title));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    public void initSwipe() {
+        mSwipe.setEnabled(false);
+    }
+
+    public void initAdapter() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ApiAdapter(apiList);
+        adapter.openLoadAnimation();
+        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
+                setApi(true, position);
+            }
+        });
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                delete(position);
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    public void delete(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("删除后将无法恢复。\n是否删除？");
+        builder.setPositiveButton(Utils.getString(getApplicationContext(), R.string.page_positive), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DatabaseUtil.deleteApi(apiList.get(position).getId());
+                adapter.remove(position);
+            }
+        });
+        builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @OnClick(R.id.add)
+    public void addApi() {
+        setApi(false, 0);
+    }
+
+    /**
+     * 设置api
+     *
+     * @param isEdit   是否为修改
+     * @param position
+     */
+    public void setApi(boolean isEdit, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_user_api_custom, null);
+        final EditText title = view.findViewById(R.id.title);
+        final EditText url = view.findViewById(R.id.url);
+        if (isEdit) {
+            title.setText(apiList.get(position).getTitle());
+            url.setText(apiList.get(position).getUrl());
+        }
+        builder.setPositiveButton(Utils.getString(getApplicationContext(), R.string.page_positive), null);
+        builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
+        builder.setTitle(Utils.getString(getApplicationContext(), R.string.page_title));
+        alertDialog = builder.setView(view).create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String name = title.getText().toString().replaceAll(" ", "");
+                String api = url.getText().toString().replaceAll(" ", "");
+                int error = 0;
+                if (name.isEmpty()) {
+                    error++;
+                    title.setError(Utils.getString(getApplicationContext(), R.string.api_error_1));
+                }
+                if (api.isEmpty()) {
+                    error++;
+                    url.setError(Utils.getString(getApplicationContext(), R.string.api_error_1));
+                }
+                if (!Patterns.WEB_URL.matcher(api).matches()) {
+                    error++;
+                    url.setError(Utils.getString(getApplicationContext(), R.string.api_error_2));
+                }
+                if (error > 0)
+                    return;
+                else {
+                    if (isEdit) {
+                        DatabaseUtil.updateApi(apiList.get(position).getId(), name, api);
+                        apiList.get(position).setTitle(name);
+                        apiList.get(position).setUrl(api);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        ApiBean bean = new ApiBean(UUID.randomUUID().toString(), name, api);
+                        DatabaseUtil.addApi(bean);
+                        adapter.addData(0, bean);
+                    }
+                    alertDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showLoadingView() {
+        apiList = new ArrayList<>();
+    }
+
+    @Override
+    public void showLoadErrorView(String msg) {
+        errorTitle.setText(msg);
+        adapter.setEmptyView(errorView);
+    }
+
+    @Override
+    public void showEmptyVIew() {
+        adapter.setEmptyView(emptyView);
+    }
+
+    @Override
+    public void showSuccess(List<ApiBean> list) {
+        apiList = list;
+        adapter.setNewData(apiList);
+    }
+}
