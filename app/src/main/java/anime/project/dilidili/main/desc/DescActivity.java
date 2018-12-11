@@ -326,6 +326,7 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
     }
 
     public void favoriteAnime(){
+        setResult(200);
         isFavorite = DatabaseUtil.favorite(animeListBean);
         if (isFavorite)
         {
