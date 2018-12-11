@@ -140,6 +140,7 @@ public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteV
     @Override
     public void showLoadingView() {
         favoriteList.clear();
+        adapter.setNewData(favoriteList);
     }
 
     @Override
