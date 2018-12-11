@@ -13,6 +13,6 @@ public class Api {
     public static String SOURCE_6_API = "http://jx.skyfollowsnow.pro/?url=";
     //搜索
     public static String SEARCH_API = "http://usr.005.tv/Aftersome/api_sosuoarctype";
-    //检更新
-//    public static String CHECK_UPDATE = "https://api.github.com/repos/670848654/dilidili/releases/latest";
+    //检测更新
+    public static String CHECK_UPDATE = "https://api.github.com/repos/670848654/Dilidili/releases/latest";
 }
