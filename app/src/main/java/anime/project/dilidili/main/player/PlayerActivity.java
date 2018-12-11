@@ -235,6 +235,7 @@ public class PlayerActivity extends BaseActivity implements VideoView {
                                 player.startVideo();
                                 break;
                             case 1:
+                                Jzvd.releaseAllVideos();
                                 Utils.selectVideoPlayer(PlayerActivity.this, url);
                                 break;
                         }
@@ -293,6 +294,7 @@ public class PlayerActivity extends BaseActivity implements VideoView {
                             player.startVideo();
                             break;
                         case 1:
+                            Jzvd.releaseAllVideos();
                             Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
                             break;
                     }
