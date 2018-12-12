@@ -19,7 +19,6 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.adapter.RecommendAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.config.RecommendType;
 import anime.project.dilidili.main.desc.DescActivity;

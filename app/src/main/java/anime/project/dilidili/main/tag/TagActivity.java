@@ -22,7 +22,6 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.TagAdapter;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;

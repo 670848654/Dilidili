@@ -31,7 +31,6 @@ import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.StatusBarUtil;
 import butterknife.BindView;
 
-
 public class DefaultWebActivity extends BaseActivity {
     private String url;
     @BindView(R.id.x5_webview)

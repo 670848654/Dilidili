@@ -17,9 +17,7 @@ public class StartActivity extends BaseActivity {
     }
 
     @Override
-    protected void loadData() {
-
-    }
+    protected void loadData() {}
 
     @Override
     protected int setLayoutRes() {

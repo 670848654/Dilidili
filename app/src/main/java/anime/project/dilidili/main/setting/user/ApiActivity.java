@@ -23,7 +23,6 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.adapter.ApiAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.ApiBean;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;

@@ -22,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SearchAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;

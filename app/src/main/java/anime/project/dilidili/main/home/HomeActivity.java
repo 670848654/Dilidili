@@ -37,7 +37,6 @@ import anime.project.dilidili.main.about.AboutActivity;
 import anime.project.dilidili.adapter.WeekAdapter;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.custom.VpSwipeRefreshLayout;
 import anime.project.dilidili.main.favorite.FavoriteActivity;
 import anime.project.dilidili.main.recommend.RecommendActivity;

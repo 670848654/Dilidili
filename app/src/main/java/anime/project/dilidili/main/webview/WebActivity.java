@@ -58,7 +58,6 @@ import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
-import anime.project.dilidili.main.video.VideoView;
 import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
