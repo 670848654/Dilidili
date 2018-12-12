@@ -1,7 +1,5 @@
 package anime.project.dilidili.main.search;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,10 +16,10 @@ import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Response;
 
-public class SearchModel implements SearchContract {
+public class SearchModel implements SearchContract.Model {
 
     @Override
-    public void getData(String title, int page, boolean isMain, LoadDataCallback callback) {
+    public void getData(String title, int page, boolean isMain, SearchContract.LoadDataCallback callback) {
         FormBody body = new FormBody.Builder()
                 .add("keywords", title)
                 .add("pagesize", "10")
@@ -68,11 +66,5 @@ public class SearchModel implements SearchContract {
                 }
             }
         });
-    }
-
-    public interface LoadDataCallback {
-        void success(boolean isMain, List<SearchBean> list);
-        void error(boolean isMain, String msg);
-        void pageCount(int pageCount);
     }
 }

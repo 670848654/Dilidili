@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.StatusBarUtil;
 import butterknife.BindView;
 
@@ -47,6 +48,16 @@ public class DefaultWebActivity extends BaseActivity {
     private View customView;
     private FrameLayout fullscreenContainer;
     private IX5WebChromeClient.CustomViewCallback customViewCallback;
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

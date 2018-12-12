@@ -49,7 +49,7 @@ import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,HomeView,BaseView {
+public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter> implements NavigationView.OnNavigationItemSelectedListener, HomeContract.View {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
@@ -64,11 +64,20 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TabLayout tab;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-    private HomePresenter presenter;
     private WeekAdapter adapter;
     private int position;
     private int week;
     private SearchView mSearchView;
+
+    @Override
+    protected HomePresenter createPresenter() {
+        return new HomePresenter(this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -81,8 +90,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         initDrawer();
         initSwipe();
         initFragment();
-        presenter = new HomePresenter(this,this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -138,7 +145,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.loadData(true);
+                mPresenter.loadData(true);
             }
         });
     }

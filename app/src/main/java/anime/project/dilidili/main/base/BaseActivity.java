@@ -21,7 +21,8 @@ import anime.project.dilidili.util.Utils;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+    protected P mPresenter;
     public View errorView, emptyView, userEmptyView;
     public TextView errorTitle;
     public DiliDili application;
@@ -40,11 +41,17 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
             Utils.creatFile();
             DatabaseUtil.CREATE_TABLES();
             init();
+            initCustomViews();
+            mPresenter = createPresenter();
+            loadData();
         } else {
             EasyPermissions.requestPermissions(this, Utils.getString(BaseActivity.this, R.string.permissions),
                     300, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
+    protected abstract P createPresenter();
+
+    protected abstract void loadData();
 
     protected abstract int setLayoutRes();
 
@@ -52,18 +59,21 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 
     protected abstract void initBeforeView();
 
-    public void initViews(RecyclerView recyclerView){
-        errorView = getLayoutInflater().inflate(R.layout.base_error_view, (ViewGroup) recyclerView.getParent(), false);
+    public void initCustomViews(){
+        errorView = getLayoutInflater().inflate(R.layout.base_error_view, null);
         errorTitle = errorView.findViewById(R.id.title);
-        emptyView = getLayoutInflater().inflate(R.layout.base_emnty_view, (ViewGroup) recyclerView.getParent(), false);
-        userEmptyView = getLayoutInflater().inflate(R.layout.base_emtpy_favorite_view, (ViewGroup) recyclerView.getParent(), false);
+        emptyView = getLayoutInflater().inflate(R.layout.base_emnty_view, null);
+        userEmptyView = getLayoutInflater().inflate(R.layout.base_emtpy_favorite_view, null);
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        //取消View的关联
+        if (null != mPresenter )
+            mPresenter.detachView();
         Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
         Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
+        super.onDestroy();
     }
 
     @Override

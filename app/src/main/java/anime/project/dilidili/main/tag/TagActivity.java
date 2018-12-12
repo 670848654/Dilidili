@@ -28,7 +28,7 @@ import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class TagActivity extends BaseActivity implements BaseView,TagView {
+public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> implements TagContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -37,7 +37,16 @@ public class TagActivity extends BaseActivity implements BaseView,TagView {
     @BindView(R.id.mSwipe)
     SwipeRefreshLayout mSwipe;
     private List<MultiItemEntity> tagList = new ArrayList<>();
-    private TagPresenter presenter;
+
+    @Override
+    protected TagPresenter createPresenter() {
+        return new TagPresenter(this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -47,14 +56,10 @@ public class TagActivity extends BaseActivity implements BaseView,TagView {
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
-        initViews(mRecyclerView);
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new TagPresenter(this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -81,7 +86,7 @@ public class TagActivity extends BaseActivity implements BaseView,TagView {
             public void onRefresh() {
                 tagList.clear();
                 adapter.setNewData(tagList);
-                presenter.loadData(true);
+                mPresenter.loadData(true);
             }
         });
     }

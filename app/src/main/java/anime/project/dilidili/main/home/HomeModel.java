@@ -16,10 +16,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class HomeModel implements HomeContract{
+public class HomeModel implements HomeContract.Model{
 
     @Override
-    public void getData(final LoadDataCallback callback) {
+    public void getData(final HomeContract.LoadDataCallback callback) {
         new OkHttpGet(Api.HOME_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -82,10 +82,5 @@ public class HomeModel implements HomeContract{
             arr.put(object);
         }
         jsonObject.put(title, arr);
-    }
-
-    public interface LoadDataCallback {
-        void success(LinkedHashMap map);
-        void error(String msg);
     }
 }

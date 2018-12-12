@@ -17,10 +17,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class VideoModel implements VideoContract {
+public class VideoModel implements VideoContract.Model {
 
     @Override
-    public void getData(String title,String HTML_url, LoadDataCallback callback) {
+    public void getData(String title,String HTML_url, VideoContract.LoadDataCallback callback) {
 
         new OkHttpGet(HTML_url, 10, 20, new Callback() {
             @Override
@@ -90,11 +90,5 @@ public class VideoModel implements VideoContract {
         }
         Log.e("url",url);
         return url;
-    }
-
-    public interface LoadDataCallback {
-        void success(String url);
-        void error();
-        void empty();
     }
 }

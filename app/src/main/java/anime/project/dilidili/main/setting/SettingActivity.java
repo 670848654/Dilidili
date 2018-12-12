@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.setting.user.ApiActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
@@ -27,6 +28,16 @@ public class SettingActivity extends BaseActivity {
     TextView player_default;
     @BindView(R.id.api)
     TextView api;
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

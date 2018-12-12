@@ -27,7 +27,7 @@ import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class RecommendActivity extends BaseActivity implements BaseView,RecommendView {
+public class RecommendActivity extends BaseActivity<RecommendContract.View, RecommendPresenter> implements RecommendContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -36,7 +36,16 @@ public class RecommendActivity extends BaseActivity implements BaseView,Recommen
     @BindView(R.id.mSwipe)
     SwipeRefreshLayout mSwipe;
     private List<MultiItemEntity> recommendList = new ArrayList<>();
-    private RecommendPresenter presenter;
+
+    @Override
+    protected RecommendPresenter createPresenter() {
+        return new RecommendPresenter(this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -46,14 +55,10 @@ public class RecommendActivity extends BaseActivity implements BaseView,Recommen
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
-        initViews(mRecyclerView);
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new RecommendPresenter(this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -79,7 +84,7 @@ public class RecommendActivity extends BaseActivity implements BaseView,Recommen
             public void onRefresh() {
                 recommendList.clear();
                 adapter.setNewData(recommendList);
-                presenter.loadData(true);
+                mPresenter.loadData(true);
             }
         });
     }

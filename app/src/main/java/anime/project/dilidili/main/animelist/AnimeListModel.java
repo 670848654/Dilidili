@@ -14,10 +14,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class AnimeListModel implements AnimeListContract{
+public class AnimeListModel implements AnimeListContract.Model{
 
     @Override
-    public void getData(String url, LoadDataCallback callback) {
+    public void getData(String url, AnimeListContract.LoadDataCallback callback) {
         new OkHttpGet(url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -68,10 +68,5 @@ public class AnimeListModel implements AnimeListContract{
                 }
             }
         });
-    }
-
-    public interface LoadDataCallback{
-        void success(List<AnimeListBean> list);
-        void error(String msg);
     }
 }

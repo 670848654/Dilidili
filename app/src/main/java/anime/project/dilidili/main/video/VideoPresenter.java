@@ -1,17 +1,19 @@
 package anime.project.dilidili.main.video;
 
 import anime.project.dilidili.main.base.BasePresenter;
+import anime.project.dilidili.main.base.Presenter;
 
-public class VideoPresenter implements BasePresenter,VideoModel.LoadDataCallback {
-    private VideoView videoView;
+public class VideoPresenter extends Presenter<VideoContract.View> implements BasePresenter,VideoContract.LoadDataCallback {
+    private VideoContract.View view;
     private VideoModel playModel;
     private String title;
     private String url;
 
-    public VideoPresenter(String title, String url, VideoView videoView){
+    public VideoPresenter(String title, String url, VideoContract.View view){
+        super(view);
         this.title = title;
         this.url = url;
-        this.videoView = videoView;
+        this.view = view;
         playModel = new VideoModel();
     }
 
@@ -22,16 +24,21 @@ public class VideoPresenter implements BasePresenter,VideoModel.LoadDataCallback
 
     @Override
     public void success(String url) {
-        videoView.getVideoSuccess(url);
+        view.getVideoSuccess(url);
     }
 
     @Override
     public void error() {
-        videoView.getVideoError();
+        view.getVideoError();
     }
 
     @Override
     public void empty() {
-        videoView.getVideoEmpty();
+        view.getVideoEmpty();
+    }
+
+    @Override
+    public void error(String msg) {
+
     }
 }

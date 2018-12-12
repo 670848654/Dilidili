@@ -30,7 +30,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ApiActivity extends BaseActivity implements BaseView, ApiView {
+public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> implements ApiContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -39,9 +39,17 @@ public class ApiActivity extends BaseActivity implements BaseView, ApiView {
     SwipeRefreshLayout mSwipe;
     private ApiAdapter adapter;
     private List<ApiBean> apiList = new ArrayList<>();
-    //dialog
     private AlertDialog alertDialog;
-    private ApiPresenter presenter;
+
+    @Override
+    protected ApiPresenter createPresenter() {
+        return new ApiPresenter(this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -51,13 +59,10 @@ public class ApiActivity extends BaseActivity implements BaseView, ApiView {
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.night), 0);
-        Slidr.attach(this, Utils.defaultInit());
-        initViews(mRecyclerView);
+        Slidr.attach(this, Utils.defaultInit());;
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new ApiPresenter(this, this);
-        presenter.loadData(true);
     }
 
     @Override

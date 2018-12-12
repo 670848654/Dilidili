@@ -20,14 +20,13 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.adapter.AnimeListAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteView {
+public class FavoriteActivity extends BaseActivity<FavoriteContract.View, FavoritePresenter> implements FavoriteContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -36,7 +35,16 @@ public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteV
     @BindView(R.id.mSwipe)
     SwipeRefreshLayout mSwipe;
     private List<AnimeListBean> favoriteList = new ArrayList<>();
-    private FavoritePresenter presenter;
+
+    @Override
+    protected FavoritePresenter createPresenter() {
+        return new FavoritePresenter(this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -48,12 +56,9 @@ public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteV
         StatusBarUtil.setColorForSwipeBack(FavoriteActivity.this, getResources().getColor(R.color.night), 0);
         // 设置右滑动返回
         Slidr.attach(this,Utils.defaultInit());
-        initViews(mRecyclerView);
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new FavoritePresenter(this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -133,7 +138,7 @@ public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteV
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 200 && requestCode == 3000) {
-            presenter.loadData(true);
+            mPresenter.loadData(true);
         }
     }
 

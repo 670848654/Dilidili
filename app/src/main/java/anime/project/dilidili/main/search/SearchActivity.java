@@ -29,7 +29,7 @@ import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class SearchActivity extends BaseActivity implements BaseView,SearchView {
+public class SearchActivity extends BaseActivity<SearchContract.View, SearchPresenter> implements SearchContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -43,7 +43,16 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
     private int pageCount;
     private boolean isErr = true;
     private androidx.appcompat.widget.SearchView mSearchView;
-    private SearchPresenter presenter;
+
+    @Override
+    protected SearchPresenter createPresenter() {
+        return new SearchPresenter(title, page, this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -53,15 +62,11 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(SearchActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
-        initViews(mRecyclerView);
         getBundle();
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new SearchPresenter(title, page, this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -93,8 +98,8 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
             @Override
             public void onRefresh() {
                 page = 0;
-                presenter = new SearchPresenter(title, page, SearchActivity.this, SearchActivity.this);
-                presenter.loadData(true);
+                mPresenter = createPresenter();
+                mPresenter.loadData(true);
             }
         });
         mSwipe.setRefreshing(true);
@@ -136,8 +141,8 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
                             if (isErr) {
                                 //成功获取更多数据
                                 page++;
-                                presenter = new SearchPresenter(title, page, SearchActivity.this, SearchActivity.this);
-                                presenter.loadData(false);
+                                mPresenter = createPresenter();
+                                mPresenter.loadData(false);
                             } else {
                                 //获取更多数据失败
                                 isErr = true;
@@ -177,8 +182,8 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
                 title = query.replaceAll(" ","");
                 if (!title.isEmpty()) {
                     page = 0;
-                    presenter = new SearchPresenter(title, page, SearchActivity.this, SearchActivity.this);
-                    presenter.loadData(true);
+                    mPresenter = createPresenter();
+                    mPresenter.loadData(true);
                     toolbar.setTitle(title);
                     Utils.hideKeyboard(mSearchView);
                     mSearchView.clearFocus();

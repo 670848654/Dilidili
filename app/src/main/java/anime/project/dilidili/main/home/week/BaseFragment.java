@@ -34,6 +34,7 @@ import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.adapter.FragmentAdapter;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.main.desc.DescActivity;
+import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.video.VideoView;
@@ -44,7 +45,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseFragment extends Fragment implements VideoView {
+public abstract class BaseFragment extends Fragment implements VideoContract.View {
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private FragmentAdapter adapter;

@@ -44,6 +44,7 @@ import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.config.AnimeType;
+import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.video.VideoView;
@@ -55,7 +56,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import jp.wasabeef.blurry.Blurry;
 
-public class DescActivity extends BaseActivity implements BaseView,DescView,VideoView {
+public class DescActivity extends BaseActivity<DescContract.View, DescPresenter> implements DescContract.View,VideoContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -80,9 +81,18 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
     private boolean isFavorite;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
-    private DescPresenter presenter;
     private VideoPresenter videoPresenter;
     private AnimeListBean animeListBean = new AnimeListBean();
+
+    @Override
+    protected DescPresenter createPresenter() {
+        return new DescPresenter(this, url, this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -92,16 +102,12 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(DescActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
         getBundle();
         initToolbar();
         initFab();
         initSwipe();
         initAdapter();
-        initViews(mRecyclerView);
-        presenter = new DescPresenter(this, url, this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -145,7 +151,7 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
             public void onRefresh() {
                 multiItemList.clear();
                 adapter.setNewData(multiItemList);
-                presenter.loadData(true);
+                mPresenter.loadData(true);
             }
         });
         mSwipe.setRefreshing(true);
@@ -321,7 +327,7 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
             mSwipe.setRefreshing(true);
             multiItemList = new ArrayList<>();
             adapter.notifyDataSetChanged();
-            presenter.loadData(true);
+            mPresenter.loadData(true);
         }
     }
 

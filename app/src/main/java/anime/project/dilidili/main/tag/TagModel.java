@@ -18,11 +18,11 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class TagModel implements TagContract{
+public class TagModel implements TagContract.Model{
     private List<MultiItemEntity> list = new ArrayList<>();
 
     @Override
-    public void getData(LoadDataCallback callback) {
+    public void getData(TagContract.LoadDataCallback callback) {
         new OkHttpGet(Api.TAG_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -120,10 +120,5 @@ public class TagModel implements TagContract{
                 homeHeaderBean.addSubItem(new HomeBean(tag.get(i).select("a").text(), tag.get(i).select("a").attr("href"), title + " - ", true));
         }
         list.add(homeHeaderBean);
-    }
-
-    public interface LoadDataCallback{
-        void success(List<MultiItemEntity> list);
-        void error(String msg);
     }
 }

@@ -25,13 +25,13 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class DescModel implements DescContract {
+public class DescModel implements DescContract.Model {
     private String fid;
     private List<MultiItemEntity> list;
     private List<AnimeDescBean> drama;
 
     @Override
-    public void getData(Context context, String url, LoadDataCallback callback) {
+    public void getData(Context context, String url, DescContract.LoadDataCallback callback) {
         new OkHttpGet(url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -165,17 +165,4 @@ public class DescModel implements DescContract {
         list.add(animeHeaderBean);
     }
 
-
-
-    public interface LoadDataCallback {
-        void successMain(List<MultiItemEntity> list);
-
-        void successDrama(List<AnimeDescBean> list);
-
-        void successDesc(AnimeListBean bean);
-
-        void isFavorite(boolean favorite);
-
-        void error(String msg);
-    }
 }

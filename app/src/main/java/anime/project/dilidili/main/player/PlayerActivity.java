@@ -39,6 +39,8 @@ import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.DramaAdapter;
+import anime.project.dilidili.main.base.Presenter;
+import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.video.VideoView;
@@ -51,7 +53,7 @@ import butterknife.OnClick;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class PlayerActivity extends BaseActivity implements VideoView {
+public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @BindView(R.id.player)
     JzvdStd player;
     private String title, url, diliUrl;
@@ -76,6 +78,16 @@ public class PlayerActivity extends BaseActivity implements VideoView {
     ImageView pic;
     private boolean is;
     private VideoPresenter presenter;
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

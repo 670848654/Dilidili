@@ -2,18 +2,17 @@ package anime.project.dilidili.main.setting.user;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.Base;
 import anime.project.dilidili.main.base.BasePresenter;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.ApiBean;
+import anime.project.dilidili.main.base.Presenter;
 
-public class ApiPresenter extends Base implements BasePresenter,ApiModel.LoadDataCallback {
-    private ApiView apiView;
+public class ApiPresenter extends Presenter<ApiContract.View> implements BasePresenter,ApiContract.LoadDataCallback {
+    private ApiContract.View view;
     private ApiModel model;
 
-    public ApiPresenter(BaseView baseView, ApiView apiView){
-        this.baseView = baseView;
-        this.apiView = apiView;
+    public ApiPresenter(ApiContract.View view){
+        super(view);
+        this.view = view;
         model = new ApiModel();
     }
 
@@ -21,19 +20,19 @@ public class ApiPresenter extends Base implements BasePresenter,ApiModel.LoadDat
     public void loadData(boolean isMain) {
         if (isMain)
         {
-            baseView.showLoadingView();
-            baseView.showEmptyVIew();
+            view.showLoadingView();
+            view.showEmptyVIew();
         }
         model.getData(this);
     }
 
     @Override
     public void success(List<ApiBean> list) {
-        apiView.showSuccess(list);
+        view.showSuccess(list);
     }
 
     @Override
     public void error(String msg) {
-        baseView.showLoadErrorView(msg);
+        view.showLoadErrorView(msg);
     }
 }

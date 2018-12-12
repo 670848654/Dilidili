@@ -54,6 +54,8 @@ import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.ApiBean;
 import anime.project.dilidili.bean.DramaAdapter;
 import anime.project.dilidili.bean.WebviewBean;
+import anime.project.dilidili.main.base.Presenter;
+import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.video.VideoView;
@@ -63,7 +65,7 @@ import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class WebActivity extends BaseActivity implements VideoView {
+public class WebActivity extends BaseActivity implements VideoContract.View {
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private WebviewAdapter adapter;
@@ -105,6 +107,16 @@ public class WebActivity extends BaseActivity implements VideoView {
     private boolean is;
     private VideoPresenter presenter;
     private List<ApiBean> apiList;
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

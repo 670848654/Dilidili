@@ -20,12 +20,13 @@ import anime.project.dilidili.adapter.AnimeListAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
-public class AnimeListActivity extends BaseActivity implements BaseView,AnimeListView {
+public class AnimeListActivity extends BaseActivity<AnimeListContract.View, AnimeListPresenter> implements AnimeListContract.View {
     @BindView(R.id.rv_list)
     RecyclerView mRecyclerView;
     private AnimeListAdapter adapter;
@@ -35,7 +36,16 @@ public class AnimeListActivity extends BaseActivity implements BaseView,AnimeLis
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     private String title, url;
-    private AnimeListPresenter presenter;
+
+    @Override
+    protected AnimeListPresenter createPresenter() {
+        return new AnimeListPresenter(url, this);
+    }
+
+    @Override
+    protected void loadData() {
+        mPresenter.loadData(true);
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -48,12 +58,9 @@ public class AnimeListActivity extends BaseActivity implements BaseView,AnimeLis
         // 设置右滑动返回
         Slidr.attach(this,Utils.defaultInit());// 设置右滑动返回
         getBundle();
-        initViews(mRecyclerView);
         initToolbar();
         initSwipe();
         initAdapter();
-        presenter = new AnimeListPresenter(url, this, this);
-        presenter.loadData(true);
     }
 
     @Override
@@ -87,7 +94,7 @@ public class AnimeListActivity extends BaseActivity implements BaseView,AnimeLis
             public void onRefresh() {
                 list.clear();
                 adapter.setNewData(list);
-                presenter.loadData(true);
+                mPresenter.loadData(true);
             }
         });
     }

@@ -16,6 +16,7 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SourceAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.bean.SourceBean;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
@@ -29,6 +30,16 @@ public class OpenSourceActivity extends BaseActivity {
     RecyclerView recyclerView;
     private SourceAdapter adapter;
     private List<SourceBean> list = new ArrayList<>();
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

@@ -1,39 +1,37 @@
 package anime.project.dilidili.main.animelist;
 
 import java.util.List;
-
-import anime.project.dilidili.main.base.Base;
 import anime.project.dilidili.main.base.BasePresenter;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.Presenter;
 
-public class AnimeListPresenter extends Base implements BasePresenter,AnimeListModel.LoadDataCallback {
+public class AnimeListPresenter extends Presenter<AnimeListContract.View> implements BasePresenter,AnimeListContract.LoadDataCallback {
     private String url;
-    private AnimeListView animeListView;
+    private AnimeListContract.View view;
     private AnimeListModel model;
 
-    public AnimeListPresenter(String url, AnimeListView animeListView, BaseView baseView){
+    public AnimeListPresenter(String url, AnimeListContract.View view){
+        super(view);
         this.url = url;
-        this.animeListView = animeListView;
-        this.baseView = baseView;
+        this.view = view;
         model = new AnimeListModel();
     }
 
     @Override
     public void loadData(boolean isMain) {
         if (isMain)
-            baseView.showLoadingView();
-        baseView.showEmptyVIew();
+            view.showLoadingView();
+        view.showEmptyVIew();
         model.getData(url, this);
     }
 
     @Override
     public void success(List<AnimeListBean> list) {
-        animeListView.showSuccessView(list);
+        view.showSuccessView(list);
     }
 
     @Override
     public void error(String msg) {
-        baseView.showLoadErrorView(msg);
+        view.showLoadErrorView(msg);
     }
 }

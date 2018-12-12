@@ -24,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.net.OkHttpGet;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -42,6 +43,16 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version)
     TextView version;
     private ProgressDialog p;
+
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 
     @Override
     protected int setLayoutRes() {

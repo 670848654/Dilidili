@@ -2,37 +2,36 @@ package anime.project.dilidili.main.favorite;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.Base;
 import anime.project.dilidili.main.base.BasePresenter;
-import anime.project.dilidili.main.base.BaseView;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.Presenter;
 
-public class FavoritePresenter extends Base implements BasePresenter,FavoriteModel.LoadDataCallback {
-    private FavoriteView favoriteView;
+public class FavoritePresenter extends Presenter<FavoriteContract.View> implements BasePresenter,FavoriteContract.LoadDataCallback {
+    private FavoriteContract.View view;
     private FavoriteModel model;
 
-    public FavoritePresenter(BaseView baseView, FavoriteView favoriteView){
-        this.baseView = baseView;
-        this.favoriteView = favoriteView;
+    public FavoritePresenter(FavoriteContract.View view){
+        super(view);
+        this.view = view;
         model = new FavoriteModel();
     }
 
     @Override
     public void loadData(boolean isMain) {
         if (isMain){
-            baseView.showLoadingView();
-            baseView.showEmptyVIew();
+            view.showLoadingView();
+            view.showEmptyVIew();
         }
         model.getData(this);
     }
 
     @Override
     public void success(List<AnimeListBean> list) {
-        favoriteView.showSuccessView(list);
+        view.showSuccessView(list);
     }
 
     @Override
     public void error(String msg) {
-        baseView.showLoadErrorView(msg);
+        view.showLoadErrorView(msg);
     }
 }

@@ -19,10 +19,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class RecommendModel implements RecommendContract{
+public class RecommendModel implements RecommendContract.Model{
 
     @Override
-    public void getData(LoadDataCallback callback) {
+    public void getData(RecommendContract.LoadDataCallback callback) {
         new OkHttpGet(Api.RECOMMEND_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -62,10 +62,5 @@ public class RecommendModel implements RecommendContract{
                 }
             }
         });
-    }
-
-    public interface LoadDataCallback{
-        void success(List<MultiItemEntity> list);
-        void error(String msg);
     }
 }

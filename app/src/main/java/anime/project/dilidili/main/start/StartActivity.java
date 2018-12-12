@@ -5,11 +5,22 @@ import android.os.Handler;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.home.HomeActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 
 public class StartActivity extends BaseActivity {
+    @Override
+    protected Presenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
+
     @Override
     protected int setLayoutRes() {
         return R.layout.activity_start;

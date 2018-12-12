@@ -4,36 +4,35 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.Base;
 import anime.project.dilidili.main.base.BasePresenter;
-import anime.project.dilidili.main.base.BaseView;
+import anime.project.dilidili.main.base.Presenter;
 
-public class TagPresenter extends Base implements BasePresenter,TagModel.LoadDataCallback {
-    private TagView tagView;
+public class TagPresenter extends Presenter<TagContract.View> implements BasePresenter,TagContract.LoadDataCallback {
+    private TagContract.View view;
     private TagModel model;
 
-    public TagPresenter(BaseView baseView, TagView tagView){
-        this.baseView = baseView;
-        this.tagView = tagView;
+    public TagPresenter(TagContract.View view){
+        super(view);
+        this.view = view;
         model = new TagModel();
     }
 
     @Override
     public void loadData(boolean isMain) {
         if (isMain){
-            baseView.showLoadingView();
-            baseView.showEmptyVIew();
+            view.showLoadingView();
+            view.showEmptyVIew();
         }
         model.getData(this);
     }
 
     @Override
     public void success(List<MultiItemEntity> list) {
-        tagView.showSuccessView(list);
+        view.showSuccessView(list);
     }
 
     @Override
     public void error(String msg) {
-        baseView.showLoadErrorView(msg);
+        view.showLoadErrorView(msg);
     }
 }

@@ -1,6 +1,21 @@
 package anime.project.dilidili.main.video;
 
+import anime.project.dilidili.main.base.BaseLoadDataCallback;
+
 public interface VideoContract {
-    //获取数据
-    void getData(String title, String url, VideoModel.LoadDataCallback callback);
+    interface Model{
+        void getData(String title, String url, LoadDataCallback callback);
+    }
+
+    interface View {
+        void getVideoSuccess(String url);
+        void getVideoEmpty();
+        void getVideoError();
+    }
+
+    interface LoadDataCallback extends BaseLoadDataCallback {
+        void success(String url);
+        void error();
+        void empty();
+    }
 }
