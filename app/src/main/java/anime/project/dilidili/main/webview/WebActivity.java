@@ -84,7 +84,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     TextView titleView;
     @BindView(R.id.rv_list_two)
     RecyclerView recyclerView2;
-    private List<AnimeDescBean> list2 = new ArrayList<>();
+    private List<AnimeDescBean> dramaList = new ArrayList<>();
     private DramaAdapter dramaAdapter;
     //dialog
     private ProgressDialog p;
@@ -166,8 +166,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             url = bundle.getString("url");
             diliUrl = bundle.getString("dili");
             if (!is){
-                list2 = new ArrayList<>();
-                list2 = (List<AnimeDescBean>) bundle.getSerializable("list");
+                dramaList = new ArrayList<>();
+                dramaList = (List<AnimeDescBean>) bundle.getSerializable("list");
                 titleView.setText(title);
             }else
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -226,7 +226,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         });
         if (!is){
             recyclerView2.setLayoutManager(new GridLayoutManager(this,4));
-            dramaAdapter = new DramaAdapter(this, list2);
+            dramaAdapter = new DramaAdapter(this, dramaList);
             recyclerView2.setAdapter(dramaAdapter);
             dramaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
@@ -234,7 +234,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     if (Utils.isFastClick()) {
                         setResult(0x20);
                         drawerLayout.closeDrawer(GravityCompat.END);
-                        final AnimeDescBean bean = list2.get(position);
+                        final AnimeDescBean bean = dramaList.get(position);
                         switch (bean.getType()) {
                             case "play":
                                 p = Utils.getProDialog(WebActivity.this, "解析中,请稍后...");
@@ -270,7 +270,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                                 bundle.putString("url", url);
                                 bundle.putString("title_t", title);
                                 bundle.putString("dili", diliUrl);
-                                bundle.putSerializable("list", (Serializable) list2);
+                                bundle.putSerializable("list", (Serializable) dramaList);
                                 startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
                                 WebActivity.this.finish();
                                 break;
@@ -334,7 +334,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                             bundle.putString("url", videoUrlArr[index]);
                             bundle.putString("title_t", title);
                             bundle.putString("dili", diliUrl);
-                            bundle.putSerializable("list", (Serializable) list2);
+                            bundle.putSerializable("list", (Serializable) dramaList);
                             startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
                             WebActivity.this.finish();
                             break;
