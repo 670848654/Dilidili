@@ -129,7 +129,7 @@ public class WebActivity extends BaseActivity implements VideoView {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
         StatusBarUtil.setTranslucent(this,0);
     }
 

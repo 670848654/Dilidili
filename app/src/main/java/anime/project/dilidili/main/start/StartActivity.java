@@ -30,7 +30,7 @@ public class StartActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 }

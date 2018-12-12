@@ -57,7 +57,7 @@ public class FavoriteActivity extends BaseActivity implements BaseView,FavoriteV
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

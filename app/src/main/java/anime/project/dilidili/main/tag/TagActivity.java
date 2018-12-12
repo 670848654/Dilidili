@@ -58,7 +58,7 @@ public class TagActivity extends BaseActivity implements BaseView,TagView {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

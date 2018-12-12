@@ -105,7 +105,7 @@ public class DescActivity extends BaseActivity implements BaseView,DescView,Vide
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

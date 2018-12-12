@@ -1,5 +1,7 @@
 package anime.project.dilidili.main.search;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,25 +39,29 @@ public class SearchModel implements SearchContract {
                     List<SearchBean> list = new ArrayList<>();
                     JSONObject object = new JSONObject(json);
                     callback.pageCount(object.getInt("count") - 1);
-                    JSONArray array = new JSONArray(object.getString("result"));
-                    if (array.length() > 0){
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject obj = new JSONObject(array.getString(i));
-                            if (!obj.getString("zhuangtai").isEmpty())
-                                list.add(
-                                        new SearchBean(
-                                                obj.getString("typename"),
-                                                Api.URL + obj.getString("typedir"),
-                                                obj.getString("suoluetudizhi"),
-                                                "标签：" + obj.getString("biaoqian"),
-                                                "看点：" + obj.getString("description"),
-                                                "状态：" + obj.getString("zhuangtai")
-                                        )
-                                );
-                        }
-                        callback.success(isMain, list);
-                    }else
+                    if (object.getString("result").equals("null")){
                         callback.error(isMain, "没有搜索到相关动漫");
+                    }else {
+                        JSONArray array = new JSONArray(object.getString("result"));
+                        if (array.length() > 0){
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject obj = new JSONObject(array.getString(i));
+                                if (!obj.getString("zhuangtai").isEmpty())
+                                    list.add(
+                                            new SearchBean(
+                                                    obj.getString("typename"),
+                                                    Api.URL + obj.getString("typedir"),
+                                                    obj.getString("suoluetudizhi"),
+                                                    "标签：" + obj.getString("biaoqian"),
+                                                    "看点：" + obj.getString("description"),
+                                                    "状态：" + obj.getString("zhuangtai")
+                                            )
+                                    );
+                            }
+                            callback.success(isMain, list);
+                        }else
+                            callback.error(isMain, "没有搜索到相关动漫");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     callback.error(isMain, e.getMessage());

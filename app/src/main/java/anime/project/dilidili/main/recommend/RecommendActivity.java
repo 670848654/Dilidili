@@ -57,7 +57,7 @@ public class RecommendActivity extends BaseActivity implements BaseView,Recommen
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

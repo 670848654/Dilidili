@@ -42,20 +42,19 @@ public class DescModel implements DescContract {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     Document doc = Jsoup.parse(response.body().string());
-                    Elements xinfan = doc.getElementsByClass("detail");
+                    Elements detail = doc.getElementsByClass("detail");
                     list = new ArrayList<>();
                     //新版解析方案
-                    if (xinfan.size() > 0) {
+                    if (detail.size() > 0) {
                         AnimeListBean bean = new AnimeListBean();
-                        String ainmeTitle = xinfan.get(0).select("h1").text();
-                        bean.setImg(xinfan.get(0).select("img").attr("src"));
+                        String ainmeTitle = detail.get(0).select("h1").text();
+                        bean.setImg(detail.get(0).select("img").attr("src"));
                         bean.setTitle(ainmeTitle);
                         //创建index
                         DatabaseUtil.addAnime(ainmeTitle);
                         fid = DatabaseUtil.getAnimeID(ainmeTitle);
-                        callback.isFavorite(DatabaseUtil.checkFavorite(ainmeTitle));
-                        Elements desc1 = xinfan.get(0).getElementsByClass("d_label");
-                        Elements desc2 = xinfan.get(0).getElementsByClass("d_label2");
+                        Elements desc1 = detail.get(0).getElementsByClass("d_label");
+                        Elements desc2 = detail.get(0).getElementsByClass("d_label2");
                         bean.setUrl(url);
                         bean.setRegion(desc1.get(0).text());
                         bean.setYear(desc1.get(1).text());
@@ -91,6 +90,7 @@ public class DescModel implements DescContract {
                             if (recommend.size() > 0) {
                                 setDataOther("相关推荐", recommend, "html");
                             }
+                            callback.isFavorite(DatabaseUtil.checkFavorite(ainmeTitle));
                             callback.successDrama(drama);
                             callback.successMain(list);
                         } else {

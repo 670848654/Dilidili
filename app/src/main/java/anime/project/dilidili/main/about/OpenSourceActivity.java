@@ -46,7 +46,7 @@ public class OpenSourceActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

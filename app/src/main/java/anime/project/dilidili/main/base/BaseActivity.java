@@ -28,10 +28,10 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initBeforeView();
         setContentView(setLayoutRes());
         ButterKnife.bind(this);
         if (application == null) {
-            // 得到Application对象
             application = (DiliDili) getApplication();
         }
         application.addActivity_(this);
@@ -50,7 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 
     protected abstract void init();
 
-    protected abstract void initBeforView();
+    protected abstract void initBeforeView();
 
     public void initViews(RecyclerView recyclerView){
         errorView = getLayoutInflater().inflate(R.layout.base_error_view, (ViewGroup) recyclerView.getParent(), false);

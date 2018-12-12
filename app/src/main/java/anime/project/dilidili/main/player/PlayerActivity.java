@@ -44,6 +44,7 @@ import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.video.VideoView;
 import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
+import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -60,7 +61,6 @@ public class PlayerActivity extends BaseActivity implements VideoView {
     private DramaAdapter dramaAdapter;
     private static Handler sHandler;
     private boolean isPip = false;
-    //dialog
     private ProgressDialog p;
     private AlertDialog alertDialog;
     private String title_t;
@@ -97,8 +97,8 @@ public class PlayerActivity extends BaseActivity implements VideoView {
     }
 
     @Override
-    protected void initBeforView() {
-
+    protected void initBeforeView() {
+        StatusBarUtil.setTranslucent(this, 0);
     }
 
     private void init(Bundle bundle) {

@@ -61,7 +61,7 @@ public class ApiActivity extends BaseActivity implements BaseView, ApiView {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

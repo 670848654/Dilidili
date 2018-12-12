@@ -67,7 +67,7 @@ public class DefaultWebActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
         StatusBarUtil.setTranslucent(this,0);
     }
 

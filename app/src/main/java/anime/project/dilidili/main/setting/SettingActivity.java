@@ -43,7 +43,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

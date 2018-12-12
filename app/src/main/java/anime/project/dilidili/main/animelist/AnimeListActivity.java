@@ -57,7 +57,7 @@ public class AnimeListActivity extends BaseActivity implements BaseView,AnimeLis
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 

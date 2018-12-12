@@ -75,7 +75,6 @@ public abstract class BaseFragment extends Fragment implements VideoView {
         errorView = getLayoutInflater().inflate(R.layout.base_error_view, (ViewGroup) recyclerView.getParent(), false);
         errorTitle = errorView.findViewById(R.id.title);
         if (application == null) {
-            // 得到Application对象
             application = (DiliDili) getActivity().getApplication();
         }
         initAdapter(getList(getWeek()));

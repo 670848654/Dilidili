@@ -65,7 +65,7 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
     }
 
     @Override
-    protected void initBeforView() {
+    protected void initBeforeView() {
 
     }
 
@@ -179,6 +179,7 @@ public class SearchActivity extends BaseActivity implements BaseView,SearchView 
                     page = 0;
                     presenter = new SearchPresenter(title, page, SearchActivity.this, SearchActivity.this);
                     presenter.loadData(true);
+                    toolbar.setTitle(title);
                     Utils.hideKeyboard(mSearchView);
                     mSearchView.clearFocus();
                 }
