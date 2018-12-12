@@ -581,6 +581,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         //释放资源
         if (mX5WebView != null)
             mX5WebView.destroy();
+        if (null != presenter)
+            presenter.detachView();
         super.onDestroy();
     }
 

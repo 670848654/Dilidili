@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,8 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (null != presenter)
+            presenter.detachView();
     }
 
     public List getList(String week){
@@ -128,7 +131,7 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                             videoTitle = bean.getTitle() + " - " + bean.getWitchTitle();
                             //创建番剧名
                             DatabaseUtil.addAnime(bean.getTitle());
-                            presenter = new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),BaseFragment.this);
+                            presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),BaseFragment.this);
                             presenter.loadData(true);
                         }
                         break;
@@ -274,4 +277,5 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
             }
         });
     }
+
 }

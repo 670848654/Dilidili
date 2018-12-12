@@ -479,4 +479,11 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != presenter)
+            presenter.detachView();
+    }
 }

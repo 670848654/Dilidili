@@ -480,4 +480,11 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != videoPresenter)
+            videoPresenter.detachView();
+    }
 }
