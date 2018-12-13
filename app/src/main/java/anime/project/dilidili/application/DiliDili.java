@@ -58,7 +58,7 @@ public class DiliDili extends Application {
     /**
      * 添加Activity
      */
-    public void addActivity_(Activity activity) {
+    public void addActivity(Activity activity) {
         if (!oList.contains(activity)) {
             oList.add(activity);
         }
@@ -67,7 +67,7 @@ public class DiliDili extends Application {
     /**
      * 销毁单个Activity
      */
-    public void removeActivity_(Activity activity) {
+    public void removeActivity(Activity activity) {
         if (oList.contains(activity)) {
             oList.remove(activity);
             activity.finish();
@@ -77,7 +77,7 @@ public class DiliDili extends Application {
     /**
      * 销毁所有的Activity
      */
-    public void removeALLActivity_() {
+    public void removeALLActivity() {
         for (Activity activity : oList) {
             activity.finish();
         }

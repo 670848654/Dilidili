@@ -3,6 +3,9 @@ package anime.project.dilidili.database;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +100,22 @@ public class DatabaseUtil {
         }
         cursor.close();
         return false;
+    }
+
+    /**
+     * 检查当前fid所有剧集
+     * @param fid 番剧ID
+     * @return
+     */
+    public static String queryAllIndex(String fid){
+        StringBuffer buffer = new StringBuffer();
+        String Query = "select * from f_index where f_pid =?";
+        Cursor c = db.rawQuery(Query, new String[] { fid });
+        while (c.moveToNext()) {
+            buffer.append(c.getString(2));
+        }
+        c.close();
+        return buffer.toString();
     }
 
     /**

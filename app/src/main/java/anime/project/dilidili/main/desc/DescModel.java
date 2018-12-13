@@ -29,6 +29,7 @@ public class DescModel implements DescContract.Model {
     private String fid;
     private List<MultiItemEntity> list;
     private List<AnimeDescBean> drama;
+    private String dramaStr = "";
 
     @Override
     public void getData(Context context, String url, DescContract.LoadDataCallback callback) {
@@ -39,7 +40,7 @@ public class DescModel implements DescContract.Model {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 try {
                     Document doc = Jsoup.parse(response.body().string());
                     Elements detail = doc.getElementsByClass("detail");
@@ -53,6 +54,7 @@ public class DescModel implements DescContract.Model {
                         //创建index
                         DatabaseUtil.addAnime(ainmeTitle);
                         fid = DatabaseUtil.getAnimeID(ainmeTitle);
+                        dramaStr = DatabaseUtil.queryAllIndex(fid);
                         Elements desc1 = detail.get(0).getElementsByClass("d_label");
                         Elements desc2 = detail.get(0).getElementsByClass("d_label2");
                         bean.setUrl(url);
@@ -119,7 +121,7 @@ public class DescModel implements DescContract.Model {
                     String watchUrl = els.get(i).select("a").attr("href");
                     if (!watchUrl.isEmpty()) {
                         k++;
-                        if (DatabaseUtil.checkIndex(fid, watchUrl))
+                        if (dramaStr.contains(watchUrl))
                             select = true;
                         else
                             select = false;

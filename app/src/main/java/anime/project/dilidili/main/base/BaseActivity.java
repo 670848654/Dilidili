@@ -33,7 +33,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         if (application == null) {
             application = (DiliDili) getApplication();
         }
-        application.addActivity_(this);
+        application.addActivity(this);
         if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             //创建database路路径
             Utils.creatFile();
@@ -82,7 +82,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Toast.makeText(this, Utils.getString(BaseActivity.this, R.string.permissions_error), Toast.LENGTH_SHORT).show();
-        application.removeALLActivity_();
+        application.removeALLActivity();
     }
 
     @Override
