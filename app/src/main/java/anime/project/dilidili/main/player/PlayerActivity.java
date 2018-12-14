@@ -95,6 +95,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void init() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         //Android 9 异形屏适配
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();

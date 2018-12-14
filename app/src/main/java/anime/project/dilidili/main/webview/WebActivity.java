@@ -46,19 +46,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
-import anime.project.dilidili.api.Api;
-import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.adapter.WebviewAdapter;
-import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.ApiBean;
 import anime.project.dilidili.bean.DramaAdapter;
 import anime.project.dilidili.bean.WebviewBean;
+import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
+import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
-import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -86,7 +86,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     RecyclerView recyclerView2;
     private List<AnimeDescBean> dramaList = new ArrayList<>();
     private DramaAdapter dramaAdapter;
-    //dialog
     private ProgressDialog p;
     private AlertDialog alertDialog;
     private String title;
@@ -124,6 +123,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void init() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         //Android P 异形屏适配
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
