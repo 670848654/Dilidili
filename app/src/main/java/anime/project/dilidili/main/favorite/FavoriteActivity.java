@@ -54,7 +54,6 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(FavoriteActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this,Utils.defaultInit());
         initToolbar();
         initSwipe();

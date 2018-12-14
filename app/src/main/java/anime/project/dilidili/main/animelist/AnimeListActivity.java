@@ -53,8 +53,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(AnimeListActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
-        Slidr.attach(this,Utils.defaultInit());// 设置右滑动返回
+        Slidr.attach(this,Utils.defaultInit());
         getBundle();
         initToolbar();
         initSwipe();

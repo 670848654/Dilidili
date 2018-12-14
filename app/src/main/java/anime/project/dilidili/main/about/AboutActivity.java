@@ -62,7 +62,6 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(AboutActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         initViews();

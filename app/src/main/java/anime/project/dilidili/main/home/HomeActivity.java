@@ -151,14 +151,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     public void initFragment(){
         week = Utils.getWeekOfDate(new Date());
-        tab.addTab(tab.newTab().setText("周一"));
-        tab.addTab(tab.newTab().setText("周二"));
-        tab.addTab(tab.newTab().setText("周三"));
-        tab.addTab(tab.newTab().setText("周四"));
-        tab.addTab(tab.newTab().setText("周五"));
-        tab.addTab(tab.newTab().setText("周六"));
-        tab.addTab(tab.newTab().setText("周日"));
-        tab.setupWithViewPager(viewpager);
+        setWeekAdapter();
         tab.setSelectedTabIndicatorColor(getResources().getColor(R.color.pinka200));
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -237,35 +230,27 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.new_anim:
-                goToNewAnime(animeUrl, title);
-                break;
-            case R.id.recommend_anime:
-                if (Utils.isFastClick()) {
+        if (Utils.isFastClick()){
+            switch (item.getItemId()){
+                case R.id.new_anim:
+                    goToNewAnime(animeUrl, title);
+                    break;
+                case R.id.recommend_anime:
                     startActivity(new Intent(this, RecommendActivity.class));
-                }
-                break;
-            case R.id.find_anim:
-                if (Utils.isFastClick()) {
+                    break;
+                case R.id.find_anim:
                     startActivity(new Intent(this, TagActivity.class));
-                }
-                break;
-            case R.id.about:
-                if (Utils.isFastClick()) {
+                    break;
+                case R.id.about:
                     startActivity(new Intent(this, AboutActivity.class));
-                }
-                break;
-            case R.id.favorite:
-                if (Utils.isFastClick()) {
+                    break;
+                case R.id.favorite:
                     startActivity(new Intent(this, FavoriteActivity.class));
-                }
-                break;
-            case R.id.setting:
-                if (Utils.isFastClick()) {
+                    break;
+                case R.id.setting:
                     startActivity(new Intent(this, SettingActivity.class));
-                }
-                break;
+                    break;
+            }
         }
         return true;
     }

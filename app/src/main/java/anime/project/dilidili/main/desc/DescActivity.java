@@ -71,7 +71,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private String videoTitle;
     private String url, diliUrl;
     private String title_t;
-    //dialog
     private ProgressDialog p;
     private AlertDialog alertDialog;
     @BindView(R.id.favorite)
