@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,11 +45,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
+import anime.project.dilidili.adapter.DramaAdapter;
 import anime.project.dilidili.adapter.WebviewAdapter;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.ApiBean;
-import anime.project.dilidili.bean.DramaAdapter;
 import anime.project.dilidili.bean.WebviewBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -71,7 +70,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private List<WebviewBean> list = new ArrayList<>();
     private final static String REFERER = "referer";
     private String url = "", diliUrl = "";
-    private String videoTitle;
+    private String animeTilte;
+    private String witchTitle;
     private String api;
     private String newUrl = "";
     @BindView(R.id.x5_webview)
@@ -79,7 +79,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private ProgressBar pg;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    private static Handler sHandler;
     @BindView(R.id.title)
     TextView titleView;
     @BindView(R.id.rv_list_two)
@@ -88,7 +87,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private DramaAdapter dramaAdapter;
     private ProgressDialog p;
     private AlertDialog alertDialog;
-    private String title;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
     /**
@@ -102,7 +100,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     DrawerLayout drawerLayout;
     @BindView(R.id.nav_view)
     LinearLayout linearLayout;
-    private boolean is;
     private VideoPresenter presenter;
     private List<ApiBean> apiList;
 
@@ -127,7 +124,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         //Android P 异形屏适配
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES ;
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
         hideNavBar();
@@ -141,7 +138,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void initBeforeView() {
-        StatusBarUtil.setTranslucent(this,0);
+        StatusBarUtil.setTranslucent(this, 0);
     }
 
     public void initToolbar() {
@@ -161,16 +158,12 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     public void getBundle() {
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
-            is = bundle.getBoolean("is");
-            title = bundle.getString("title");
+            animeTilte = bundle.getString("title");
             url = bundle.getString("url");
             diliUrl = bundle.getString("dili");
-            if (!is){
-                dramaList = new ArrayList<>();
-                dramaList = (List<AnimeDescBean>) bundle.getSerializable("list");
-                titleView.setText(title);
-            }else
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            dramaList = (List<AnimeDescBean>) bundle.getSerializable("list");
+            titleView.setText(animeTilte);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
@@ -179,7 +172,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     private void initApiData() {
-        DatabaseUtil.addAnime(title);
         apiList = DatabaseUtil.queryAllApi();
     }
 
@@ -224,61 +216,59 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 }
             }
         });
-        if (!is){
-            recyclerView2.setLayoutManager(new GridLayoutManager(this,4));
-            dramaAdapter = new DramaAdapter(this, dramaList);
-            recyclerView2.setAdapter(dramaAdapter);
-            dramaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    if (Utils.isFastClick()) {
-                        setResult(0x20);
-                        drawerLayout.closeDrawer(GravityCompat.END);
-                        final AnimeDescBean bean = dramaList.get(position);
-                        switch (bean.getType()) {
-                            case "play":
-                                p = Utils.getProDialog(WebActivity.this, "解析中,请稍后...");
-                                Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
-                                v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
-                                diliUrl = bean.getUrl();
-                                videoTitle = bean.getTitle();
-                                presenter = new VideoPresenter(title, bean.getUrl(),WebActivity.this);
-                                presenter.loadData(true);
-                                break;
-                        }
-
+        recyclerView2.setLayoutManager(new GridLayoutManager(this, 4));
+        dramaAdapter = new DramaAdapter(this, dramaList);
+        recyclerView2.setAdapter(dramaAdapter);
+        dramaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (Utils.isFastClick()) {
+                    setResult(0x20);
+                    drawerLayout.closeDrawer(GravityCompat.END);
+                    final AnimeDescBean bean = dramaList.get(position);
+                    switch (bean.getType()) {
+                        case "play":
+                            p = Utils.getProDialog(WebActivity.this, "解析中,请稍后...");
+                            Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
+                            v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
+                            diliUrl = bean.getUrl();
+                            witchTitle = animeTilte + " - " + bean.getTitle();
+                            presenter = new VideoPresenter(animeTilte, bean.getUrl(), WebActivity.this);
+                            presenter.loadData(true);
+                            break;
                     }
+
                 }
-            });
-        }
+            }
+        });
     }
 
-    public void goToPlay(String videoUrl){
+    public void goToPlay(String videoUrl) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
                 //如果播放地址只有1个
-                if (arr.length == 1){
-                    String url = "http"+arr[0];
-                    if (url.contains(".m3u8") || url.contains(".mp4")){
-                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(),"player",0)){
+                if (arr.length == 1) {
+                    String url = "http" + arr[0];
+                    if (url.contains(".m3u8") || url.contains(".mp4")) {
+                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                             case 0:
                                 //调用播放器
                                 Bundle bundle = new Bundle();
-                                bundle.putString("title", videoTitle);
+                                bundle.putString("title", witchTitle);
                                 bundle.putString("url", url);
-                                bundle.putString("title_t", title);
+                                bundle.putString("animeTitle", animeTilte);
                                 bundle.putString("dili", diliUrl);
                                 bundle.putSerializable("list", (Serializable) dramaList);
                                 startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
                                 WebActivity.this.finish();
                                 break;
                             case 1:
-                                Utils.selectVideoPlayer(WebActivity.this,url);
+                                Utils.selectVideoPlayer(WebActivity.this, url);
                                 break;
                         }
-                    }else {
+                    } else {
                         //视频源地址
                         java.net.URL urlHost;
                         try {
@@ -292,16 +282,16 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                         newUrl = api + url;
                         mX5WebView.loadUrl(newUrl, map);
                     }
-                }else {
+                } else {
                     videoUrlArr = new String[arr.length];
                     videoTitleArr = new String[arr.length];
-                    for (int i=0;i<arr.length;i++) {
+                    for (int i = 0; i < arr.length; i++) {
                         String str = "http" + arr[i];
-                        Log.e("video",str);
+                        Log.e("video", str);
                         videoUrlArr[i] = str;
-                        java.net.URL  urlHost;
+                        java.net.URL urlHost;
                         try {
-                            urlHost = new  java.net.URL(str);
+                            urlHost = new java.net.URL(str);
                             if (str.contains(".mp4"))
                                 videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
                             else if (str.contains(".m3u8"))
@@ -325,24 +315,24 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         builder.setItems(videoTitleArr, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int index) {
-                if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")){
-                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(),"player",0)){
+                if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
+                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                         case 0:
                             //调用播放器
                             Bundle bundle = new Bundle();
-                            bundle.putString("title", videoTitle);
+                            bundle.putString("title", witchTitle);
                             bundle.putString("url", videoUrlArr[index]);
-                            bundle.putString("title_t", title);
+                            bundle.putString("animeTitle", animeTilte);
                             bundle.putString("dili", diliUrl);
                             bundle.putSerializable("list", (Serializable) dramaList);
                             startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
                             WebActivity.this.finish();
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(WebActivity.this,videoUrlArr[index]);
+                            Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
                             break;
                     }
-                }else {
+                } else {
                     //视频源地址
                     java.net.URL urlHost;
                     try {
@@ -537,6 +527,27 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         Toast.makeText(WebActivity.this, Utils.getString(WebActivity.this, R.string.error_700), Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showSuccessDramaView(List<AnimeDescBean> list) {
+        dramaList = list;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dramaAdapter.setNewData(dramaList);
+            }
+        });
+    }
+
+    @Override
+    public void errorDramaView() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(WebActivity.this, "获取剧集信息出错", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     /**
      * 全屏容器界面
@@ -585,42 +596,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         super.onDestroy();
     }
 
-    /**
-     * 隐藏虚拟按键
-     */
-    public void hideNavBar(){
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        sHandler = new Handler();
-        sHandler.post(mHideRunnable); // hide the navigation bar
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
-            }
-        });
-    }
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            int flags;
-            // This work only for android 4.4+
-            // hide navigation bar permanently in android activity
-            // touch the screen, the navigation bar will not show
-            flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
-            // must be executed in main thread :)
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-        }
-    };
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
         View view = findViewById(R.id.module);
-        if (is)
-            view.setVisibility(View.GONE);
         return true;
     }
 
@@ -630,7 +609,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         if (id == R.id.module) {
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);
-            }else
+            } else
                 drawerLayout.openDrawer(GravityCompat.END);
             return true;
         }

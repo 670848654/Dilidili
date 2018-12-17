@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,10 +34,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
-import anime.project.dilidili.database.DatabaseUtil;
-import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.adapter.DramaAdapter;
 import anime.project.dilidili.bean.AnimeDescBean;
-import anime.project.dilidili.bean.DramaAdapter;
+import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
@@ -55,27 +53,24 @@ import cn.jzvd.JzvdStd;
 public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @BindView(R.id.player)
     JzvdStd player;
-    private String title, url, diliUrl;
+    private String witchTitle, url, diliUrl;
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private List<AnimeDescBean> list = new ArrayList<>();
     private DramaAdapter dramaAdapter;
-    private static Handler sHandler;
-    private boolean isPip = false;
     private ProgressDialog p;
     private AlertDialog alertDialog;
-    private String title_t;
+    private String animeTitle;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
     @BindView(R.id.nav_view)
     RelativeLayout relativeLayout;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @BindView(R.id.title_t)
+    @BindView(R.id.anime_title)
     TextView titleView;
     @BindView(R.id.pic)
     ImageView pic;
-    private boolean is;
     private VideoPresenter presenter;
 
     @Override
@@ -104,8 +99,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         }
         Bundle bundle = getIntent().getExtras();
         init(bundle);
-        if (!is)
-            initAdapter();
+        initAdapter();
     }
 
     @Override
@@ -114,32 +108,25 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     }
 
     private void init(Bundle bundle) {
-        is = bundle.getBoolean("is");
         //播放地址
         url = bundle.getString("url");
         //集数名称
-        title = bundle.getString("title");
-        if (!is) {
-            //番剧名称
-            title_t = bundle.getString("title_t");
-            titleView.setText(title_t);
-            //源地址
-            diliUrl = bundle.getString("dili");
-            //剧集list
-            list = new ArrayList<>();
-            list = (List<AnimeDescBean>) bundle.getSerializable("list");
-            //创建番剧名
-            DatabaseUtil.addAnime(title_t);
-            relativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    return;
-                }
-            });
-            relativeLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
-        } else {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+        witchTitle = bundle.getString("title");
+        //番剧名称
+        animeTitle = bundle.getString("animeTitle");
+        titleView.setText(animeTitle);
+        //源地址
+        diliUrl = bundle.getString("dili");
+        //剧集list
+        list = (List<AnimeDescBean>) bundle.getSerializable("list");
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                return;
+            }
+        });
+        relativeLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         player.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,43 +134,27 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                 finish();
             }
         });
-        if (Utils.isPad(this)){
+        if (Utils.isPad(this)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
                 pic.setVisibility(View.GONE);
             else
                 pic.setVisibility(View.VISIBLE);
-        }else
+        } else
             pic.setVisibility(View.GONE);
-        player.setUp(url, title, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-        if (is){
-            if (Utils.isPad(this)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    Glide.with(PlayerActivity.this).load(R.drawable.baseline_picture_in_picture_alt_white_48dp).into(player.fullscreenButton);
-                else
-                    player.fullscreenButton.setVisibility(View.INVISIBLE);
-            }else
-                player.fullscreenButton.setVisibility(View.INVISIBLE);
-        }
-        else
-            Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
+        player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+        Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
         player.fullscreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Utils.isFastClick())
-                    if (is){
-                        isPip = true;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                            enterPicInPic();
-                    }else {
-                        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                            drawerLayout.closeDrawer(GravityCompat.END);
-                        }else
-                            drawerLayout.openDrawer(GravityCompat.END);
-                    }
+                    if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                    } else
+                        drawerLayout.openDrawer(GravityCompat.END);
             }
         });
         Glide.with(PlayerActivity.this).load(R.drawable.baseline_arrow_back_white_24dp).apply(new RequestOptions().centerCrop()).into(player.backButton);
-        player.backButton.setPadding(0,0,15,0);
+        player.backButton.setPadding(0, 0, 15, 0);
         Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         player.startButton.performClick();
@@ -192,9 +163,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @OnClick(R.id.pic)
-    public void startPic(){
+    public void startPic() {
         drawerLayout.closeDrawer(GravityCompat.END);
-        isPip = true;
         enterPicInPic();
     }
 
@@ -215,8 +185,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                             Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                             v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
                             diliUrl = bean.getUrl();
-                            title = bean.getTitle();
-                            presenter = new VideoPresenter(title_t, bean.getUrl(),PlayerActivity.this);
+                            witchTitle = animeTitle + " - " + bean.getTitle();
+                            presenter = new VideoPresenter(animeTitle, bean.getUrl(), PlayerActivity.this);
                             presenter.loadData(true);
                             break;
                     }
@@ -226,7 +196,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         });
     }
 
-    public void goToPlay(String videoUrl){
+    public void goToPlay(String videoUrl) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -239,11 +209,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                             case 0:
                                 //调用播放器
                                 Jzvd.releaseAllVideos();
-                                player.setUp(url, title, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-                                if (is)
-                                    Glide.with(PlayerActivity.this).load(R.drawable.baseline_picture_in_picture_alt_white_48dp).into(player.fullscreenButton);
-                                else
-                                    Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
+                                player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                                Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
                                 player.startVideo();
                                 break;
                             case 1:
@@ -253,7 +220,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                         }
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putString("title", title_t);
+                        bundle.putString("title", animeTitle);
                         bundle.putString("url", url);
                         bundle.putString("dili", diliUrl);
                         bundle.putSerializable("list", (Serializable) list);
@@ -298,11 +265,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                         case 0:
                             //调用播放器
                             Jzvd.releaseAllVideos();
-                            player.setUp(url, title, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-                            if (is)
-                                Glide.with(PlayerActivity.this).load(R.drawable.baseline_picture_in_picture_alt_white_48dp).into(player.fullscreenButton);
-                            else
-                                Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
+                            player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                            Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
                             player.startVideo();
                             break;
                         case 1:
@@ -312,7 +276,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                     }
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putString("title", title_t);
+                    bundle.putString("title", animeTitle);
                     bundle.putString("url", url);
                     bundle.putString("dili", diliUrl);
                     bundle.putSerializable("list", (Serializable) list);
@@ -345,27 +309,18 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @Override
     protected void onPause() {
         super.onPause();
-        if (!isPip) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                if (!PlayerActivity.this.isInMultiWindowMode())
-                {
-                    JzvdStd.goOnPlayOnPause();
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-                    Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-                }
-            }else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (!PlayerActivity.this.isInMultiWindowMode())
                 JzvdStd.goOnPlayOnPause();
-                Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-                Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-            }
-        }
+        } else
+            JzvdStd.goOnPlayOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideNavBar();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
             if (!PlayerActivity.this.isInMultiWindowMode())
                 JzvdStd.goOnPlayOnResume();
         }else
@@ -376,8 +331,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     protected void onStop() {
         super.onStop();
         Jzvd.releaseAllVideos();
-        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-        Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
     }
 
     /**
@@ -397,42 +350,9 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         enterPictureInPictureMode(builder);
     }
 
-    /**
-     * 隐藏虚拟按键
-     */
-    public void hideNavBar() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        sHandler = new Handler();
-        sHandler.post(mHideRunnable); // hide the navigation bar
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
-            }
-        });
-    }
-
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            int flags;
-            // This work only for android 4.4+
-            // hide navigation bar permanently in android activity
-            // touch the screen, the navigation bar will not show
-            flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            // must be executed in main thread :)
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-        }
-    };
-
     @Override
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
-        isPip = isInPictureInPictureMode;
         if (isInPictureInPictureMode) {
             player.fullscreenButton.setVisibility(View.INVISIBLE);
             player.backButton.setVisibility(View.INVISIBLE);
@@ -476,6 +396,28 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                 Utils.cancelProDoalog(p);
                 //网络出错
                 Toast.makeText(PlayerActivity.this, Utils.getString(PlayerActivity.this, R.string.error_700), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void showSuccessDramaView(List<AnimeDescBean> dramaList) {
+        list = dramaList;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dramaAdapter.setNewData(list);
+            }
+        });
+
+    }
+
+    @Override
+    public void errorDramaView() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(PlayerActivity.this, "获取剧集信息出错", Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -1,5 +1,8 @@
 package anime.project.dilidili.main.video;
 
+import java.util.List;
+
+import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
@@ -35,6 +38,14 @@ public class VideoPresenter extends Presenter<VideoContract.View> implements Bas
     @Override
     public void empty() {
         view.getVideoEmpty();
+    }
+
+    @Override
+    public void successDrama(List<AnimeDescBean> list) {
+        if (list.size() > 0)
+            view.showSuccessDramaView(list);
+        else
+            view.errorDramaView();
     }
 
     @Override

@@ -8,11 +8,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import anime.project.dilidili.R;
+import anime.project.dilidili.bean.AnimeDescBean;
+import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -34,6 +40,7 @@ public class VideoModel implements VideoContract.Model {
                 Document doc = Jsoup.parse(response.body().string());
                 String fid = DatabaseUtil.getAnimeID(title);
                 DatabaseUtil.addIndex(fid, HTML_url);
+                callback.successDrama(getAllDrama(fid,  doc.select("div.aside_cen2 > div.con24 >a")));
                 Elements script = doc.select("script");
                 //第一种方式
                 videoUrl = getSourceUrl(script);
@@ -50,6 +57,27 @@ public class VideoModel implements VideoContract.Model {
                     callback.success(videoUrl);
             }
         });
+    }
+
+    public static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList){
+        List<AnimeDescBean> list = new ArrayList<>();
+        try {
+            String dataBaseDrama = DatabaseUtil.queryAllIndex(fid);
+            String dramaTitle;
+            String dramaUrl;
+            for (int i = 0; i < dramaList.size(); i++) {
+                dramaUrl = dramaList.get(i).attr("href");
+                dramaTitle = dramaList.get(i).text();
+                if (dataBaseDrama.contains(dramaUrl))
+                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, true, dramaTitle, dramaUrl, "play"));
+                else
+                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, dramaTitle, dramaUrl, "play"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return list;
+        }
+        return list;
     }
 
     /**

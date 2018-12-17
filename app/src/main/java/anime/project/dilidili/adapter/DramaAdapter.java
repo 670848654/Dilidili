@@ -1,4 +1,4 @@
-package anime.project.dilidili.bean;
+package anime.project.dilidili.adapter;
 
 import android.content.Context;
 
@@ -9,10 +9,7 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import anime.project.dilidili.R;
-
-/**
- * Created by Administrator on 2018/1/24.
- */
+import anime.project.dilidili.bean.AnimeDescBean;
 
 public class DramaAdapter extends BaseQuickAdapter<AnimeDescBean, BaseViewHolder> {
     private Context context;
@@ -24,14 +21,7 @@ public class DramaAdapter extends BaseQuickAdapter<AnimeDescBean, BaseViewHolder
     @Override
     protected void convert(final BaseViewHolder helper, AnimeDescBean item) {
         String title = item.getTitle();
-        if(item.getType().equals("play")) {
-            if (!title.equals("没有资源")){
-                title = title.substring(1, title.length());
-                title = title.substring(0,title.length() - 1);
-            }
-            helper.setText(R.id.tag_group, title);
-        } else
-            helper.setText(R.id.tag_group, title);
+        helper.setText(R.id.tag_group, title);
         if (item.isSelect())
             helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_selected,null));
         else

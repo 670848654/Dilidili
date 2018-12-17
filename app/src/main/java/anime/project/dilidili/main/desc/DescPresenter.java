@@ -38,11 +38,6 @@ public class DescPresenter extends Presenter<DescContract.View> implements BaseP
     }
 
     @Override
-    public void successDrama(List<AnimeDescBean> list) {
-        view.showSuccessDramaView(list);
-    }
-
-    @Override
     public void successDesc(AnimeListBean bean) {
         view.showSuccessDescView(bean);
     }

@@ -68,9 +68,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     ImageView imageView;
     @BindView(R.id.collaps_toolbar_layout)
     CollapsingToolbarLayout ct;
-    private String videoTitle;
     private String url, diliUrl;
-    private String title_t;
+    private String animeTitle;
+    private String witchTitle;
     private ProgressDialog p;
     private AlertDialog alertDialog;
     @BindView(R.id.favorite)
@@ -116,7 +116,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
             url = bundle.getString("url");
-            title_t = bundle.getString("name");
+            animeTitle = bundle.getString("name");
         }
     }
 
@@ -168,9 +168,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             p = Utils.getProDialog(DescActivity.this, "解析中,请稍后...");
                             Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                             v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
-                            drama.get(position-1).setSelect(true);
                             diliUrl = bean.getUrl();
-                            videoTitle = bean.getTitle();
+                            witchTitle = animeTitle + " - " +bean.getTitle();
                             videoPresenter = new VideoPresenter(animeListBean.getTitle(), bean.getUrl(),DescActivity.this);
                             videoPresenter.loadData(true);
                             break;
@@ -190,15 +189,15 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 }
             }
         });
-        adapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+        adapter.setOnItemChildLongClickListener(new BaseQuickAdapter.OnItemChildLongClickListener() {
             @Override
-            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+            public boolean onItemChildLongClick(BaseQuickAdapter adapter, View view, int position) {
                 if (Utils.isFastClick()) {
                     final AnimeDescBean bean = (AnimeDescBean) multiItemList.get(position);
                     switch (bean.getType()) {
                         case "down":
                             Utils.putTextIntoClip(DescActivity.this, bean.getTitle());
-                            Toast.makeText(DescActivity.this, bean.getTitle() +"已复制到剪切板!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DescActivity.this, bean.getTitle() +"已复制到剪切板", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -223,9 +222,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(),"player",0)){
                             case 0:
                                 //调用播放器
-                                bundle.putBoolean("is", false);
-                                bundle.putString("title_t", title_t);
-                                bundle.putString("title", videoTitle);
+                                bundle.putString("animeTitle", animeTitle);
+                                bundle.putString("title", witchTitle);
                                 bundle.putString("url", url);
                                 bundle.putString("dili", diliUrl);
                                 bundle.putSerializable("list", (Serializable) drama);
@@ -237,8 +235,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         }
                     }else {
                         Bundle bundle = new Bundle();
-                        bundle.putBoolean("is", false);
-                        bundle.putString("title", title_t);
+                        bundle.putString("title", animeTitle);
                         bundle.putString("url", url);
                         bundle.putString("dili", diliUrl);
                         bundle.putSerializable("list", (Serializable) drama);
@@ -282,9 +279,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         case 0:
                             //调用播放器
                             Bundle bundle = new Bundle();
-                            bundle.putBoolean("is", false);
-                            bundle.putString("title", videoTitle);
-                            bundle.putString("title_t", title_t);
+                            bundle.putString("title", witchTitle);
+                            bundle.putString("animeTitle", animeTitle);
                             bundle.putString("url", videoUrlArr[index]);
                             bundle.putString("dili", diliUrl);
                             bundle.putSerializable("list", (Serializable) drama);
@@ -296,8 +292,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     }
                 }else {
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean("is", false);
-                    bundle.putString("title", title_t);
+                    bundle.putString("title", animeTitle);
                     bundle.putString("url", videoUrlArr[index]);
                     bundle.putString("dili", diliUrl);
                     bundle.putSerializable("list", (Serializable) drama);
@@ -418,6 +413,11 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showSuccessDramaView(List<AnimeDescBean> list) {
         drama = list;
+    }
+
+    @Override
+    public void errorDramaView() {
+
     }
 
     @Override

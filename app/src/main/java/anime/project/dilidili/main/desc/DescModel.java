@@ -14,11 +14,11 @@ import java.util.List;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
-import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.config.AnimeType;
+import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.net.OkHttpGet;
 import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
@@ -28,7 +28,6 @@ import okhttp3.Response;
 public class DescModel implements DescContract.Model {
     private String fid;
     private List<MultiItemEntity> list;
-    private List<AnimeDescBean> drama;
     private String dramaStr = "";
 
     @Override
@@ -80,7 +79,6 @@ public class DescModel implements DescContract.Model {
                             for (int i = 0; i < playDesc.size(); i++) {
                                 String str = playDesc.get(i).text();
                                 if (str.equals("在线")) {
-                                    drama = new ArrayList<>();
                                     setData(context, str, play_list, "play");
                                 } else if (str.equals("下载")) {
                                     setData(context, str, down, "down");
@@ -93,7 +91,6 @@ public class DescModel implements DescContract.Model {
                                 setDataOther("相关推荐", recommend, "html");
                             }
                             callback.isFavorite(DatabaseUtil.checkFavorite(ainmeTitle));
-                            callback.successDrama(drama);
                             callback.successMain(list);
                         } else {
                             callback.error("根据国家相关部门规定\n本动画不准上架");
@@ -126,12 +123,11 @@ public class DescModel implements DescContract.Model {
                         else
                             select = false;
                         animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, els.get(i).select("a").attr("href"), type));
-                        drama.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, els.get(i).select("a").attr("href"), type));
                     }
                 }
                 if (k == 0)
                     animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(context, R.string.no_resources), "", type));
-                break;
+            break;
             case "下载":
                 for (int i = 0; i < els.size(); i++) {
                     String str = els.get(i).select("a").text();

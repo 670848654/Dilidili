@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
+import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.adapter.FragmentAdapter;
 import anime.project.dilidili.bean.HomeBean;
@@ -52,7 +54,8 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
     private DiliDili application;
     private ProgressDialog p;
     private String diliUrl;
-    private String videoTitle;
+    private String witchTitle;
+    private String animeTitle;
     private AlertDialog alertDialog;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
@@ -60,6 +63,7 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
     private VideoPresenter presenter;
     private View errorView;
     public TextView errorTitle;
+    private List<AnimeDescBean> dramaList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -126,9 +130,10 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                         if (Utils.isFastClick()) {
                             p = Utils.getProDialog(getActivity(), "解析中,请稍后...");
                             diliUrl = bean.getWitchUrl();
-                            videoTitle = bean.getTitle() + " - " + bean.getWitchTitle();
+                            animeTitle = bean.getTitle();
+                            witchTitle = animeTitle + " - " + bean.getWitchTitle();
                             //创建番剧名
-                            DatabaseUtil.addAnime(bean.getTitle());
+                            DatabaseUtil.addAnime(animeTitle);
                             presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),BaseFragment.this);
                             presenter.loadData(true);
                         }
@@ -157,9 +162,10 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                             case 0:
                                 //调用播放器
                                 Bundle bundle = new Bundle();
-                                bundle.putBoolean("is", true);
-                                bundle.putString("title", videoTitle);
+                                bundle.putString("animeTitle", animeTitle);
+                                bundle.putString("title", witchTitle);
                                 bundle.putString("url", url);
+                                bundle.putSerializable("list", (Serializable) dramaList);
                                 startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                                 break;
                             case 1:
@@ -168,9 +174,10 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                         }
                     }else {
                         Bundle bundle = new Bundle();
-                        bundle.putBoolean("is", true);
+                        bundle.putString("title", animeTitle);
                         bundle.putString("url", url);
                         bundle.putString("dili", diliUrl);
+                        bundle.putSerializable("list", (Serializable) dramaList);
                         startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
                     }
                 }else {
@@ -212,9 +219,10 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                         case 0:
                             //调用播放器
                             Bundle bundle = new Bundle();
-                            bundle.putBoolean("is", true);
-                            bundle.putString("title", videoTitle);
+                            bundle.putString("animeTitle", animeTitle);
+                            bundle.putString("title", witchTitle);
                             bundle.putString("url", videoUrlArr[index]);
+                            bundle.putSerializable("list", (Serializable) dramaList);
                             startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                             break;
                         case 1:
@@ -223,9 +231,10 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                     }
                 }else {
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean("is", true);
+                    bundle.putString("title", animeTitle);
                     bundle.putString("url", videoUrlArr[index]);
                     bundle.putString("dili", diliUrl);
+                    bundle.putSerializable("list", (Serializable) dramaList);
                     startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
                 }
             }
@@ -276,4 +285,13 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
         });
     }
 
+    @Override
+    public void showSuccessDramaView(List<AnimeDescBean> list) {
+        dramaList = list;
+    }
+
+    @Override
+    public void errorDramaView() {
+
+    }
 }
