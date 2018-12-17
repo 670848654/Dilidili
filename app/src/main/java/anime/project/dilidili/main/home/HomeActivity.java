@@ -31,13 +31,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import anime.project.dilidili.R;
+import anime.project.dilidili.adapter.WeekAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.custom.VpSwipeRefreshLayout;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.about.AboutActivity;
-import anime.project.dilidili.adapter.WeekAdapter;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.custom.VpSwipeRefreshLayout;
 import anime.project.dilidili.main.favorite.FavoriteActivity;
 import anime.project.dilidili.main.recommend.RecommendActivity;
 import anime.project.dilidili.main.search.SearchActivity;
@@ -67,7 +67,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     private int position;
     private int week;
     private SearchView mSearchView;
-    private String[] tabs = new String[]{"周一","周二","周三","周四","周五","周六","周日"};
+    private String[] tabs = new String[]{"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
 
     @Override
     protected HomePresenter createPresenter() {
@@ -97,13 +97,13 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     }
 
-    public void initToolbar(){
+    public void initToolbar() {
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitle(getResources().getString(R.string.app_sub_name));
         setSupportActionBar(toolbar);
     }
 
-    public void initDrawer(){
+    public void initDrawer() {
         StatusBarUtil.setColorForDrawerLayout(this, drawer, getResources().getColor(R.color.night), 0);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -140,7 +140,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void initSwipe(){
+    public void initSwipe() {
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -150,9 +150,9 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         });
     }
 
-    public void initFragment(){
+    public void initFragment() {
         week = Utils.getWeekOfDate(new Date());
-        for(int i=0;i<tabs.length;i++){
+        for (int i = 0; i < tabs.length; i++) {
             tab.addTab(tab.newTab());
         }
         tab.setupWithViewPager(viewpager);
@@ -203,7 +203,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!query.replaceAll(" ","").isEmpty()) {
+                if (!query.replaceAll(" ", "").isEmpty()) {
                     Utils.hideKeyboard(mSearchView);
                     mSearchView.clearFocus();
                     startActivity(new Intent(HomeActivity.this, SearchActivity.class).putExtra("title", query));
@@ -235,8 +235,8 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (Utils.isFastClick()){
-            switch (item.getItemId()){
+        if (Utils.isFastClick()) {
+            switch (item.getItemId()) {
                 case R.id.new_anim:
                     goToNewAnime(animeUrl, title);
                     break;
@@ -261,18 +261,16 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     }
 
     public void goToNewAnime(String url, String title) {
-        if (Utils.isFastClick()) {
-            if (url.equals("")) {
-                Utils.showSnackbar(imageView, Utils.getString(this, R.string.empty));
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString("title", title);
-                if (url.indexOf("http") == -1)
-                    bundle.putString("url", Api.URL + url);
-                else
-                    bundle.putString("url", url);
-                startActivity(new Intent(this, AnimeListActivity.class).putExtras(bundle));
-            }
+        if (url.equals("")) {
+            Utils.showSnackbar(imageView, Utils.getString(this, R.string.empty));
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString("title", title);
+            if (url.indexOf("http") == -1)
+                bundle.putString("url", Api.URL + url);
+            else
+                bundle.putString("url", url);
+            startActivity(new Intent(this, AnimeListActivity.class).putExtras(bundle));
         }
     }
 
@@ -297,7 +295,8 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     }
 
     @Override
-    public void showEmptyVIew() {}
+    public void showEmptyVIew() {
+    }
 
     @Override
     public void showLoadSuccess(LinkedHashMap map) {
@@ -314,11 +313,11 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         });
     }
 
-    public void setWeekAdapter(){
+    public void setWeekAdapter() {
         adapter = new WeekAdapter(getSupportFragmentManager(), tab.getTabCount());
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(week);
-        for(int i=0;i<tabs.length;i++){
+        for (int i = 0; i < tabs.length; i++) {
             tab.getTabAt(i).setText(tabs[i]);
         }
     }
