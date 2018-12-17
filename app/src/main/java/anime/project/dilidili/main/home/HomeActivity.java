@@ -67,6 +67,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     private int position;
     private int week;
     private SearchView mSearchView;
+    private String[] tabs = new String[]{"周一","周二","周三","周四","周五","周六","周日"};
 
     @Override
     protected HomePresenter createPresenter() {
@@ -151,6 +152,10 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     public void initFragment(){
         week = Utils.getWeekOfDate(new Date());
+        for(int i=0;i<tabs.length;i++){
+            tab.addTab(tab.newTab());
+        }
+        tab.setupWithViewPager(viewpager);
         setWeekAdapter();
         tab.setSelectedTabIndicatorColor(getResources().getColor(R.color.pinka200));
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -313,13 +318,9 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         adapter = new WeekAdapter(getSupportFragmentManager(), tab.getTabCount());
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(week);
-        tab.getTabAt(0).setText("周一");
-        tab.getTabAt(1).setText("周二");
-        tab.getTabAt(2).setText("周三");
-        tab.getTabAt(3).setText("周四");
-        tab.getTabAt(4).setText("周五");
-        tab.getTabAt(5).setText("周六");
-        tab.getTabAt(6).setText("周日");
+        for(int i=0;i<tabs.length;i++){
+            tab.getTabAt(i).setText(tabs[i]);
+        }
     }
 
     @Override
