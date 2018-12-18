@@ -37,7 +37,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     SwipeRefreshLayout mSwipe;
     private SearchAdapter adapter;
     private List<SearchBean> searchList = new ArrayList<>();
-    private String title;
+    private String title = "";
     private int page = 0;
     private int pageCount;
     private boolean isErr = true;
@@ -50,7 +50,8 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
 
     @Override
     protected void loadData() {
-        mPresenter.loadData(true);
+        if (!title.isEmpty())
+            mPresenter.loadData(true);
     }
 
     @Override
@@ -75,9 +76,8 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
 
     public void getBundle(){
         Bundle bundle = getIntent().getExtras();
-        if (!bundle.isEmpty()) {
+        if (null != bundle && !bundle.isEmpty())
             title = bundle.getString("title");
-        }
     }
 
     public void initToolbar(){
@@ -101,7 +101,6 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                 mPresenter.loadData(true);
             }
         });
-        mSwipe.setRefreshing(true);
     }
 
     public void initAdapter(){
@@ -171,8 +170,14 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
         getMenuInflater().inflate(R.menu.home_menu, menu);
         final MenuItem item = menu.findItem(R.id.search);
         mSearchView = (androidx.appcompat.widget.SearchView) MenuItemCompat.getActionView(item);
+        mSearchView.onActionViewExpanded();
         mSearchView.setQueryHint(Utils.getString(SearchActivity.this, R.string.search_hint));
         mSearchView.setMaxWidth(1000);
+        if (!title.isEmpty()){
+            mSearchView.setQuery(title, false);
+            mSearchView.clearFocus();
+            Utils.hideKeyboard(mSearchView);
+        }
         androidx.appcompat.widget.SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
         textView.setTextColor(getResources().getColor(R.color.md_white_1000));
         mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
@@ -184,8 +189,8 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                     mPresenter = createPresenter();
                     mPresenter.loadData(true);
                     toolbar.setTitle(title);
-                    Utils.hideKeyboard(mSearchView);
                     mSearchView.clearFocus();
+                    Utils.hideKeyboard(mSearchView);
                 }
                 return true;
             }

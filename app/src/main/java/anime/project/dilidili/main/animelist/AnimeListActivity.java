@@ -1,10 +1,12 @@
 package anime.project.dilidili.main.animelist;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
@@ -20,9 +22,11 @@ import anime.project.dilidili.adapter.AnimeListAdapter;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.main.desc.DescActivity;
+import anime.project.dilidili.main.search.SearchActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class AnimeListActivity extends BaseActivity<AnimeListContract.View, AnimeListPresenter> implements AnimeListContract.View {
     @BindView(R.id.rv_list)
@@ -33,6 +37,8 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     private List<AnimeListBean> list = new ArrayList<>();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.query)
+    FloatingActionButton query;
     private String title, url;
 
     @Override
@@ -56,6 +62,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         Slidr.attach(this,Utils.defaultInit());
         getBundle();
         initToolbar();
+        initFab();
         initSwipe();
         initAdapter();
     }
@@ -82,6 +89,11 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
                 finish();
             }
         });
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void initFab(){
+        query.setVisibility(View.VISIBLE);
     }
 
     public void initSwipe(){
@@ -117,6 +129,11 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
             }
         });
         mRecyclerView.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.query)
+    public void query(){
+        startActivity(new Intent(this, SearchActivity.class));
     }
 
     @Override

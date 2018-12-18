@@ -145,6 +145,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                viewpager.removeAllViews();
                 mPresenter.loadData(true);
             }
         });

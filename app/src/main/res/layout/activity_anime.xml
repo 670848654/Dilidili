@@ -14,5 +14,14 @@
 
     <include layout="@layout/content_home" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/query"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_behavior="anime.project.dilidili.custom.ScrollAwareBehavior"
+        app:srcCompat="@drawable/baseline_search_white_48dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>
