@@ -84,7 +84,7 @@ public class OpenSourceActivity extends BaseActivity {
         list.add(new SourceBean("EasyPermissions","googlesamples","Simplify Android M system permissions","https://github.com/googlesamples/easypermissions"));
         list.add(new SourceBean("MaterialEditText","rengwuxian","EditText in Material Design","https://github.com/rengwuxian/MaterialEditText"));
         list.add(new SourceBean("JiaoZiVideoPlayer","lipangit","Android VideoPlayer MediaPlayer VideoView MediaView Float View And Fullscreen","https://github.com/lipangit/JiaoZiVideoPlayer"));
-        list.add(new SourceBean("JiaoZiVideoPlayer","lipangit","Android VideoPlayer MediaPlayer VideoView MediaView Float View And Fullscreen","https://github.com/lipangit/JiaoZiVideoPlayer"));
+        list.add(new SourceBean("ExoPlayer","google","An extensible media player for Android","https://github.com/google/ExoPlayer"));
         list.add(new SourceBean("Blurry","wasabeef","Blurry is an easy blur library for Android","https://github.com/wasabeef/Blurry"));
         list.add(new SourceBean("Slidr","r0adkll","Easily add slide to dismiss functionality to an Activity","https://github.com/r0adkll/Slidr"));
         list.add(new SourceBean("butterknife","JakeWharton","Bind Android views and callbacks to fields and methods.","https://github.com/JakeWharton/butterknife"));
