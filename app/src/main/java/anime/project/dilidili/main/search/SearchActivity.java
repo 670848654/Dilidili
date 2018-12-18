@@ -92,15 +92,8 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     }
 
     public void initSwipe(){
+        mSwipe.setEnabled(false);
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
-        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                page = 0;
-                mPresenter = createPresenter();
-                mPresenter.loadData(true);
-            }
-        });
     }
 
     public void initAdapter(){
@@ -130,11 +123,9 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                 mRecyclerView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mSwipe.setEnabled(false);
                         if (page >= pageCount) {
                             //数据全部加载完毕
                             adapter.loadMoreEnd();
-                            mSwipe.setEnabled(true);
                         } else {
                             if (isErr) {
                                 //成功获取更多数据
@@ -145,7 +136,6 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                                 //获取更多数据失败
                                 isErr = true;
                                 adapter.loadMoreFail();
-                                mSwipe.setEnabled(true);
                             }
                         }
                     }
