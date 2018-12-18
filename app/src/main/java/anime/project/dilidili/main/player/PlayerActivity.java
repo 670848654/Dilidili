@@ -297,7 +297,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (drawerLayout.isDrawerOpen(GravityCompat.END))
             drawerLayout.closeDrawer(GravityCompat.END);
         else {

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import anime.project.dilidili.ijkplayer.JZMediaIjkplayer;
+import anime.project.dilidili.util.JZExoPlayer;
 import anime.project.dilidili.util.Utils;
 import cn.jzvd.JzvdStd;
 
@@ -28,7 +28,7 @@ public class DiliDili extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        JzvdStd.setMediaInterface(new JZMediaIjkplayer());
+        JzvdStd.setMediaInterface(new JZExoPlayer());
         oList = new ArrayList<>();
         appContext = this;
         Utils.init(this);
