@@ -112,6 +112,11 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
             public void onClick(DialogInterface dialogInterface, int i) {
                 DatabaseUtil.deleteApi(apiList.get(position).getId());
                 adapter.remove(position);
+                if (apiList.size() == 0){
+                    adapter.notifyDataSetChanged();
+                    errorTitle.setText("未自定义");
+                    adapter.setEmptyView(errorView);
+                }
             }
         });
         builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
@@ -136,8 +141,8 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
         final EditText title = view.findViewById(R.id.title);
         final EditText url = view.findViewById(R.id.url);
         if (isEdit) {
-            title.setText(apiList.get(position).getTitle());
-            url.setText(apiList.get(position).getUrl());
+            title.setText(adapter.getData().get(position).getTitle());
+            url.setText(adapter.getData().get(position).getUrl());
         }
         builder.setPositiveButton(Utils.getString(getApplicationContext(), R.string.page_positive), null);
         builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
@@ -167,9 +172,9 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
                     return;
                 else {
                     if (isEdit) {
-                        DatabaseUtil.updateApi(apiList.get(position).getId(), name, api);
-                        apiList.get(position).setTitle(name);
-                        apiList.get(position).setUrl(api);
+                        DatabaseUtil.updateApi(adapter.getData().get(position).getId(), name, api);
+                        adapter.getData().get(position).setTitle(name);
+                        adapter.getData().get(position).setUrl(api);
                         adapter.notifyDataSetChanged();
                     } else {
                         ApiBean bean = new ApiBean(UUID.randomUUID().toString(), name, api);
