@@ -182,7 +182,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             startActivityForResult(new Intent(DescActivity.this, DescActivity.class).putExtras(bundle), 3000);
                             break;
                         case "down":
-                            Utils.viewInBrowser(DescActivity.this, bean.getUrl());
+                            if (!bean.getUrl().isEmpty())
+                                Utils.viewInBrowser(DescActivity.this, bean.getUrl());
+                            else
+                                Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.no_resources));
                             break;
                     }
 
@@ -375,11 +378,14 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             case AnimeType.TYPE_LEVEL_0:
                                 index = manager.getSpanCount();
                                 break;
-                            case AnimeType.TYPE_LEVEL_2:
-                                index = 2;
-                                break;
                             case AnimeType.TYPE_LEVEL_1:
                                 index = 1;
+                                break;
+                            case AnimeType.TYPE_LEVEL_2:
+                                index = manager.getSpanCount();
+                                break;
+                            case AnimeType.TYPE_LEVEL_3:
+                                index = 2;
                                 break;
                         }
                         return index;

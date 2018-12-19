@@ -22,9 +22,10 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
     public DescAdapter(List data, Context context) {
         super(data);
         this.context = context;
-        addItemType(AnimeType.TYPE_LEVEL_0,R.layout.item_head);
-        addItemType(AnimeType.TYPE_LEVEL_1,R.layout.item_btn);
-        addItemType(AnimeType.TYPE_LEVEL_2,R.layout.item_recommend);
+        addItemType(AnimeType.TYPE_LEVEL_0, R.layout.item_head);
+        addItemType(AnimeType.TYPE_LEVEL_1, R.layout.item_btn);
+        addItemType(AnimeType.TYPE_LEVEL_2, R.layout.item_down);
+        addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_recommend);
     }
 
     @Override
@@ -49,27 +50,31 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_1:
                 final AnimeDescBean animeDescBean = (AnimeDescBean) item;
                 String title = animeDescBean.getTitle();
-                if(animeDescBean.getType().equals("play")) {
-                    if (!title.equals("没有资源")){
+                if (animeDescBean.getType().equals("play")) {
+                    if (!title.equals(Utils.getString(context, R.string.no_resources))) {
                         title = title.substring(1, title.length());
-                        title = title.substring(0,title.length() - 1);
+                        title = title.substring(0, title.length() - 1);
                     }
                     helper.setText(R.id.tag_group, title);
                 } else
                     helper.setText(R.id.tag_group, title);
                 if (animeDescBean.isSelect())
-                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_selected,null));
+                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_selected, null));
                 else
-                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_default,null));
-                if (animeDescBean.getTitle().equals("没有资源"))
+                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_default, null));
+                if (animeDescBean.getTitle().equals(Utils.getString(context, R.string.no_resources)))
                     helper.getView(R.id.tag_group).setEnabled(false);
                 else
                     helper.getView(R.id.tag_group).setEnabled(true);
                 break;
             case AnimeType.TYPE_LEVEL_2:
+                final AnimeDescBean animeDescBean2 = (AnimeDescBean) item;
+                helper.setText(R.id.down, animeDescBean2.getTitle());
+                break;
+            case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
-                helper.setText(R.id.title,bean.getTitle());
-                Utils.setImageVertical(context,bean.getImg(),(ImageView) helper.getView(R.id.img));
+                helper.setText(R.id.title, bean.getTitle());
+                Utils.setImageVertical(context, bean.getImg(), (ImageView) helper.getView(R.id.img));
                 break;
         }
     }

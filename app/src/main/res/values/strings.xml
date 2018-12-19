@@ -56,7 +56,7 @@
     <string name="loading">加载中</string>
     <string name="load_error">加载失败</string>
     <!-- btn文本 -->
-    <string name="no_resources">没有资源</string>
+    <string name="no_resources">暂无资源</string>
     <!-- msg文本 -->
     <string name="error_700">网络错误,请重试!</string>
     <string name="error_800">未能获取到播放地址!\n1.解析方法不支持\n2.播放地址不存在\n可以尝试打开原页面去播放.</string>

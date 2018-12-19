@@ -133,11 +133,11 @@ public class DescModel implements DescContract.Model {
                     String str = els.get(i).select("a").text();
                     if (!str.equals("")) {
                         k++;
-                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, str, els.get(i).select("a").attr("href"), type));
+                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, str, els.get(i).select("a").attr("href"), type));
                     }
                 }
                 if (k == 0)
-                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(context, R.string.no_resources), "", type));
+                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, Utils.getString(context, R.string.no_resources), "", type));
                 break;
         }
         list.add(animeHeaderBean);
@@ -158,7 +158,7 @@ public class DescModel implements DescContract.Model {
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, els.get(i).select("p").text(), Api.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_3, els.get(i).select("p").text(), Api.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
         }
         list.add(animeHeaderBean);
     }
