@@ -30,7 +30,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
 
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemEntity item) {
-        helper.addOnLongClickListener(R.id.tag_group);
+        helper.addOnLongClickListener(R.id.down);
         switch (helper.getItemViewType()) {
             case AnimeType.TYPE_LEVEL_0:
                 final AnimeHeaderBean mainHeaderBean = (AnimeHeaderBean) item;
