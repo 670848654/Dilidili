@@ -29,6 +29,7 @@ import anime.project.dilidili.net.OkHttpGet;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -93,6 +94,11 @@ public class AboutActivity extends BaseActivity {
                     startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
             }
         });
+    }
+
+    @OnClick(R.id.dilidili)
+    public void openDilidili(){
+        Utils.viewInBrowser(this, Api.HOME_API);
     }
 
     @Override

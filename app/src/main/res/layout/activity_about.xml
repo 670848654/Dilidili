@@ -33,6 +33,8 @@
                 android:textSize="15sp" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/dilidili"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp">
