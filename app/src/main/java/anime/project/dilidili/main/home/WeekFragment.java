@@ -1,4 +1,4 @@
-package anime.project.dilidili.main.home.week;
+package anime.project.dilidili.main.home;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -46,7 +46,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseFragment extends Fragment implements VideoContract.View {
+public class WeekFragment extends Fragment implements VideoContract.View {
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private FragmentAdapter adapter;
@@ -64,6 +64,11 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
     private View errorView;
     public TextView errorTitle;
     private List<AnimeDescBean> dramaList = new ArrayList<>();
+    private String week;
+
+    public WeekFragment(String week){
+        this.week = week;
+    }
 
     @Nullable
     @Override
@@ -81,7 +86,7 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
         if (application == null) {
             application = (DiliDili) getActivity().getApplication();
         }
-        initAdapter(getList(getWeek()));
+        initAdapter(getList(week));
     }
 
     @Override
@@ -134,7 +139,7 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
                             witchTitle = animeTitle + " - " + bean.getWitchTitle();
                             //创建番剧名
                             DatabaseUtil.addAnime(animeTitle);
-                            presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),BaseFragment.this);
+                            presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),WeekFragment.this);
                             presenter.loadData(true);
                         }
                         break;
@@ -248,8 +253,6 @@ public abstract class BaseFragment extends Fragment implements VideoContract.Vie
         alertDialog = builder.create();
         alertDialog.show();
     }
-
-    public abstract String getWeek();
 
     @Override
     public void getVideoSuccess(String url) {

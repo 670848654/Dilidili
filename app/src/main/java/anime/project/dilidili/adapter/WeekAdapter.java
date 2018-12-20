@@ -5,13 +5,7 @@ import java.util.HashMap;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import anime.project.dilidili.main.home.week.FridayFragment;
-import anime.project.dilidili.main.home.week.MondayFragment;
-import anime.project.dilidili.main.home.week.SaturdayFragment;
-import anime.project.dilidili.main.home.week.SundayFragment;
-import anime.project.dilidili.main.home.week.ThursdayFragment;
-import anime.project.dilidili.main.home.week.TuesdayFragment;
-import anime.project.dilidili.main.home.week.WednesdayFragment;
+import anime.project.dilidili.main.home.WeekFragment;
 
 public class WeekAdapter extends FragmentPagerAdapter {
     private int num;
@@ -38,25 +32,25 @@ public class WeekAdapter extends FragmentPagerAdapter {
         if (fragment == null) {
             switch (pos) {
                 case 0:
-                    fragment = new MondayFragment();
+                    fragment = new WeekFragment("Monday");
                     break;
                 case 1:
-                    fragment = new TuesdayFragment();
+                    fragment = new WeekFragment("Tuesday");
                     break;
                 case 2:
-                    fragment = new WednesdayFragment();
+                    fragment = new WeekFragment("Wednesday");
                     break;
                 case 3:
-                    fragment = new ThursdayFragment();
+                    fragment = new WeekFragment("Thursday");
                     break;
                 case 4:
-                    fragment = new FridayFragment();
+                    fragment = new WeekFragment("Friday");
                     break;
                 case 5:
-                    fragment = new SaturdayFragment();
+                    fragment = new WeekFragment("Saturday");
                     break;
                 case 6:
-                    fragment = new SundayFragment();
+                    fragment = new WeekFragment("Sunday");
                     break;
             }
             mFragmentHashMap.put(pos, fragment);
