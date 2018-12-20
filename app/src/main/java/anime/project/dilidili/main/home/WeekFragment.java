@@ -1,5 +1,6 @@
 package anime.project.dilidili.main.home;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +47,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@SuppressLint("ValidFragment")
 public class WeekFragment extends Fragment implements VideoContract.View {
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
