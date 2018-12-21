@@ -25,7 +25,7 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
-import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
@@ -77,22 +77,15 @@ public class AboutActivity extends BaseActivity {
         toolbar.setTitle("关于");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     private void initViews(){
         version.setText(Utils.getASVersionName());
         cache.setText(Environment.getExternalStorageDirectory() + Utils.getString(this, R.string.cache_text));
-        open_source.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utils.isFastClick())
-                    startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
-            }
+        open_source.setOnClickListener(v -> {
+            if (Utils.isFastClick())
+                startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
         });
     }
 
@@ -121,36 +114,31 @@ public class AboutActivity extends BaseActivity {
     public void checkUpdate() {
         p = Utils.getProDialog(AboutActivity.this, "检测更新中...");
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.postDelayed(() -> new HttpGet(Api.CHECK_UPDATE, 10, 20, new Callback() {
             @Override
-            public void run() {
-                new OkHttpGet(Api.CHECK_UPDATE, 10, 20, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        sendMessage(-1,null);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String json = response.body().string();
-                        try {
-                            JSONObject obj = new JSONObject(json);
-                            String newVersion = obj.getString("tag_name");
-                            if (newVersion.equals(Utils.getASVersionName()))
-                                sendMessage(1,null);
-                            else {
-                                String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
-                                Bundle bundle = new Bundle();
-                                bundle.putString("url",downloadUrl);
-                                sendMessage(2,bundle);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            public void onFailure(Call call, IOException e) {
+                sendMessage(-1,null);
             }
-        }, 1000);
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    JSONObject obj = new JSONObject(json);
+                    String newVersion = obj.getString("tag_name");
+                    if (newVersion.equals(Utils.getASVersionName()))
+                        sendMessage(1,null);
+                    else {
+                        String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("url",downloadUrl);
+                        sendMessage(2,bundle);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }), 1000);
     }
 
     public void sendMessage(int id, Bundle bundle) {

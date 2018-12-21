@@ -13,7 +13,7 @@ import java.util.List;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.bean.HomeHeaderBean;
-import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.net.HttpGet;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -23,7 +23,7 @@ public class TagModel implements TagContract.Model{
 
     @Override
     public void getData(TagContract.LoadDataCallback callback) {
-        new OkHttpGet(Api.TAG_API, 10, 20, new Callback() {
+        new HttpGet(Api.TAG_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

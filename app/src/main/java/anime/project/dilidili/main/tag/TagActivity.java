@@ -1,9 +1,7 @@
 package anime.project.dilidili.main.tag;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -70,23 +68,15 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         toolbar.setTitle(Utils.getString(TagActivity.this, R.string.tag_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     public void initSwipe(){
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
-        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onRefresh() {
-                tagList.clear();
-                adapter.setNewData(tagList);
-                mPresenter.loadData(true);
-            }
+        mSwipe.setOnRefreshListener(() -> {
+            tagList.clear();
+            adapter.setNewData(tagList);
+            mPresenter.loadData(true);
         });
     }
 
@@ -94,25 +84,22 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         adapter = new TagAdapter(tagList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (Utils.isFastClick()) {
-                    final HomeBean bean = (HomeBean) tagList.get(position);
-                    String title = "";
-                    String reg = "([0-9])";
-                    Pattern p = Pattern.compile(reg);
-                    Matcher m = p.matcher(bean.getDesc());
-                    while (m.find()) {
-                        title += m.group();
-                    }
-                    if (!title.isEmpty())
-                        title += "年";
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", title + bean.getTitle());
-                    bundle.putString("url", bean.getUrl());
-                    startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) {
+                final HomeBean bean = (HomeBean) tagList.get(position);
+                String title = "";
+                String reg = "([0-9])";
+                Pattern p = Pattern.compile(reg);
+                Matcher m = p.matcher(bean.getDesc());
+                while (m.find()) {
+                    title += m.group();
                 }
+                if (!title.isEmpty())
+                    title += "年";
+                Bundle bundle = new Bundle();
+                bundle.putString("title", title + bean.getTitle());
+                bundle.putString("url", bean.getUrl());
+                startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
             }
         });
         mRecyclerView.setAdapter(adapter);
@@ -134,25 +121,19 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
 
     @Override
     public void showSuccessView(List<MultiItemEntity> list) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                tagList = list;
-                adapter.setNewData(tagList);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            tagList = list;
+            adapter.setNewData(tagList);
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                errorTitle.setText(msg);
-                adapter.setEmptyView(errorView);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            errorTitle.setText(msg);
+            adapter.setEmptyView(errorView);
         });
     }
 

@@ -1,8 +1,6 @@
 package anime.project.dilidili.adapter;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -35,15 +33,12 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_0:
                 final AnimeHeaderBean mainHeaderBean = (AnimeHeaderBean) item;
                 helper.setText(R.id.header, mainHeaderBean.getTitle()).setImageResource(R.id.arrow, mainHeaderBean.isExpanded() ? R.drawable.ic_keyboard_arrow_down_white_48dp : R.drawable.baseline_keyboard_arrow_right_white_48dp);
-                helper.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos = helper.getAdapterPosition();
-                        if (mainHeaderBean.isExpanded()) {
-                            collapse(pos);
-                        } else {
-                            expand(pos);
-                        }
+                helper.itemView.setOnClickListener(v -> {
+                    int pos = helper.getAdapterPosition();
+                    if (mainHeaderBean.isExpanded()) {
+                        collapse(pos);
+                    } else {
+                        expand(pos);
                     }
                 });
                 break;
@@ -74,7 +69,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
-                Utils.setImageVertical(context, bean.getImg(), (ImageView) helper.getView(R.id.img));
+                Utils.setImageVertical(context, bean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

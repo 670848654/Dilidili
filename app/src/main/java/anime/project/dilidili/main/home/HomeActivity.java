@@ -26,9 +26,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.WeekAdapter;
@@ -121,20 +119,12 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         navigationView.setItemIconTintList(csl);
         View view = navigationView.getHeaderView(0);
         imageView = view.findViewById(R.id.imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.showSnackbar(imageView, Utils.getString(HomeActivity.this, R.string.huaji));
-                final ObjectAnimator animator = Utils.nope(imageView);
-                animator.setRepeatCount(ValueAnimator.INFINITE);
-                animator.start();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        animator.cancel();
-                    }
-                }, 500);
-            }
+        imageView.setOnClickListener(view1 -> {
+            Utils.showSnackbar(imageView, Utils.getString(HomeActivity.this, R.string.huaji));
+            final ObjectAnimator animator = Utils.nope(imageView);
+            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.start();
+            new Handler().postDelayed(() -> animator.cancel(), 500);
         });
         navigationView.getBackground().mutate().setAlpha(150);//0~255透明度值
         navigationView.setNavigationItemSelectedListener(this);
@@ -142,12 +132,9 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     public void initSwipe() {
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
-        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewpager.removeAllViews();
-                mPresenter.loadData(true);
-            }
+        mSwipe.setOnRefreshListener(() -> {
+            viewpager.removeAllViews();
+            mPresenter.loadData(true);
         });
     }
 
@@ -196,7 +183,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         final MenuItem item = menu.findItem(R.id.search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(item);
+        mSearchView = (SearchView) item.getActionView();
         mSearchView.setQueryHint(Utils.getString(HomeActivity.this, R.string.search_hint));
         mSearchView.setMaxWidth(1000);
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
@@ -225,12 +212,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Snackbar.make(toolbar, Utils.getString(HomeActivity.this, R.string.exit_app), Snackbar.LENGTH_LONG).setAction(Utils.getString(HomeActivity.this, R.string.exit), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            }).show();
+            Snackbar.make(toolbar, Utils.getString(HomeActivity.this, R.string.exit_app), Snackbar.LENGTH_LONG).setAction(Utils.getString(HomeActivity.this, R.string.exit), v -> finish()).show();
         }
     }
 
@@ -283,15 +265,12 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public void showLoadErrorView(String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                navigationView.getMenu().getItem(0).setTitle(Utils.getString(HomeActivity.this, R.string.menu_load_error));
-                Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_LONG).show();
-                application.error = msg;
-                setWeekAdapter();
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            navigationView.getMenu().getItem(0).setTitle(Utils.getString(HomeActivity.this, R.string.menu_load_error));
+            Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_LONG).show();
+            application.error = msg;
+            setWeekAdapter();
         });
     }
 
@@ -301,16 +280,13 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public void showLoadSuccess(LinkedHashMap map) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                application.week = map.get("week") == null ? new JSONObject() : (JSONObject) map.get("week");
-                title = map.get("title").toString() == null ? "加载失败" : map.get("title").toString();
-                animeUrl = map.get("url").toString() == null ? "" : map.get("url").toString();
-                navigationView.getMenu().getItem(0).setTitle(title);
-                setWeekAdapter();
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            application.week = map.get("week") == null ? new JSONObject() : (JSONObject) map.get("week");
+            title = map.get("title").toString() == null ? "加载失败" : map.get("title").toString();
+            animeUrl = map.get("url").toString() == null ? "" : map.get("url").toString();
+            navigationView.getMenu().getItem(0).setTitle(title);
+            setWeekAdapter();
         });
     }
 

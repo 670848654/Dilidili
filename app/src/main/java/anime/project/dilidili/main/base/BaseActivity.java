@@ -76,27 +76,21 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         sHandler = new Handler();
         sHandler.post(mHideRunnable); // hide the navigation bar
         final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
-            }
+        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
         });
     }
 
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            int flags;
-            // This work only for android 4.4+
-            // hide navigation bar permanently in android activity
-            // touch the screen, the navigation bar will not show
-            flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            // must be executed in main thread :)
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-        }
+    Runnable mHideRunnable = () -> {
+        int flags;
+        // This work only for android 4.4+
+        // hide navigation bar permanently in android activity
+        // touch the screen, the navigation bar will not show
+        flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        // must be executed in main thread :)
+        getWindow().getDecorView().setSystemUiVisibility(flags);
     };
 
     @Override

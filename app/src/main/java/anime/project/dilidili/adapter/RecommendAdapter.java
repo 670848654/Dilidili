@@ -1,7 +1,6 @@
 package anime.project.dilidili.adapter;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -38,22 +37,19 @@ public class RecommendAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity,
             case RecommendType.TYPE_LEVEL_0:
                 final RecommendHeaderBean recommendHeaderBean = (RecommendHeaderBean) item;
                 helper.setText(R.id.header, recommendHeaderBean.getTitle()).setImageResource(R.id.arrow, recommendHeaderBean.isExpanded() ? R.drawable.ic_keyboard_arrow_down_white_48dp : R.drawable.baseline_keyboard_arrow_right_white_48dp);
-                helper.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos = helper.getAdapterPosition();
-                        if (recommendHeaderBean.isExpanded()) {
-                            collapse(pos);
-                        } else {
-                            expand(pos);
-                        }
+                helper.itemView.setOnClickListener(v -> {
+                    int pos = helper.getAdapterPosition();
+                    if (recommendHeaderBean.isExpanded()) {
+                        collapse(pos);
+                    } else {
+                        expand(pos);
                     }
                 });
                 break;
             case RecommendType.TYPE_LEVEL_1:
                 final RecommendBean recommendBean = (RecommendBean) item;
                 helper.setText(R.id.title,recommendBean.getTitle());
-                Utils.setImageVertical(context,recommendBean.getImg(),(ImageView) helper.getView(R.id.img));
+                Utils.setImageVertical(context,recommendBean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

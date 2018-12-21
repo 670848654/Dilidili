@@ -29,12 +29,9 @@ public class StartActivity extends BaseActivity {
         StatusBarUtil.setColor(StartActivity.this, getResources().getColor(R.color.night), 0);
         SharedPreferencesUtils.setParam(this,"initX5","init");
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(StartActivity.this, HomeActivity.class));
-                StartActivity.this.finish();
-            }
+        handler.postDelayed(() -> {
+            startActivity(new Intent(StartActivity.this, HomeActivity.class));
+            StartActivity.this.finish();
         }, 1500);
     }
 

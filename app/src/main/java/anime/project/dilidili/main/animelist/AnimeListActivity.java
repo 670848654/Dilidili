@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.adapter.AnimeListAdapter;
-import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.main.search.SearchActivity;
 import anime.project.dilidili.util.StatusBarUtil;
@@ -84,11 +84,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     @SuppressLint("RestrictedApi")
@@ -98,13 +94,10 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     public void initSwipe(){
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
-        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                list.clear();
-                adapter.setNewData(list);
-                mPresenter.loadData(true);
-            }
+        mSwipe.setOnRefreshListener(() -> {
+            list.clear();
+            adapter.setNewData(list);
+            mPresenter.loadData(true);
         });
     }
 
@@ -113,19 +106,16 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         adapter = new AnimeListAdapter(AnimeListActivity.this,list);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (Utils.isFastClick()) {
-                    final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", bean.getTitle());
-                    if (bean.getUrl().indexOf("http") == -1)
-                        bundle.putString("url", Api.URL + bean.getUrl());
-                    else
-                        bundle.putString("url", bean.getUrl());
-                    startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
-                }
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) {
+                final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", bean.getTitle());
+                if (bean.getUrl().indexOf("http") == -1)
+                    bundle.putString("url", Api.URL + bean.getUrl());
+                else
+                    bundle.putString("url", bean.getUrl());
+                startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
             }
         });
         mRecyclerView.setAdapter(adapter);
@@ -143,25 +133,19 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     @Override
     public void showSuccessView(List<AnimeListBean> animeList) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                list = animeList;
-                adapter.setNewData(list);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            list = animeList;
+            adapter.setNewData(list);
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                errorTitle.setText(msg);
-                adapter.setEmptyView(errorView);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            errorTitle.setText(msg);
+            adapter.setEmptyView(errorView);
         });
     }
 

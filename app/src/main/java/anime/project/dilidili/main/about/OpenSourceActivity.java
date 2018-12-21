@@ -1,7 +1,5 @@
 package anime.project.dilidili.main.about;
 
-import android.view.View;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.r0adkll.slidr.Slidr;
 
@@ -14,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SourceAdapter;
-import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.bean.SourceBean;
+import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -65,11 +63,7 @@ public class OpenSourceActivity extends BaseActivity {
         toolbar.setTitle("开源相关");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                supportFinishAfterTransition();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> supportFinishAfterTransition());
     }
 
     public void initSwipe(){
@@ -96,12 +90,9 @@ public class OpenSourceActivity extends BaseActivity {
         adapter = new SourceAdapter(list);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (Utils.isFastClick())
-                    Utils.viewInBrowser(OpenSourceActivity.this,list.get(position).getUrl());
-            }
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick())
+                Utils.viewInBrowser(OpenSourceActivity.this,list.get(position).getUrl());
         });
         recyclerView.setAdapter(adapter);
     }

@@ -2,7 +2,6 @@ package anime.project.dilidili.main.home;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,16 +30,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
+import anime.project.dilidili.adapter.FragmentAdapter;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
-import anime.project.dilidili.database.DatabaseUtil;
-import anime.project.dilidili.adapter.FragmentAdapter;
 import anime.project.dilidili.bean.HomeBean;
+import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.desc.DescActivity;
+import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.main.video.VideoUtils;
-import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.Utils;
@@ -120,32 +119,29 @@ public class WeekFragment extends Fragment implements VideoContract.View {
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.isFirstOnly((Boolean) SharedPreferencesUtils.getParam(getActivity(), "anim_is_first", true));//init firstOnly state
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                final HomeBean bean = (HomeBean) list.get(position);
-                switch (view.getId()) {
-                    case R.id.tag_group:
-                        if (Utils.isFastClick()) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("name", bean.getTitle());
-                            bundle.putString("url", bean.getUrl());
-                            startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
-                        }
-                        break;
-                    case R.id.witch:
-                        if (Utils.isFastClick()) {
-                            p = Utils.getProDialog(getActivity(), "解析中,请稍后...");
-                            diliUrl = bean.getWitchUrl();
-                            animeTitle = bean.getTitle();
-                            witchTitle = animeTitle + " - " + bean.getWitchTitle();
-                            //创建番剧名
-                            DatabaseUtil.addAnime(animeTitle);
-                            presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),WeekFragment.this);
-                            presenter.loadData(true);
-                        }
-                        break;
-                }
+        adapter.setOnItemChildClickListener((adapter, view, position) -> {
+            final HomeBean bean = (HomeBean) list.get(position);
+            switch (view.getId()) {
+                case R.id.tag_group:
+                    if (Utils.isFastClick()) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("name", bean.getTitle());
+                        bundle.putString("url", bean.getUrl());
+                        startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
+                    }
+                    break;
+                case R.id.witch:
+                    if (Utils.isFastClick()) {
+                        p = Utils.getProDialog(getActivity(), "解析中,请稍后...");
+                        diliUrl = bean.getWitchUrl();
+                        animeTitle = bean.getTitle();
+                        witchTitle = animeTitle + " - " + bean.getWitchTitle();
+                        //创建番剧名
+                        DatabaseUtil.addAnime(animeTitle);
+                        presenter =  new VideoPresenter(bean.getTitle(), bean.getWitchUrl(),WeekFragment.this);
+                        presenter.loadData(true);
+                    }
+                    break;
             }
         });
         recyclerView.setAdapter(adapter);
@@ -157,58 +153,55 @@ public class WeekFragment extends Fragment implements VideoContract.View {
     }
 
     public void goToPlay(String videoUrl){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
-                //如果播放地址只有1个
-                if (arr.length == 1){
-                    String url = "http"+arr[0];
-                    if (url.contains(".m3u8") || url.contains(".mp4")){
-                        switch ((Integer) SharedPreferencesUtils.getParam(getActivity(),"player",0)){
-                            case 0:
-                                //调用播放器
-                                Bundle bundle = new Bundle();
-                                bundle.putString("animeTitle", animeTitle);
-                                bundle.putString("title", witchTitle);
-                                bundle.putString("url", url);
-                                bundle.putSerializable("list", (Serializable) dramaList);
-                                startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
-                                break;
-                            case 1:
-                                Utils.selectVideoPlayer(getActivity(),url);
-                                break;
-                        }
-                    }else {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("title", animeTitle);
-                        bundle.putString("url", url);
-                        bundle.putString("dili", diliUrl);
-                        bundle.putSerializable("list", (Serializable) dramaList);
-                        startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
+        new Handler().postDelayed(() -> {
+            String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
+            //如果播放地址只有1个
+            if (arr.length == 1){
+                String url = "http"+arr[0];
+                if (url.contains(".m3u8") || url.contains(".mp4")){
+                    switch ((Integer) SharedPreferencesUtils.getParam(getActivity(),"player",0)){
+                        case 0:
+                            //调用播放器
+                            Bundle bundle = new Bundle();
+                            bundle.putString("animeTitle", animeTitle);
+                            bundle.putString("title", witchTitle);
+                            bundle.putString("url", url);
+                            bundle.putSerializable("list", (Serializable) dramaList);
+                            startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
+                            break;
+                        case 1:
+                            Utils.selectVideoPlayer(getActivity(),url);
+                            break;
                     }
                 }else {
-                    videoUrlArr = new String[arr.length];
-                    videoTitleArr = new String[arr.length];
-                    for (int i=0;i<arr.length;i++) {
-                        String str = "http" + arr[i];
-                        Log.e("video",str);
-                        videoUrlArr[i] = str;
-                        java.net.URL  urlHost;
-                        try {
-                            urlHost = new java.net.URL(str);
-                            if (str.contains(".mp4"))
-                                videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                            else if (str.contains(".m3u8"))
-                                videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                            else
-                                videoTitleArr[i] = urlHost.getHost() + " <HTML>";
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    selectVideoDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title", animeTitle);
+                    bundle.putString("url", url);
+                    bundle.putString("dili", diliUrl);
+                    bundle.putSerializable("list", (Serializable) dramaList);
+                    startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
                 }
+            }else {
+                videoUrlArr = new String[arr.length];
+                videoTitleArr = new String[arr.length];
+                for (int i=0;i<arr.length;i++) {
+                    String str = "http" + arr[i];
+                    Log.e("video",str);
+                    videoUrlArr[i] = str;
+                    java.net.URL  urlHost;
+                    try {
+                        urlHost = new java.net.URL(str);
+                        if (str.contains(".mp4"))
+                            videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
+                        else if (str.contains(".m3u8"))
+                            videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
+                        else
+                            videoTitleArr[i] = urlHost.getHost() + " <HTML>";
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                selectVideoDialog();
             }
         }, 200);
 
@@ -218,75 +211,58 @@ public class WeekFragment extends Fragment implements VideoContract.View {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getActivity());
         builder.setTitle("选择视频源");
         builder.setCancelable(false);
-        builder.setItems(videoTitleArr, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int index) {
-                if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")){
-                    switch ((Integer) SharedPreferencesUtils.getParam(getActivity(),"player",0)){
-                        case 0:
-                            //调用播放器
-                            Bundle bundle = new Bundle();
-                            bundle.putString("animeTitle", animeTitle);
-                            bundle.putString("title", witchTitle);
-                            bundle.putString("url", videoUrlArr[index]);
-                            bundle.putSerializable("list", (Serializable) dramaList);
-                            startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
-                            break;
-                        case 1:
-                            Utils.selectVideoPlayer(getActivity(),videoUrlArr[index]);
-                            break;
-                    }
-                }else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", animeTitle);
-                    bundle.putString("url", videoUrlArr[index]);
-                    bundle.putString("dili", diliUrl);
-                    bundle.putSerializable("list", (Serializable) dramaList);
-                    startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
+        builder.setItems(videoTitleArr, (dialog, index) -> {
+            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")){
+                switch ((Integer) SharedPreferencesUtils.getParam(getActivity(),"player",0)){
+                    case 0:
+                        //调用播放器
+                        Bundle bundle = new Bundle();
+                        bundle.putString("animeTitle", animeTitle);
+                        bundle.putString("title", witchTitle);
+                        bundle.putString("url", videoUrlArr[index]);
+                        bundle.putSerializable("list", (Serializable) dramaList);
+                        startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
+                        break;
+                    case 1:
+                        Utils.selectVideoPlayer(getActivity(),videoUrlArr[index]);
+                        break;
                 }
+            }else {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", animeTitle);
+                bundle.putString("url", videoUrlArr[index]);
+                bundle.putString("dili", diliUrl);
+                bundle.putSerializable("list", (Serializable) dramaList);
+                startActivity(new Intent(getActivity(), WebActivity.class).putExtras(bundle));
             }
         });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         alertDialog = builder.create();
         alertDialog.show();
     }
 
     @Override
     public void getVideoSuccess(String url) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.cancelProDoalog(p);
-                goToPlay(url);
-            }
+        getActivity().runOnUiThread(() -> {
+            Utils.cancelProDoalog(p);
+            goToPlay(url);
         });
     }
 
     @Override
     public void getVideoEmpty() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.cancelProDoalog(p);
-                VideoUtils.showErrorInfo(getActivity(), diliUrl);
-            }
+        getActivity().runOnUiThread(() -> {
+            Utils.cancelProDoalog(p);
+            VideoUtils.showErrorInfo(getActivity(), diliUrl);
         });
     }
 
     @Override
     public void getVideoError() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.cancelProDoalog(p);
-                //网络出错
-                Toast.makeText(getActivity(), Utils.getString(getActivity(), R.string.error_700), Toast.LENGTH_LONG).show();
-            }
+        getActivity().runOnUiThread(() -> {
+            Utils.cancelProDoalog(p);
+            //网络出错
+            Toast.makeText(getActivity(), Utils.getString(getActivity(), R.string.error_700), Toast.LENGTH_LONG).show();
         });
     }
 

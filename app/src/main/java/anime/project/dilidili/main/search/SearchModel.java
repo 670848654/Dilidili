@@ -10,7 +10,7 @@ import java.util.List;
 
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.SearchBean;
-import anime.project.dilidili.net.OkHttpPost;
+import anime.project.dilidili.net.HttpPost;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -24,7 +24,7 @@ public class SearchModel implements SearchContract.Model {
                 .add("keywords", title)
                 .add("pagesize", "10")
                 .add("page", page + "").build();
-        new OkHttpPost(Api.SEARCH_API, body, 10, 20, new Callback() {
+        new HttpPost(Api.SEARCH_API, body, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(isMain, e.getMessage());

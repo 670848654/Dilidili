@@ -2,7 +2,6 @@ package anime.project.dilidili.main.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,7 +46,6 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(SettingActivity.this, getResources().getColor(R.color.night), 0);
-        // 设置右滑动返回
         Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         getUserCustomSet();
@@ -63,11 +61,7 @@ public class SettingActivity extends BaseActivity {
         toolbar.setTitle(Utils.getString(SettingActivity.this,R.string.setting_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     public void getUserCustomSet() {

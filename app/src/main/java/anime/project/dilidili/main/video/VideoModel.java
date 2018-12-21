@@ -13,12 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import anime.project.dilidili.R;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
-import anime.project.dilidili.net.OkHttpGet;
-import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.net.HttpGet;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -28,7 +26,7 @@ public class VideoModel implements VideoContract.Model {
     @Override
     public void getData(String title,String HTML_url, VideoContract.LoadDataCallback callback) {
 
-        new OkHttpGet(HTML_url, 10, 20, new Callback() {
+        new HttpGet(HTML_url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error();

@@ -19,7 +19,7 @@ import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
-import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,7 +32,7 @@ public class DescModel implements DescContract.Model {
 
     @Override
     public void getData(Context context, String url, DescContract.LoadDataCallback callback) {
-        new OkHttpGet(url, 10, 20, new Callback() {
+        new HttpGet(url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

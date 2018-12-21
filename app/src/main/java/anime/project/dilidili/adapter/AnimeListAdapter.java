@@ -1,7 +1,6 @@
 package anime.project.dilidili.adapter;
 
 import android.content.Context;
-import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -21,7 +20,7 @@ public class AnimeListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setImageVertical(context,item.getImg(),(ImageView) helper.getView(R.id.img));
+        Utils.setImageVertical(context,item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.region, item.getRegion());
         helper.setText(R.id.year, item.getYear());

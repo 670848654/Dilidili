@@ -3,9 +3,6 @@ package anime.project.dilidili.database;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.util.Log;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

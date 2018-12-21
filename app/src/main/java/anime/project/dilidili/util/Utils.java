@@ -6,7 +6,6 @@ import android.animation.PropertyValuesHolder;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -119,9 +118,6 @@ public class Utils {
         // 注意此处的判断intent.resolveActivity()可以返回显示该Intent的Activity对应的组件名
         // 官方解释 : Name of the component implementing an activity that can display the intent
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            final ComponentName componentName = intent.resolveActivity(context.getPackageManager());
-            // 打印Log   ComponentName到底是什么
-            Log.e("componentName = ", componentName.getClassName());
             context.startActivity(Intent.createChooser(intent, "请选择视频播放器"));
         } else {
             Toast.makeText(context.getApplicationContext(), "没有找到匹配的程序", Toast.LENGTH_SHORT).show();
@@ -137,12 +133,7 @@ public class Utils {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
-        // 注意此处的判断intent.resolveActivity()可以返回显示该Intent的Activity对应的组件名
-        // 官方解释 : Name of the component implementing an activity that can display the intent
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            final ComponentName componentName = intent.resolveActivity(context.getPackageManager());
-            // 打印Log   ComponentName到底是什么
-            Log.e("componentName = ", componentName.getClassName());
             context.startActivity(Intent.createChooser(intent, "请通过浏览器打开"));
         } else {
             Toast.makeText(context.getApplicationContext(), "没有匹配的程序", Toast.LENGTH_SHORT).show();
@@ -190,12 +181,9 @@ public class Utils {
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferencesUtils.setParam(Utils.getContext(), "show_x5_info", false);
-                alertDialog.dismiss();
-            }
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            SharedPreferencesUtils.setParam(Utils.getContext(), "show_x5_info", false);
+            alertDialog.dismiss();
         });
     }
 

@@ -2,7 +2,7 @@ package anime.project.dilidili.main.video;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,18 +42,10 @@ public class VideoUtils {
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                context.startActivity(new Intent(context, DefaultWebActivity.class).putExtra("url", HTML_url));
-            }
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            alertDialog.dismiss();
+            context.startActivity(new Intent(context, DefaultWebActivity.class).putExtra("url", HTML_url));
         });
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> alertDialog.dismiss());
     }
 }

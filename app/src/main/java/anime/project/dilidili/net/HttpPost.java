@@ -8,8 +8,8 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class OkHttpPost {
-    public OkHttpPost(String url, FormBody body, int connectTimeout, int readTimeout, Callback callback) {
+public class HttpPost {
+    public HttpPost(String url, FormBody body, int connectTimeout, int readTimeout, Callback callback) {
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS).readTimeout(readTimeout, TimeUnit.SECONDS).build();
         Request request = new Request.Builder()
                 .url(url)

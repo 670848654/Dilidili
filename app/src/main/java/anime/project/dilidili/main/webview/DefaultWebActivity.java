@@ -64,7 +64,7 @@ public class DefaultWebActivity extends BaseActivity {
     protected void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES ;
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
         hideNavBar();
@@ -75,7 +75,7 @@ public class DefaultWebActivity extends BaseActivity {
 
     @Override
     protected void initBeforeView() {
-        StatusBarUtil.setTranslucent(this,0);
+        StatusBarUtil.setTranslucent(this, 0);
     }
 
     public void getBundle() {
@@ -89,14 +89,10 @@ public class DefaultWebActivity extends BaseActivity {
         toolbar.setTitle("加载中");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
-    public void initWebView(){
+    public void initWebView() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mX5WebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
@@ -129,12 +125,13 @@ public class DefaultWebActivity extends BaseActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (newProgress == 100) {
-                    pg.setVisibility(View.GONE);//加载完网页进度条消失
+                    pg.setVisibility(View.GONE);
                 } else {
-                    pg.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
-                    pg.setProgress(newProgress);//设置进度值
+                    pg.setVisibility(View.VISIBLE);
+                    pg.setProgress(newProgress);
                 }
             }
+
             //*** 视频播放相关的方法 **//*
             @Override
             public View getVideoLoadingProgressView() {
@@ -230,12 +227,9 @@ public class DefaultWebActivity extends BaseActivity {
      */
     private void initHardwareAccelerate() {
         try {
-            if (Integer.parseInt(Build.VERSION.SDK) >= 11) {
-                getWindow()
-                        .setFlags(
-                                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-            }
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         } catch (Exception e) {
         }
     }

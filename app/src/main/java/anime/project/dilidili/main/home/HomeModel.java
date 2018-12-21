@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import anime.project.dilidili.api.Api;
-import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.net.HttpGet;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -20,7 +20,7 @@ public class HomeModel implements HomeContract.Model{
 
     @Override
     public void getData(final HomeContract.LoadDataCallback callback) {
-        new OkHttpGet(Api.HOME_API, 10, 20, new Callback() {
+        new HttpGet(Api.HOME_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

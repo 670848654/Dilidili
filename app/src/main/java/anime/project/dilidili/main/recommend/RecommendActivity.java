@@ -2,7 +2,6 @@ package anime.project.dilidili.main.recommend;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -16,11 +15,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.adapter.RecommendAdapter;
-import anime.project.dilidili.main.base.BaseActivity;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.config.RecommendType;
+import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -69,22 +68,15 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
         toolbar.setTitle(Utils.getString(this,R.string.recommend_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     public void initSwipe(){
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
-        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                recommendList.clear();
-                adapter.setNewData(recommendList);
-                mPresenter.loadData(true);
-            }
+        mSwipe.setOnRefreshListener(() -> {
+            recommendList.clear();
+            adapter.setNewData(recommendList);
+            mPresenter.loadData(true);
         });
     }
 
@@ -92,18 +84,15 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
         adapter = new RecommendAdapter(this, recommendList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (Utils.isFastClick()) {
-                    final RecommendBean bean = (RecommendBean) recommendList.get(position);
-                    Bundle bundle = new Bundle();
-                    if (bean.getUrl().indexOf("http") == -1)
-                        bundle.putString("url", Api.URL + bean.getUrl());
-                    else
-                        bundle.putString("url", bean.getUrl());
-                    startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
-                }
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) {
+                final RecommendBean bean = (RecommendBean) recommendList.get(position);
+                Bundle bundle = new Bundle();
+                if (bean.getUrl().indexOf("http") == -1)
+                    bundle.putString("url", Api.URL + bean.getUrl());
+                else
+                    bundle.putString("url", bean.getUrl());
+                startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
             }
         });
         mRecyclerView.setAdapter(adapter);
@@ -125,25 +114,19 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
 
     @Override
     public void showSuccessView(List<MultiItemEntity> list) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                recommendList = list;
-                adapter.setNewData(recommendList);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            recommendList = list;
+            adapter.setNewData(recommendList);
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipe.setRefreshing(false);
-                errorTitle.setText(msg);
-                adapter.setEmptyView(errorView);
-            }
+        runOnUiThread(() -> {
+            mSwipe.setRefreshing(false);
+            errorTitle.setText(msg);
+            adapter.setEmptyView(errorView);
         });
     }
 

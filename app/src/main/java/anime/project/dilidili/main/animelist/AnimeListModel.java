@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import anime.project.dilidili.bean.AnimeListBean;
-import anime.project.dilidili.net.OkHttpGet;
+import anime.project.dilidili.net.HttpGet;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -18,7 +18,7 @@ public class AnimeListModel implements AnimeListContract.Model{
 
     @Override
     public void getData(String url, AnimeListContract.LoadDataCallback callback) {
-        new OkHttpGet(url, 10, 20, new Callback() {
+        new HttpGet(url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());
