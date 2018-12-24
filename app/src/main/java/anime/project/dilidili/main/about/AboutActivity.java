@@ -156,12 +156,7 @@ public class AboutActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case -1:
-                    Snackbar.make(toolbar,"连接服务器超时",Snackbar.LENGTH_LONG).setAction("重试", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            checkUpdate();
-                        }
-                    }).show();
+                    Snackbar.make(toolbar,"连接服务器超时",Snackbar.LENGTH_LONG).setAction("重试", view -> checkUpdate()).show();
                     break;
                 case 1:
                     Toast.makeText(AboutActivity.this, "没有新版本", Toast.LENGTH_LONG).show();
