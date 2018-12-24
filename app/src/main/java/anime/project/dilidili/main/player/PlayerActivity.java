@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +62,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     private String[] videoUrlArr;
     private String[] videoTitleArr;
     @BindView(R.id.nav_view)
-    RelativeLayout relativeLayout;
+    LinearLayout linearLayout;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.anime_title)
@@ -118,10 +118,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         //剧集list
         list = (List<AnimeDescBean>) bundle.getSerializable("list");
         //禁止冒泡
-        relativeLayout.setOnClickListener(view -> {
+        linearLayout.setOnClickListener(view -> {
             return;
         });
-        relativeLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
+        linearLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         player.backButton.setOnClickListener(v -> {
             Jzvd.releaseAllVideos();
@@ -159,6 +159,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     }
 
     public void initAdapter() {
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         dramaAdapter = new DramaAdapter(this, list);
         recyclerView.setAdapter(dramaAdapter);
