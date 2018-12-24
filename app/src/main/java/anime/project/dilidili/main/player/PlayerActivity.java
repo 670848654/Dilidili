@@ -315,12 +315,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             JzvdStd.goOnPlayOnResume();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Jzvd.releaseAllVideos();
-    }
-
     /**
      * Android 8.0 画中画
      */
