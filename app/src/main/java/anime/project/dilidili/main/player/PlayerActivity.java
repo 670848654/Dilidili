@@ -188,7 +188,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
             //如果播放地址只有1个
             if (arr.length == 1) {
-                String url = "http" + arr[0];
+                url = "http" + arr[0];
                 if (url.contains(".m3u8") || url.contains(".mp4")) {
                     switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                         case 0:
@@ -242,7 +242,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         builder.setTitle("选择视频源");
         builder.setCancelable(false);
         builder.setItems(videoTitleArr, (dialog, index) -> {
-            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
+            url = videoUrlArr[index];
+            if (url.contains(".m3u8") || url.contains(".mp4")) {
                 switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                     case 0:
                         //调用播放器
@@ -269,6 +270,18 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @OnClick({R.id.select_player, R.id.open_in_browser})
+    public void onClick(TextView view){
+        switch (view.getId()){
+            case R.id.select_player:
+                Utils.selectVideoPlayer(this, url);
+                break;
+            case R.id.open_in_browser:
+                Utils.viewInBrowser(this, diliUrl);
+                break;
+        }
     }
 
     @Override
