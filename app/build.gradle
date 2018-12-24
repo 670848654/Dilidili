@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.2'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     implementation 'com.r0adkll:slidableactivity:2.0.5'
-    implementation"com.mikepenz:materialdrawer:6.0.3"
+    implementation 'com.mikepenz:materialdrawer:6.0.3'
     implementation 'com.jakewharton:butterknife:9.0.0-rc2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
