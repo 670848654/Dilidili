@@ -83,9 +83,10 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
+                AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
-                bundle.putString("name", favoriteList.get(position).getTitle());
-                bundle.putString("url", favoriteList.get(position).getUrl());
+                bundle.putString("name", bean.getTitle());
+                bundle.putString("url", bean.getUrl());
                 startActivityForResult(new Intent(FavoriteActivity.this, DescActivity.class).putExtras(bundle),3000);
             }
         });

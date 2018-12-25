@@ -86,7 +86,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
-                final HomeBean bean = (HomeBean) tagList.get(position);
+                final HomeBean bean = (HomeBean) adapter.getItem(position);
                 String title = "";
                 String reg = "([0-9])";
                 Pattern p = Pattern.compile(reg);

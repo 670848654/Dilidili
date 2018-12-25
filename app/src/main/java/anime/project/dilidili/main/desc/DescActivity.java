@@ -53,7 +53,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import jp.wasabeef.blurry.Blurry;
 
-public class DescActivity extends BaseActivity<DescContract.View, DescPresenter> implements DescContract.View,VideoContract.View {
+public class DescActivity extends BaseActivity<DescContract.View, DescPresenter> implements DescContract.View, VideoContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -126,7 +126,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         toolbar.setNavigationOnClickListener(view -> finish());
     }
 
-    public void initFab(){
+    public void initFab() {
         favorite.setOnClickListener(view -> {
             if (Utils.isFastClick())
                 favoriteAnime();
@@ -143,21 +143,20 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mSwipe.setRefreshing(true);
     }
 
-    public void initAdapter(){
-//        mRecyclerView.setNestedScrollingEnabled(false);
+    public void initAdapter() {
         adapter = new DescAdapter(multiItemList, DescActivity.this);
         adapter.openLoadAnimation();
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
-                final AnimeDescBean bean = (AnimeDescBean) multiItemList.get(position);
+                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
                         p = Utils.getProDialog(DescActivity.this, "解析中,请稍后...");
                         Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                         v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
                         diliUrl = bean.getUrl();
-                        witchTitle = animeTitle + " - " +bean.getTitle();
-                        videoPresenter = new VideoPresenter(animeListBean.getTitle(), bean.getUrl(),DescActivity.this);
+                        witchTitle = animeTitle + " - " + bean.getTitle();
+                        videoPresenter = new VideoPresenter(animeListBean.getTitle(), bean.getUrl(), DescActivity.this);
                         videoPresenter.loadData(true);
                         break;
                     case "html":
@@ -168,6 +167,13 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             bundle.putString("url", bean.getUrl());
                         startActivityForResult(new Intent(DescActivity.this, DescActivity.class).putExtras(bundle), 3000);
                         break;
+                }
+            }
+        });
+        adapter.setOnItemChildClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) {
+                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+                switch (bean.getType()) {
                     case "down":
                         if (!bean.getUrl().isEmpty())
                             Utils.viewInBrowser(DescActivity.this, bean.getUrl());
@@ -175,16 +181,15 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.no_resources));
                         break;
                 }
-
             }
         });
         adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
-                final AnimeDescBean bean = (AnimeDescBean) multiItemList.get(position);
+                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "down":
                         Utils.putTextIntoClip(DescActivity.this, bean.getTitle());
-                        Toast.makeText(DescActivity.this, bean.getTitle() +"已复制到剪切板", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DescActivity.this, bean.getTitle() + "已复制到剪切板", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -195,15 +200,15 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         adapter.isFirstOnly((Boolean) SharedPreferencesUtils.getParam(DescActivity.this, "anim_is_first", true));//init firstOnly state
     }
 
-    public void goToPlay(String videoUrl){
+    public void goToPlay(String videoUrl) {
         new Handler().postDelayed(() -> {
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
             //如果播放地址只有1个
-            if (arr.length == 1){
-                String url = "http"+arr[0];
-                if (url.contains(".m3u8") || url.contains(".mp4")){
+            if (arr.length == 1) {
+                String url = "http" + arr[0];
+                if (url.contains(".m3u8") || url.contains(".mp4")) {
                     Bundle bundle = new Bundle();
-                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(),"player",0)){
+                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                         case 0:
                             //调用播放器
                             bundle.putString("animeTitle", animeTitle);
@@ -214,10 +219,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(DescActivity.this,url);
+                            Utils.selectVideoPlayer(DescActivity.this, url);
                             break;
                     }
-                }else {
+                } else {
                     Bundle bundle = new Bundle();
                     bundle.putString("title", animeTitle);
                     bundle.putString("url", url);
@@ -225,16 +230,16 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     bundle.putSerializable("list", (Serializable) drama);
                     startActivityForResult(new Intent(DescActivity.this, WebActivity.class).putExtras(bundle), 0x10);
                 }
-            }else {
+            } else {
                 videoUrlArr = new String[arr.length];
                 videoTitleArr = new String[arr.length];
-                for (int i=0;i<arr.length;i++) {
+                for (int i = 0; i < arr.length; i++) {
                     String str = "http" + arr[i];
-                    Log.e("video",str);
+                    Log.e("video", str);
                     videoUrlArr[i] = str;
-                    java.net.URL  urlHost;
+                    java.net.URL urlHost;
                     try {
-                        urlHost = new  java.net.URL(str);
+                        urlHost = new java.net.URL(str);
                         if (str.contains(".mp4"))
                             videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
                         else if (str.contains(".m3u8"))
@@ -247,7 +252,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 }
                 selectVideoDialog();
             }
-        },200);
+        }, 200);
     }
 
     private void selectVideoDialog() {
@@ -255,8 +260,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         builder.setTitle("选择视频源");
         builder.setCancelable(false);
         builder.setItems(videoTitleArr, (dialogInterface, index) -> {
-            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")){
-                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(),"player",0)){
+            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
+                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                     case 0:
                         //调用播放器
                         Bundle bundle = new Bundle();
@@ -268,10 +273,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(DescActivity.this,videoUrlArr[index]);
+                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
                         break;
                 }
-            }else {
+            } else {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", animeTitle);
                 bundle.putString("url", videoUrlArr[index]);
@@ -290,7 +295,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 200 && requestCode == 3000) {
             setResult(200);
-        }else if (resultCode == 0x20 && requestCode == 0x10){
+        } else if (resultCode == 0x20 && requestCode == 0x10) {
             mSwipe.setRefreshing(true);
             multiItemList = new ArrayList<>();
             adapter.notifyDataSetChanged();
@@ -298,14 +303,13 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         }
     }
 
-    public void favoriteAnime(){
+    public void favoriteAnime() {
         setResult(200);
         isFavorite = DatabaseUtil.favorite(animeListBean);
-        if (isFavorite)
-        {
+        if (isFavorite) {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
             Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.join_ok));
-        }else {
+        } else {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
             Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.join_error));
         }
@@ -341,7 +345,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 @Override
                 public int getSpanSize(int position) {
                     int index = 0;
-                    switch (adapter.getItemViewType(position)){
+                    switch (adapter.getItemViewType(position)) {
                         case AnimeType.TYPE_LEVEL_0:
                             index = manager.getSpanCount();
                             break;
@@ -402,7 +406,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void showSuccessFavorite(boolean is) {
         isFavorite = is;
         runOnUiThread(() -> {
-            if (!favorite.isShown()){
+            if (!favorite.isShown()) {
                 if (isFavorite)
                     Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
                 else

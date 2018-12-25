@@ -167,7 +167,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             if (Utils.isFastClick()) {
                 setResult(0x20);
                 drawerLayout.closeDrawer(GravityCompat.END);
-                final AnimeDescBean bean = list.get(position);
+                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
                         p = Utils.getProDialog(PlayerActivity.this, "解析中,请稍后...");

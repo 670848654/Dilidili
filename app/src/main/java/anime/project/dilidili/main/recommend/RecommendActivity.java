@@ -86,7 +86,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
-                final RecommendBean bean = (RecommendBean) recommendList.get(position);
+                final RecommendBean bean = (RecommendBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
                 if (bean.getUrl().indexOf("http") == -1)
                     bundle.putString("url", Api.URL + bean.getUrl());

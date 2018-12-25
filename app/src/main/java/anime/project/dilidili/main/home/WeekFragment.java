@@ -120,7 +120,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.isFirstOnly((Boolean) SharedPreferencesUtils.getParam(getActivity(), "anim_is_first", true));//init firstOnly state
         adapter.setOnItemChildClickListener((adapter, view, position) -> {
-            final HomeBean bean = (HomeBean) list.get(position);
+            final HomeBean bean = (HomeBean) adapter.getItem(position);
             switch (view.getId()) {
                 case R.id.tag_group:
                     if (Utils.isFastClick()) {

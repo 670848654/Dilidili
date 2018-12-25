@@ -215,7 +215,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             if (Utils.isFastClick()) {
                 setResult(0x20);
                 drawerLayout.closeDrawer(GravityCompat.END);
-                final AnimeDescBean bean = dramaList.get(position);
+                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
                         p = Utils.getProDialog(WebActivity.this, "解析中,请稍后...");
