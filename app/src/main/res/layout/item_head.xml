@@ -4,7 +4,7 @@
     android:id="@+id/header_view"
     android:layout_width="match_parent"
     android:layout_height="40dip"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="4dp"
     android:layout_gravity="center"
     card_view:cardBackgroundColor="@color/night"
     android:foreground="?android:attr/selectableItemBackground"

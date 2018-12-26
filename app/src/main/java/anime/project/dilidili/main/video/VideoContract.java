@@ -11,6 +11,7 @@ public interface VideoContract {
     }
 
     interface View {
+        void cancelDialog();
         void getVideoSuccess(String url);
         void getVideoEmpty();
         void getVideoError();

@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -350,28 +349,24 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     }
 
     @Override
+    public void cancelDialog() {
+        Utils.cancelProDialog(p);
+    }
+
+    @Override
     public void getVideoSuccess(String url) {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            goToPlay(url);
-        });
+        runOnUiThread(() -> goToPlay(url));
     }
 
     @Override
     public void getVideoEmpty() {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            VideoUtils.showErrorInfo(PlayerActivity.this, diliUrl);
-        });
+        runOnUiThread(() -> VideoUtils.showErrorInfo(PlayerActivity.this, diliUrl));
     }
 
     @Override
     public void getVideoError() {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            //网络出错
-            Toast.makeText(PlayerActivity.this, Utils.getString(PlayerActivity.this, R.string.error_700), Toast.LENGTH_LONG).show();
-        });
+        //网络出错
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(PlayerActivity.this, R.string.error_700)));
     }
 
     @Override
@@ -383,7 +378,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void errorDramaView() {
-        runOnUiThread(() -> Toast.makeText(PlayerActivity.this, "获取剧集信息出错", Toast.LENGTH_LONG).show());
+        runOnUiThread(() -> application.showToastMsg("获取剧集信息出错"));
     }
 
     @Override

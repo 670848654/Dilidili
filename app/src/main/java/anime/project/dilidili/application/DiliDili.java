@@ -2,8 +2,10 @@ package anime.project.dilidili.application;
 
 import android.app.Activity;
 import android.app.Application;
+import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.tencent.smtt.sdk.QbSdk;
 
 import org.json.JSONObject;
@@ -42,10 +44,8 @@ public class DiliDili extends Application {
             @Override
             public void onViewInitFinished(boolean arg0) {
                 //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                if (arg0)
-                    Toast.makeText(DiliDili.this, "X5内核加载成功", Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(DiliDili.this, "X5内核加载失败,切换到系统内核", Toast.LENGTH_LONG).show();
+                if (arg0) showToastMsg("X5内核加载成功");
+                else showToastMsg("X5内核加载失败,切换到系统内核");
             }
             @Override
             public void onCoreInitFinished() {
@@ -53,6 +53,18 @@ public class DiliDili extends Application {
         };
         //x5内核初始化接口
         QbSdk.initX5Environment(getApplicationContext(), cb);
+    }
+
+    public void showToastMsg(String msg){
+        Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showSnackbarMsg(View view, String msg){
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void showSnackbarMsg(View view, String msg, String actionName, View.OnClickListener listener){
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).setAction(actionName, listener);
     }
 
     /**

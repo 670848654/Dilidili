@@ -22,9 +22,11 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class VideoModel implements VideoContract.Model {
+    private final static Pattern SCRIPT_PATTERN = Pattern.compile("sourceUrl = (.*?);");
+    private final static Pattern NEW_PATTERN = Pattern.compile("Url = (.*?);");
 
     @Override
-    public void getData(String title,String HTML_url, VideoContract.LoadDataCallback callback) {
+    public void getData(String title, String HTML_url, VideoContract.LoadDataCallback callback) {
 
         new HttpGet(HTML_url, 10, 20, new Callback() {
             @Override
@@ -38,26 +40,21 @@ public class VideoModel implements VideoContract.Model {
                 Document doc = Jsoup.parse(response.body().string());
                 String fid = DatabaseUtil.getAnimeID(title);
                 DatabaseUtil.addIndex(fid, HTML_url);
-                callback.successDrama(getAllDrama(fid,  doc.select("div.aside_cen2 > div.con24 >a")));
+                callback.successDrama(getAllDrama(fid, doc.select("div.aside_cen2 > div.con24 >a")));
                 Elements script = doc.select("script");
                 //第一种方式
                 videoUrl = getSourceUrl(script);
-                if (videoUrl.isEmpty()) {
-                    //尝试第二种方式[版权页面]
-                    videoUrl = doc.getElementsByClass("player").select("a").attr("href");
-                    if (!Patterns.WEB_URL.matcher(videoUrl).matches())
-                        callback.empty();
-                    else
-                        callback.success(videoUrl);
-                } else if (!Patterns.WEB_URL.matcher(videoUrl).matches())
-                    callback.empty();
-                else
-                    callback.success(videoUrl);
+                if (videoUrl.isEmpty())
+                    videoUrl = doc.getElementsByClass("player").select("a").attr("href");//尝试第二种方式[版权页面]
+                if (!videoUrl.isEmpty()) {
+                    if (!Patterns.WEB_URL.matcher(videoUrl).matches()) callback.empty();
+                    else callback.success(videoUrl);
+                } else callback.empty();
             }
         });
     }
 
-    public static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList){
+    public static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList) {
         List<AnimeDescBean> list = new ArrayList<>();
         try {
             String dataBaseDrama = DatabaseUtil.queryAllIndex(fid);
@@ -71,7 +68,7 @@ public class VideoModel implements VideoContract.Model {
                 else
                     list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, dramaTitle, dramaUrl, "play"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return list;
         }
@@ -86,11 +83,7 @@ public class VideoModel implements VideoContract.Model {
     public static String getSourceUrl(Elements script) {
         String url = "";
         for (int i = 0; i < script.size(); i++) {
-            Elements e = script.eq(i);
-            String str = e.html();
-            String reg = "sourceUrl = (.*?);";
-            Pattern p = Pattern.compile(reg);
-            Matcher m = p.matcher(str);
+            Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());
             while (m.find()) {
                 url = m.group();
                 url = url.substring(13, url.length());
@@ -98,14 +91,10 @@ public class VideoModel implements VideoContract.Model {
                 break;
             }
         }
-        if (url.isEmpty()){
+        if (url.isEmpty()) {
             //新版本解析方式
             for (int i = 0; i < script.size(); i++) {
-                Elements e = script.eq(i);
-                String str = e.html();
-                String reg = "Url = (.*?);";
-                Pattern p = Pattern.compile(reg);
-                Matcher m = p.matcher(str);
+                Matcher m = NEW_PATTERN.matcher(script.eq(i).html());
                 while (m.find()) {
                     url = m.group();
                     url = url.substring(7, url.length());
@@ -114,7 +103,7 @@ public class VideoModel implements VideoContract.Model {
                 }
             }
         }
-        Log.e("url",url);
+        Log.d("视频播放地址", url);
         return url;
     }
 }

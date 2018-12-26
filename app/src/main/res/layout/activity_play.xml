@@ -74,7 +74,7 @@
                         android:gravity="center_vertical"
                         android:textColor="@android:color/white"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:drawableLeft="@drawable/baseline_reply_white_48dp"
+                        android:drawableLeft="@drawable/baseline_open_in_new_white_48dp"
                         android:drawablePadding="5dp"
                         android:text="使用外部播放器播放"
                         android:layout_width="match_parent"

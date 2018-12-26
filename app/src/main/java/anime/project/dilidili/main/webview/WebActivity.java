@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -390,8 +389,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             data.putInt("DefaultVideoScreen", 2);
             //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
             mX5WebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams", data);
-        } else
-            Toast.makeText(this, "X5内核加载失败,切换到系统内核", Toast.LENGTH_LONG).show();
+        } else application.showToastMsg("X5内核加载失败,切换到系统内核");
         mX5WebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -470,26 +468,24 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     @Override
+    public void cancelDialog() {
+        Utils.cancelProDialog(p);
+    }
+
+    @Override
     public void getVideoSuccess(String url) {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            goToPlay(url);
-        });
+        runOnUiThread(() -> goToPlay(url));
     }
 
     @Override
     public void getVideoEmpty() {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            VideoUtils.showErrorInfo(WebActivity.this, diliUrl);
-        });
+        runOnUiThread(() -> VideoUtils.showErrorInfo(WebActivity.this, diliUrl));
     }
 
     @Override
     public void getVideoError() {
-        Utils.cancelProDoalog(p);
         //网络出错
-        Toast.makeText(WebActivity.this, Utils.getString(WebActivity.this, R.string.error_700), Toast.LENGTH_LONG).show();
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(WebActivity.this, R.string.error_700)));
     }
 
     @Override
@@ -500,7 +496,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void errorDramaView() {
-        runOnUiThread(() -> Toast.makeText(WebActivity.this, "获取剧集信息出错", Toast.LENGTH_LONG).show());
+        runOnUiThread(() -> application.showToastMsg("获取剧集信息出错"));
     }
 
 

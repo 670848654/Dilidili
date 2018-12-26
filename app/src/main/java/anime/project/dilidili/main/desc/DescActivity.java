@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -189,7 +188,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 switch (bean.getType()) {
                     case "down":
                         Utils.putTextIntoClip(DescActivity.this, bean.getTitle());
-                        Toast.makeText(DescActivity.this, bean.getTitle() + "已复制到剪切板", Toast.LENGTH_SHORT).show();
+                        application.showToastMsg(bean.getTitle() + "已复制到剪切板");
                         break;
                 }
             }
@@ -315,6 +314,24 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         }
     }
 
+    public void setCollapsingToolbar() {
+        Glide.with(DescActivity.this).asBitmap().load(animeListBean.getImg()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                if (null == resource)
+                    imageView.setImageDrawable(getDrawable(R.drawable.error));
+                else
+                    Blurry.with(DescActivity.this)
+                            .radius(4)
+                            .sampling(2)
+                            .async()
+                            .from(resource)
+                            .into(imageView);
+            }
+        });
+        ct.setTitle(animeListBean.getTitle());
+    }
+
     @Override
     public void showLoadingView() {
         showEmptyVIew();
@@ -324,7 +341,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
             mSwipe.setRefreshing(false);
-            ct.setTitle("加载出错");
+            setCollapsingToolbar();
             mRecyclerView.setLayoutManager(new LinearLayoutManager(DescActivity.this));
             errorTitle.setText(msg);
             adapter.setEmptyView(errorView);
@@ -340,7 +357,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showSuccessMainView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
-            final GridLayoutManager manager = new GridLayoutManager(DescActivity.this, 4);
+            final GridLayoutManager manager = new GridLayoutManager(DescActivity.this, 15);
             manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -350,13 +367,13 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             index = manager.getSpanCount();
                             break;
                         case AnimeType.TYPE_LEVEL_1:
-                            index = 1;
+                            index = 3;
                             break;
                         case AnimeType.TYPE_LEVEL_2:
                             index = manager.getSpanCount();
                             break;
                         case AnimeType.TYPE_LEVEL_3:
-                            index = 2;
+                            index = 5;
                             break;
                     }
                     return index;
@@ -366,21 +383,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             mRecyclerView.setLayoutManager(manager);
             multiItemList = list;
             mSwipe.setRefreshing(false);
-            Glide.with(DescActivity.this).asBitmap().load(animeListBean.getImg()).into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    if (null == resource)
-                        imageView.setImageDrawable(getDrawable(R.drawable.urlerror_w));
-                    else
-                        Blurry.with(DescActivity.this)
-                                .radius(4)
-                                .sampling(2)
-                                .async()
-                                .from(resource)
-                                .into(imageView);
-                }
-            });
-            ct.setTitle(animeListBean.getTitle());
+            setCollapsingToolbar();
             adapter.setNewData(multiItemList);
             adapter.expand(0);
         });
@@ -393,7 +396,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public void errorDramaView() {
-
     }
 
     @Override
@@ -418,28 +420,24 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     }
 
     @Override
+    public void cancelDialog() {
+        Utils.cancelProDialog(p);
+    }
+
+    @Override
     public void getVideoSuccess(String url) {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            goToPlay(url);
-        });
+        runOnUiThread(() -> goToPlay(url));
     }
 
     @Override
     public void getVideoEmpty() {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            VideoUtils.showErrorInfo(DescActivity.this, diliUrl);
-        });
+        runOnUiThread(() -> VideoUtils.showErrorInfo(DescActivity.this, diliUrl));
     }
 
     @Override
     public void getVideoError() {
-        runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            //网络出错
-            Toast.makeText(DescActivity.this, Utils.getString(DescActivity.this, R.string.error_700), Toast.LENGTH_LONG).show();
-        });
+        //网络出错
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(DescActivity.this, R.string.error_700)));
     }
 
     @Override

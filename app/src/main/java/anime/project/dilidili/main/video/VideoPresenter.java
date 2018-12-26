@@ -27,16 +27,19 @@ public class VideoPresenter extends Presenter<VideoContract.View> implements Bas
 
     @Override
     public void success(String url) {
+        view.cancelDialog();
         view.getVideoSuccess(url);
     }
 
     @Override
     public void error() {
+        view.cancelDialog();
         view.getVideoError();
     }
 
     @Override
     public void empty() {
+        view.cancelDialog();
         view.getVideoEmpty();
     }
 

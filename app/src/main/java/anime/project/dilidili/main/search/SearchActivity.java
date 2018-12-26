@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.material.snackbar.Snackbar;
 import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
@@ -105,9 +103,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                     bundle.putString("name", bean.getTitle());
                     bundle.putString("url", bean.getUrl());
                     startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
-                } else {
-                    Snackbar.make(toolbar, Utils.getString(getApplicationContext(), R.string.ceshi_error), Snackbar.LENGTH_LONG).show();
-                }
+                } else application.showSnackbarMsg(toolbar, Utils.getString(getApplicationContext(), R.string.ceshi_error));
             }
         });
         adapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
@@ -222,7 +218,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                 adapter.setEmptyView(errorView);
             } else {
                 setLoadState(false);
-                Toast.makeText(SearchActivity.this, msg, Toast.LENGTH_LONG).show();
+                application.showToastMsg(msg);
             }
         });
     }

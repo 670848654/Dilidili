@@ -101,7 +101,7 @@ public class Utils {
      *
      * @param p
      */
-    public static void cancelProDoalog(ProgressDialog p) {
+    public static void cancelProDialog(ProgressDialog p) {
         if (p != null)
             p.dismiss();
     }
@@ -300,7 +300,7 @@ public class Utils {
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.loading)
-                .error(R.drawable.neterror);
+                .error(R.drawable.error);
         Glide.with(context)
                 .load(url)
                 .apply(options)

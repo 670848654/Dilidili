@@ -10,10 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONObject;
@@ -166,7 +164,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
             }
         });
-        if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(Utils.getContext(), "show_x5_info", true).toString()))
+        if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(application.getInstance(), "show_x5_info", true).toString()))
             Utils.showX5Info(this);
     }
 
@@ -211,9 +209,11 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Snackbar.make(toolbar, Utils.getString(HomeActivity.this, R.string.exit_app), Snackbar.LENGTH_LONG).setAction(Utils.getString(HomeActivity.this, R.string.exit), v -> finish()).show();
-        }
+        } else
+            application.showSnackbarMsg(toolbar,
+                    Utils.getString(HomeActivity.this, R.string.exit_app),
+                    Utils.getString(HomeActivity.this, R.string.exit),
+                    v -> finish());
     }
 
     @Override
@@ -268,7 +268,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         runOnUiThread(() -> {
             mSwipe.setRefreshing(false);
             navigationView.getMenu().getItem(0).setTitle(Utils.getString(HomeActivity.this, R.string.menu_load_error));
-            Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_LONG).show();
+            application.showToastMsg(msg);
             application.error = msg;
             setWeekAdapter();
         });

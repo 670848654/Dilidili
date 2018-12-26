@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -119,8 +118,7 @@ public class DefaultWebActivity extends BaseActivity {
             data.putInt("DefaultVideoScreen", 2);
             //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
             mX5WebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams", data);
-        } else
-            Toast.makeText(this, "X5内核加载失败,切换到系统内核", Toast.LENGTH_LONG).show();
+        } else application.showToastMsg("X5内核加载失败,切换到系统内核");
         mX5WebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {

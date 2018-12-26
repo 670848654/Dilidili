@@ -26,6 +26,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
 public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> implements TagContract.View {
+    private final static Pattern YEAR = Pattern.compile("([0-9])");
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -64,14 +65,14 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
 
     }
 
-    public void initToolbar(){
+    public void initToolbar() {
         toolbar.setTitle(Utils.getString(TagActivity.this, R.string.tag_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
     }
 
-    public void initSwipe(){
+    public void initSwipe() {
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
         mSwipe.setOnRefreshListener(() -> {
             tagList.clear();
@@ -80,7 +81,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         });
     }
 
-    public void initAdapter(){
+    public void initAdapter() {
         adapter = new TagAdapter(tagList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
@@ -88,14 +89,9 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             if (Utils.isFastClick()) {
                 final HomeBean bean = (HomeBean) adapter.getItem(position);
                 String title = "";
-                String reg = "([0-9])";
-                Pattern p = Pattern.compile(reg);
-                Matcher m = p.matcher(bean.getDesc());
-                while (m.find()) {
-                    title += m.group();
-                }
-                if (!title.isEmpty())
-                    title += "年";
+                Matcher m = YEAR.matcher(bean.getDesc());
+                while (m.find()) title += m.group();
+                if (!title.isEmpty()) title += "年";
                 Bundle bundle = new Bundle();
                 bundle.putString("title", title + bean.getTitle());
                 bundle.putString("url", bean.getUrl());

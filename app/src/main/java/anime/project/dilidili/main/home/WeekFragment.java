@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -242,28 +241,24 @@ public class WeekFragment extends Fragment implements VideoContract.View {
     }
 
     @Override
+    public void cancelDialog() {
+        Utils.cancelProDialog(p);
+    }
+
+    @Override
     public void getVideoSuccess(String url) {
-        getActivity().runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            goToPlay(url);
-        });
+        getActivity().runOnUiThread(() -> goToPlay(url));
     }
 
     @Override
     public void getVideoEmpty() {
-        getActivity().runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            VideoUtils.showErrorInfo(getActivity(), diliUrl);
-        });
+        getActivity().runOnUiThread(() -> VideoUtils.showErrorInfo(getActivity(), diliUrl));
     }
 
     @Override
     public void getVideoError() {
-        getActivity().runOnUiThread(() -> {
-            Utils.cancelProDoalog(p);
-            //网络出错
-            Toast.makeText(getActivity(), Utils.getString(getActivity(), R.string.error_700), Toast.LENGTH_LONG).show();
-        });
+        //网络出错
+        getActivity().runOnUiThread(() -> application.showToastMsg(Utils.getString(getActivity(), R.string.error_700)));
     }
 
     @Override

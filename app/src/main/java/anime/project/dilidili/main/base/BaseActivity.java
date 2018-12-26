@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.List;
@@ -110,7 +109,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Toast.makeText(this, Utils.getString(BaseActivity.this, R.string.permissions_error), Toast.LENGTH_SHORT).show();
+        application.showToastMsg(Utils.getString(BaseActivity.this, R.string.permissions_error));
         application.removeALLActivity();
     }
 

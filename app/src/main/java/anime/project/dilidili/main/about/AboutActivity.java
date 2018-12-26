@@ -8,11 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.r0adkll.slidr.Slidr;
 
 import org.json.JSONException;
@@ -152,17 +149,17 @@ public class AboutActivity extends BaseActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Utils.cancelProDoalog(p);
+            Utils.cancelProDialog(p);
             super.handleMessage(msg);
             switch (msg.what) {
                 case -1:
-                    Snackbar.make(toolbar,"连接服务器超时",Snackbar.LENGTH_LONG).setAction("重试", view -> checkUpdate()).show();
+                    application.showSnackbarMsg(toolbar, "连接服务器超时", "重试", view -> checkUpdate());
                     break;
                 case 1:
-                    Toast.makeText(AboutActivity.this, "没有新版本", Toast.LENGTH_LONG).show();
+                    application.showToastMsg("没有新版本");
                     break;
                 case 2:
-                    Toast.makeText(AboutActivity.this, "发现新版本,请手动下载", Toast.LENGTH_LONG).show();
+                    application.showToastMsg("发现新版本,请手动下载");
                     Utils.viewInBrowser(AboutActivity.this,msg.getData().getString("url"));
                     break;
             }
