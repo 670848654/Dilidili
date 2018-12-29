@@ -64,7 +64,7 @@ public class DiliDili extends Application {
     }
 
     public void showSnackbarMsg(View view, String msg, String actionName, View.OnClickListener listener){
-        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).setAction(actionName, listener);
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).setAction(actionName, listener).show();
     }
 
     /**
