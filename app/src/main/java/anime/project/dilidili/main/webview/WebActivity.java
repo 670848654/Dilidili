@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -53,10 +52,10 @@ import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class WebActivity extends BaseActivity implements VideoContract.View {
@@ -84,7 +83,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private List<AnimeDescBean> dramaList = new ArrayList<>();
     private DramaAdapter dramaAdapter;
     private ProgressDialog p;
-    private AlertDialog alertDialog;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
     /**
@@ -278,68 +276,45 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             } else {
                 videoUrlArr = new String[arr.length];
                 videoTitleArr = new String[arr.length];
-                for (int i = 0; i < arr.length; i++) {
-                    String str = "http" + arr[i];
-                    Log.e("video", str);
-                    videoUrlArr[i] = str;
-                    java.net.URL urlHost;
-                    try {
-                        urlHost = new java.net.URL(str);
-                        if (str.contains(".mp4"))
-                            videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                        else if (str.contains(".m3u8"))
-                            videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                        else
-                            videoTitleArr[i] = urlHost.getHost() + " <HTML>";
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                selectVideoDialog();
+                VideoUtils.showMultipleVideoSources(this,
+                        arr,
+                        videoTitleArr,
+                        videoUrlArr,
+                        (dialog, index) -> {
+                            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
+                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                                    case 0:
+                                        //调用播放器
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("title", witchTitle);
+                                        bundle.putString("url", videoUrlArr[index]);
+                                        bundle.putString("animeTitle", animeTilte);
+                                        bundle.putString("dili", diliUrl);
+                                        bundle.putSerializable("list", (Serializable) dramaList);
+                                        startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
+                                        WebActivity.this.finish();
+                                        break;
+                                    case 1:
+                                        Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
+                                        break;
+                                }
+                            } else {
+                                //视频源地址
+                                java.net.URL urlHost;
+                                try {
+                                    urlHost = new java.net.URL(url);
+                                    toolbar.setTitle(urlHost.getHost());
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+                                Map<String, String> map = new HashMap<>();
+                                map.put(REFERER, diliUrl);
+                                newUrl = api + url;
+                                mX5WebView.loadUrl(newUrl, map);
+                            }
+                        });
             }
         }, 200);
-    }
-
-    private void selectVideoDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle("选择视频源");
-        builder.setCancelable(false);
-        builder.setItems(videoTitleArr, (dialog, index) -> {
-            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
-                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                    case 0:
-                        //调用播放器
-                        Bundle bundle = new Bundle();
-                        bundle.putString("title", witchTitle);
-                        bundle.putString("url", videoUrlArr[index]);
-                        bundle.putString("animeTitle", animeTilte);
-                        bundle.putString("dili", diliUrl);
-                        bundle.putSerializable("list", (Serializable) dramaList);
-                        startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
-                        WebActivity.this.finish();
-                        break;
-                    case 1:
-                        Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
-                        break;
-                }
-            } else {
-                //视频源地址
-                java.net.URL urlHost;
-                try {
-                    urlHost = new java.net.URL(url);
-                    toolbar.setTitle(urlHost.getHost());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Map<String, String> map = new HashMap<>();
-                map.put(REFERER, diliUrl);
-                newUrl = api + url;
-                mX5WebView.loadUrl(newUrl, map);
-            }
-        });
-        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        alertDialog = builder.create();
-        alertDialog.show();
     }
 
     public void initWebView() {
@@ -563,7 +538,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.module:
                 if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                     drawerLayout.closeDrawer(GravityCompat.END);
@@ -571,14 +546,14 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     drawerLayout.openDrawer(GravityCompat.END);
                 break;
             case R.id.model:
-                if (mModel){
+                if (mModel) {
                     //切换成手机版
                     mModel = false;
                     webSettings.setUserAgent(PHONE_USER_AGENT);
                     menuItem.setIcon(R.drawable.baseline_stay_primary_portrait_white_48dp);
                     menuItem.setTitle(Utils.getString(R.string.phone_model));
                     application.showToastMsg("已切换成手机版");
-                }else {
+                } else {
                     //切换成电脑版
                     mModel = true;
                     webSettings.setUserAgent(PC_USER_AGENT);

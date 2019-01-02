@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,12 +19,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,11 +34,11 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.main.video.VideoUtils;
 import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.jzvd.Jzvd;
@@ -56,7 +53,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     private List<AnimeDescBean> list = new ArrayList<>();
     private DramaAdapter dramaAdapter;
     private ProgressDialog p;
-    private AlertDialog alertDialog;
     private String animeTitle;
     private String[] videoUrlArr;
     private String[] videoTitleArr;
@@ -215,66 +211,43 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             } else {
                 videoUrlArr = new String[arr.length];
                 videoTitleArr = new String[arr.length];
-                for (int i = 0; i < arr.length; i++) {
-                    String str = "http" + arr[i];
-                    Log.e("video", str);
-                    videoUrlArr[i] = str;
-                    java.net.URL urlHost;
-                    try {
-                        urlHost = new java.net.URL(str);
-                        if (str.contains(".mp4"))
-                            videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                        else if (str.contains(".m3u8"))
-                            videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                        else
-                            videoTitleArr[i] = urlHost.getHost() + " <HTML>";
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                selectVideoDialog();
+                VideoUtils.showMultipleVideoSources(this,
+                        arr,
+                        videoTitleArr,
+                        videoUrlArr,
+                        (dialog, index) -> {
+                            url = videoUrlArr[index];
+                            if (url.contains(".m3u8") || url.contains(".mp4")) {
+                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                                    case 0:
+                                        //调用播放器
+                                        Jzvd.releaseAllVideos();
+                                        player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                                        Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
+                                        player.startVideo();
+                                        break;
+                                    case 1:
+                                        Jzvd.releaseAllVideos();
+                                        Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
+                                        break;
+                                }
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("title", animeTitle);
+                                bundle.putString("url", url);
+                                bundle.putString("dili", diliUrl);
+                                bundle.putSerializable("list", (Serializable) list);
+                                startActivity(new Intent(PlayerActivity.this, WebActivity.class).putExtras(bundle));
+                                PlayerActivity.this.finish();
+                            }
+                        });
             }
         }, 200);
     }
 
-    private void selectVideoDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle("选择视频源");
-        builder.setCancelable(false);
-        builder.setItems(videoTitleArr, (dialog, index) -> {
-            url = videoUrlArr[index];
-            if (url.contains(".m3u8") || url.contains(".mp4")) {
-                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                    case 0:
-                        //调用播放器
-                        Jzvd.releaseAllVideos();
-                        player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-                        Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
-                        player.startVideo();
-                        break;
-                    case 1:
-                        Jzvd.releaseAllVideos();
-                        Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
-                        break;
-                }
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString("title", animeTitle);
-                bundle.putString("url", url);
-                bundle.putString("dili", diliUrl);
-                bundle.putSerializable("list", (Serializable) list);
-                startActivity(new Intent(PlayerActivity.this, WebActivity.class).putExtras(bundle));
-                PlayerActivity.this.finish();
-            }
-        });
-        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     @OnClick({R.id.select_player, R.id.open_in_browser})
-    public void onClick(TextView view){
-        switch (view.getId()){
+    public void onClick(TextView view) {
+        switch (view.getId()) {
             case R.id.select_player:
                 Utils.selectVideoPlayer(this, url);
                 break;
@@ -308,10 +281,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     protected void onResume() {
         super.onResume();
         hideNavBar();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (!PlayerActivity.this.isInMultiWindowMode())
                 JzvdStd.goOnPlayOnResume();
-        }else
+        } else
             JzvdStd.goOnPlayOnResume();
     }
 

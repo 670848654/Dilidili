@@ -46,7 +46,7 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.main.video.VideoUtils;
+import anime.project.dilidili.util.VideoUtils;
 import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
@@ -166,6 +166,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             bundle.putString("url", Api.URL + bean.getUrl());
                         else
                             bundle.putString("url", bean.getUrl());
+                        bundle.putString("name", bean.getTitle());
                         startActivityForResult(new Intent(DescActivity.this, DescActivity.class).putExtras(bundle), 3000);
                         break;
                 }
