@@ -198,9 +198,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (list.get(position).isOriginalPage()) {
-                Utils.viewInBrowser(diliUrl);
+                Utils.viewInBrowser(WebActivity.this, diliUrl);
             } else if (list.get(position).isOriginalAddress()) {
-                Utils.viewInBrowser(url);
+                Utils.viewInBrowser(WebActivity.this, url);
             } else {
                 for (int i = 0; i < list.size(); i++) {
                     list.get(i).setSelect(false);
@@ -258,7 +258,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                             WebActivity.this.finish();
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(url);
+                            Utils.selectVideoPlayer(WebActivity.this, url);
                             break;
                     }
                 } else {
@@ -319,7 +319,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                         WebActivity.this.finish();
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(videoUrlArr[index]);
+                        Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
                         break;
                 }
             } else {

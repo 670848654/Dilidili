@@ -92,7 +92,7 @@ public class OpenSourceActivity extends BaseActivity {
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick())
-                Utils.viewInBrowser(list.get(position).getUrl());
+                Utils.viewInBrowser(this, list.get(position).getUrl());
         });
         recyclerView.setAdapter(adapter);
     }

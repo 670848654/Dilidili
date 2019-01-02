@@ -163,7 +163,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             }
         });
         if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(application.getInstance(), "show_x5_info", true).toString()))
-            Utils.showX5Info();
+            Utils.showX5Info(this);
     }
 
     @Override

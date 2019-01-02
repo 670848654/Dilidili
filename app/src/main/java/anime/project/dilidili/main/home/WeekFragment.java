@@ -169,7 +169,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
                             startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(url);
+                            Utils.selectVideoPlayer(getActivity(), url);
                             break;
                     }
                 }else {
@@ -223,7 +223,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
                         startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(videoUrlArr[index]);
+                        Utils.selectVideoPlayer(getActivity(), videoUrlArr[index]);
                         break;
                 }
             }else {

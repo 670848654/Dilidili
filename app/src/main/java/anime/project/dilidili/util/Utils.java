@@ -109,16 +109,17 @@ public class Utils {
      *
      * @param url
      */
-    public static void selectVideoPlayer(String url) {
+    public static void selectVideoPlayer(Context context, String url) {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         intent.setDataAndType(Uri.parse(url), "video/*");
         // 注意此处的判断intent.resolveActivity()可以返回显示该Intent的Activity对应的组件名
         // 官方解释 : Name of the component implementing an activity that can display the intent
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            getContext().startActivity(Intent.createChooser(intent, "请选择视频播放器"));
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(Intent.createChooser(intent, "请选择视频播放器"));
         } else {
-            Toast.makeText(getContext().getApplicationContext(), "没有找到匹配的程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "没有找到匹配的程序", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -127,14 +128,15 @@ public class Utils {
      *
      * @param url
      */
-    public static void viewInBrowser(String url) {
+    public static void viewInBrowser(Context context, String url) {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(url));
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            getContext().startActivity(Intent.createChooser(intent, "请通过浏览器打开"));
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(Intent.createChooser(intent, "请通过浏览器打开"));
         } else {
-            Toast.makeText(getContext().getApplicationContext(), "没有匹配的程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "没有匹配的程序", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -170,7 +172,7 @@ public class Utils {
     /**
      * info
      */
-    public static void showX5Info() {
+    public static void showX5Info(Context context) {
         AlertDialog alertDialog;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
         builder.setPositiveButton(getString(R.string.x5_info_positive), null);

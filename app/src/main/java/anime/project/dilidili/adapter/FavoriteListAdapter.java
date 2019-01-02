@@ -1,7 +1,5 @@
 package anime.project.dilidili.adapter;
 
-import android.content.Context;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

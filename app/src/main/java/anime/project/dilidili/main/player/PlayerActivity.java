@@ -200,7 +200,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                             break;
                         case 1:
                             Jzvd.releaseAllVideos();
-                            Utils.selectVideoPlayer(url);
+                            Utils.selectVideoPlayer(PlayerActivity.this, url);
                             break;
                     }
                 } else {
@@ -254,7 +254,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                         break;
                     case 1:
                         Jzvd.releaseAllVideos();
-                        Utils.selectVideoPlayer(videoUrlArr[index]);
+                        Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
                         break;
                 }
             } else {
@@ -276,10 +276,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     public void onClick(TextView view){
         switch (view.getId()){
             case R.id.select_player:
-                Utils.selectVideoPlayer(url);
+                Utils.selectVideoPlayer(this, url);
                 break;
             case R.id.open_in_browser:
-                Utils.viewInBrowser(diliUrl);
+                Utils.viewInBrowser(this, diliUrl);
                 break;
         }
     }

@@ -177,7 +177,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 switch (bean.getType()) {
                     case "down":
                         if (!bean.getUrl().isEmpty())
-                            Utils.viewInBrowser(bean.getUrl());
+                            Utils.viewInBrowser(DescActivity.this, bean.getUrl());
                         else
                             Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
                         break;
@@ -220,7 +220,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(url);
+                            Utils.selectVideoPlayer(DescActivity.this, url);
                             break;
                     }
                 } else {
@@ -274,7 +274,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(videoUrlArr[index]);
+                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
                         break;
                 }
             } else {
@@ -395,7 +395,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.open_in_browser:
-                Utils.viewInBrowser(url);
+                Utils.viewInBrowser(this, url);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -88,7 +88,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.dilidili)
     public void openDilidili(){
-        Utils.viewInBrowser(Api.HOME_API);
+        Utils.viewInBrowser(this, Api.HOME_API);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class AboutActivity extends BaseActivity {
                     break;
                 case 2:
                     application.showToastMsg("发现新版本,请手动下载");
-                    Utils.viewInBrowser(msg.getData().getString("url"));
+                    Utils.viewInBrowser(AboutActivity.this, msg.getData().getString("url"));
                     break;
             }
         }
