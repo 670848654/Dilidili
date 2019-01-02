@@ -12,11 +12,11 @@ import java.util.List;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
-import anime.project.dilidili.adapter.AnimeListAdapter;
+import anime.project.dilidili.adapter.FavoriteListAdapter;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -30,7 +30,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
     Toolbar toolbar;
     @BindView(R.id.rv_list)
     RecyclerView mRecyclerView;
-    private AnimeListAdapter adapter;
+    private FavoriteListAdapter adapter;
     @BindView(R.id.mSwipe)
     SwipeRefreshLayout mSwipe;
     private List<AnimeListBean> favoriteList = new ArrayList<>();
@@ -65,7 +65,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
     }
 
     public void initToolbar(){
-        toolbar.setTitle(Utils.getString(FavoriteActivity.this,R.string.favorite_title));
+        toolbar.setTitle(Utils.getString(R.string.favorite_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -77,8 +77,8 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
     }
 
     public void initAdapter(){
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AnimeListAdapter(FavoriteActivity.this, favoriteList);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        adapter = new FavoriteListAdapter(favoriteList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
@@ -91,7 +91,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
             }
         });
         adapter.setOnItemLongClickListener((adapter, view, position) -> {
-            View v = adapter.getViewByPosition(mRecyclerView, position, R.id.tag);
+            View v = adapter.getViewByPosition(mRecyclerView, position, R.id.img);
             final PopupMenu popupMenu = new PopupMenu(FavoriteActivity.this, v);
             popupMenu.getMenuInflater().inflate(R.menu.favorite_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(menuItem -> {
@@ -114,8 +114,9 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
     private void removeFavorite(int position){
         DatabaseUtil.deleteFavorite(favoriteList.get(position).getTitle());
         adapter.remove(position);
+        Utils.showSnackbar(toolbar, Utils.getString(R.string.join_error));
         if (favoriteList.size() <= 0){
-            errorTitle.setText("收藏为空");
+            errorTitle.setText(Utils.getString(R.string.empty_favorite));
             adapter.setEmptyView(errorView);
         }
     }

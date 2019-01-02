@@ -18,13 +18,13 @@
             android:icon="@drawable/ic_find_replace_white_48dp"
             android:title="条件筛选" />
     </group>
-    <item android:title="收藏">
+    <item android:title="我的">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/favorite"
                     android:icon="@drawable/ic_loyalty_white_48dp"
-                    android:title="动漫" />
+                    android:title="追番" />
             </group>
         </menu>
     </item>

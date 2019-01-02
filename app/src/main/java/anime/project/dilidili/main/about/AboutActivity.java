@@ -79,7 +79,7 @@ public class AboutActivity extends BaseActivity {
 
     private void initViews(){
         version.setText(Utils.getASVersionName());
-        cache.setText(Environment.getExternalStorageDirectory() + Utils.getString(this, R.string.cache_text));
+        cache.setText(Environment.getExternalStorageDirectory() + Utils.getString(R.string.cache_text));
         open_source.setOnClickListener(v -> {
             if (Utils.isFastClick())
                 startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
@@ -88,7 +88,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.dilidili)
     public void openDilidili(){
-        Utils.viewInBrowser(this, Api.HOME_API);
+        Utils.viewInBrowser(Api.HOME_API);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     public void checkUpdate() {
-        p = Utils.getProDialog(AboutActivity.this, "检测更新中...");
+        p = Utils.getProDialog(this, R.string.check_update_text);
         Handler handler = new Handler();
         handler.postDelayed(() -> new HttpGet(Api.CHECK_UPDATE, 10, 20, new Callback() {
             @Override
@@ -160,7 +160,7 @@ public class AboutActivity extends BaseActivity {
                     break;
                 case 2:
                     application.showToastMsg("发现新版本,请手动下载");
-                    Utils.viewInBrowser(AboutActivity.this,msg.getData().getString("url"));
+                    Utils.viewInBrowser(msg.getData().getString("url"));
                     break;
             }
         }

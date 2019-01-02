@@ -12,7 +12,7 @@ import anime.project.dilidili.main.base.BaseView;
 
 public interface DescContract {
     interface Model {
-        void getData(Context context, String url, LoadDataCallback callback);
+        void getData(String url, LoadDataCallback callback);
     }
 
     interface View extends BaseView {

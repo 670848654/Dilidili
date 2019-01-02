@@ -31,7 +31,7 @@ public class DescModel implements DescContract.Model {
     private String dramaStr = "";
 
     @Override
-    public void getData(Context context, String url, DescContract.LoadDataCallback callback) {
+    public void getData(String url, DescContract.LoadDataCallback callback) {
         new HttpGet(url, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -79,9 +79,9 @@ public class DescModel implements DescContract.Model {
                             for (int i = 0; i < playDesc.size(); i++) {
                                 String str = playDesc.get(i).text();
                                 if (str.equals("在线")) {
-                                    setData(context, str, play_list, "play");
+                                    setData(str, play_list, "play");
                                 } else if (str.equals("下载")) {
-                                    setData(context, str, down, "down");
+                                    setData(str, down, "down");
                                 }
                             }
                             if (playOva.size() > 0) {
@@ -107,7 +107,7 @@ public class DescModel implements DescContract.Model {
         });
     }
 
-    public void setData(Context context, String title, Elements els, String type) {
+    public void setData(String title, Elements els, String type) {
         AnimeHeaderBean animeHeaderBean = new AnimeHeaderBean(title);
         int k = 0;
         boolean select;
@@ -126,7 +126,7 @@ public class DescModel implements DescContract.Model {
                     }
                 }
                 if (k == 0)
-                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(context, R.string.no_resources), "", type));
+                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(R.string.no_resources), "", type));
             break;
             case "下载":
                 for (int i = 0; i < els.size(); i++) {
@@ -137,7 +137,7 @@ public class DescModel implements DescContract.Model {
                     }
                 }
                 if (k == 0)
-                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, Utils.getString(context, R.string.no_resources), "", type));
+                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, Utils.getString(R.string.no_resources), "", type));
                 break;
         }
         list.add(animeHeaderBean);

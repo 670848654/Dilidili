@@ -2,8 +2,8 @@ package anime.project.dilidili.main.setting.user;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.bean.ApiBean;
+import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
 public class ApiPresenter extends Presenter<ApiContract.View> implements BasePresenter,ApiContract.LoadDataCallback {

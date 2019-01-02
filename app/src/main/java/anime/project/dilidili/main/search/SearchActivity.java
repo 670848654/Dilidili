@@ -92,7 +92,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
 
     public void initAdapter(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SearchAdapter(SearchActivity.this, searchList);
+        adapter = new SearchAdapter(searchList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
@@ -103,7 +103,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                     bundle.putString("name", bean.getTitle());
                     bundle.putString("url", bean.getUrl());
                     startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
-                } else application.showSnackbarMsg(toolbar, Utils.getString(getApplicationContext(), R.string.ceshi_error));
+                } else application.showSnackbarMsg(toolbar, Utils.getString(R.string.ceshi_error));
             }
         });
         adapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
@@ -141,7 +141,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
         final MenuItem item = menu.findItem(R.id.search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(item);
         mSearchView.onActionViewExpanded();
-        mSearchView.setQueryHint(Utils.getString(SearchActivity.this, R.string.search_hint));
+        mSearchView.setQueryHint(Utils.getString(R.string.search_hint));
         mSearchView.setMaxWidth(1000);
         if (!title.isEmpty()){
             mSearchView.setQuery(title, false);

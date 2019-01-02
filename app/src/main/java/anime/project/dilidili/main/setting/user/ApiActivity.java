@@ -68,7 +68,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
     }
 
     public void initToolbar() {
-        toolbar.setTitle(Utils.getString(getApplicationContext(), R.string.api_title));
+        toolbar.setTitle(Utils.getString(R.string.api_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -91,7 +91,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
     public void delete(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("删除后将无法恢复。\n是否删除？");
-        builder.setPositiveButton(Utils.getString(getApplicationContext(), R.string.page_positive), (dialog, i) -> {
+        builder.setPositiveButton(Utils.getString(R.string.page_positive), (dialog, i) -> {
             DatabaseUtil.deleteApi(apiList.get(position).getId());
             adapter.remove(position);
             if (apiList.size() == 0){
@@ -100,7 +100,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
                 adapter.setEmptyView(errorView);
             }
         });
-        builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
+        builder.setNegativeButton(Utils.getString(R.string.page_negative), null);
         alertDialog = builder.create();
         alertDialog.show();
     }
@@ -125,9 +125,9 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
             title.setText(adapter.getData().get(position).getTitle());
             url.setText(adapter.getData().get(position).getUrl());
         }
-        builder.setPositiveButton(Utils.getString(getApplicationContext(), R.string.page_positive), null);
-        builder.setNegativeButton(Utils.getString(getApplicationContext(), R.string.page_negative), null);
-        builder.setTitle(Utils.getString(getApplicationContext(), R.string.page_title));
+        builder.setPositiveButton(Utils.getString(R.string.page_positive), null);
+        builder.setNegativeButton(Utils.getString(R.string.page_negative), null);
+        builder.setTitle(R.string.page_title);
         alertDialog = builder.setView(view).create();
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
@@ -136,15 +136,15 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
             int error = 0;
             if (name.isEmpty()) {
                 error++;
-                title.setError(Utils.getString(getApplicationContext(), R.string.api_error_1));
+                title.setError(Utils.getString(R.string.api_error_1));
             }
             if (api.isEmpty()) {
                 error++;
-                url.setError(Utils.getString(getApplicationContext(), R.string.api_error_1));
+                url.setError(Utils.getString(R.string.api_error_1));
             }
             if (!Patterns.WEB_URL.matcher(api).matches()) {
                 error++;
-                url.setError(Utils.getString(getApplicationContext(), R.string.api_error_2));
+                url.setError(Utils.getString(R.string.api_error_2));
             }
             if (error > 0)
                 return;

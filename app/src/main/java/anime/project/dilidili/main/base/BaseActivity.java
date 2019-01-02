@@ -45,7 +45,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
             mPresenter = createPresenter();
             loadData();
         } else {
-            EasyPermissions.requestPermissions(this, Utils.getString(BaseActivity.this, R.string.permissions),
+            EasyPermissions.requestPermissions(this, Utils.getString(R.string.permissions),
                     300, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
@@ -109,7 +109,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        application.showToastMsg(Utils.getString(BaseActivity.this, R.string.permissions_error));
+        application.showToastMsg(Utils.getString(R.string.permissions_error));
         application.removeALLActivity();
     }
 

@@ -103,7 +103,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     public void initAdapter(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AnimeListAdapter(AnimeListActivity.this,list);
+        adapter = new AnimeListAdapter(list);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {

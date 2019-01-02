@@ -29,18 +29,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="3dip"
-                android:progressDrawable="@drawable/pg"
-                android:visibility="gone" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dip"
+                    android:progressDrawable="@drawable/pg"
+                    android:visibility="gone" />
+
                 <!--显示网页区域-->
                 <anime.project.dilidili.main.webview.X5WebView
                     android:id="@+id/x5_webview"
@@ -63,7 +64,7 @@
                         android:layout_centerVertical="true"
                         android:background="@color/grey1000"
                         android:clipToPadding="false"
-                        android:fadingEdge="none"></androidx.recyclerview.widget.RecyclerView>
+                        android:fadingEdge="none" />
                 </RelativeLayout>
             </LinearLayout>
         </FrameLayout>

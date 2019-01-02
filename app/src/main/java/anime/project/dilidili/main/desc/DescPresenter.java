@@ -6,9 +6,8 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.BasePresenter;
-import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
 public class DescPresenter extends Presenter<DescContract.View> implements BasePresenter,DescContract.LoadDataCallback {
@@ -29,7 +28,7 @@ public class DescPresenter extends Presenter<DescContract.View> implements BaseP
     public void loadData(boolean isMain) {
         if (isMain)
             view.showLoadingView();
-        model.getData(context, url, this);
+        model.getData(url, this);
     }
 
     @Override

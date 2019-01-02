@@ -65,7 +65,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     }
 
     public void initToolbar(){
-        toolbar.setTitle(Utils.getString(this,R.string.recommend_title));
+        toolbar.setTitle(Utils.getString(R.string.recommend_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -81,7 +81,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     }
 
     public void initAdapter(){
-        adapter = new RecommendAdapter(this, recommendList);
+        adapter = new RecommendAdapter(recommendList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
@@ -92,6 +92,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
                     bundle.putString("url", Api.URL + bean.getUrl());
                 else
                     bundle.putString("url", bean.getUrl());
+                bundle.putString("name", bean.getTitle());
                 startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
             }
         });

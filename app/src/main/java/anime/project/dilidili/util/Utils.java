@@ -84,13 +84,11 @@ public class Utils {
 
     /**
      * 加载框
-     *
-     * @param context
      * @return
      */
-    public static ProgressDialog getProDialog(Context context, String str) {
+    public static ProgressDialog getProDialog(Context context, @StringRes int id) {
         ProgressDialog p = new ProgressDialog(context);
-        p.setMessage(str);
+        p.setMessage(getString(id));
         p.setCancelable(false);
         p.show();
         return p;
@@ -111,16 +109,16 @@ public class Utils {
      *
      * @param url
      */
-    public static void selectVideoPlayer(Context context, String url) {
+    public static void selectVideoPlayer(String url) {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.parse(url), "video/*");
         // 注意此处的判断intent.resolveActivity()可以返回显示该Intent的Activity对应的组件名
         // 官方解释 : Name of the component implementing an activity that can display the intent
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(Intent.createChooser(intent, "请选择视频播放器"));
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            getContext().startActivity(Intent.createChooser(intent, "请选择视频播放器"));
         } else {
-            Toast.makeText(context.getApplicationContext(), "没有找到匹配的程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext().getApplicationContext(), "没有找到匹配的程序", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -129,19 +127,19 @@ public class Utils {
      *
      * @param url
      */
-    public static void viewInBrowser(Context context, String url) {
+    public static void viewInBrowser(String url) {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(Intent.createChooser(intent, "请通过浏览器打开"));
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            getContext().startActivity(Intent.createChooser(intent, "请通过浏览器打开"));
         } else {
-            Toast.makeText(context.getApplicationContext(), "没有匹配的程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext().getApplicationContext(), "没有匹配的程序", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static String getString(Context context, @StringRes int id) {
-        return context.getResources().getString(id);
+    public static String getString( @StringRes int id) {
+        return getContext().getResources().getString(id);
     }
     /**
      * Snackbar
@@ -172,17 +170,17 @@ public class Utils {
     /**
      * info
      */
-    public static void showX5Info(Context context) {
+    public static void showX5Info() {
         AlertDialog alertDialog;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        builder.setPositiveButton(Utils.getString(Utils.getContext(), R.string.x5_info_positive), null);
-        builder.setMessage(Utils.getString(Utils.getContext(), R.string.x5_info));
-        builder.setTitle(Utils.getString(Utils.getContext(), R.string.x5_info_title));
+        builder.setPositiveButton(getString(R.string.x5_info_positive), null);
+        builder.setMessage(getString(R.string.x5_info));
+        builder.setTitle(getString(R.string.x5_info_title));
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            SharedPreferencesUtils.setParam(Utils.getContext(), "show_x5_info", false);
+            SharedPreferencesUtils.setParam(getContext(), "show_x5_info", false);
             alertDialog.dismiss();
         });
     }
@@ -193,6 +191,58 @@ public class Utils {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(),0);
         }
+    }
+
+    public static ObjectAnimator tada(View view) {
+        return tada(view, 2f);
+    }
+
+    public static ObjectAnimator tada(View view, float shakeFactor) {
+
+        PropertyValuesHolder pvhScaleX = PropertyValuesHolder.ofKeyframe(View.SCALE_X,
+                Keyframe.ofFloat(0f, 1f),
+                Keyframe.ofFloat(.1f, .9f),
+                Keyframe.ofFloat(.2f, .9f),
+                Keyframe.ofFloat(.3f, 1.1f),
+                Keyframe.ofFloat(.4f, 1.1f),
+                Keyframe.ofFloat(.5f, 1.1f),
+                Keyframe.ofFloat(.6f, 1.1f),
+                Keyframe.ofFloat(.7f, 1.1f),
+                Keyframe.ofFloat(.8f, 1.1f),
+                Keyframe.ofFloat(.9f, 1.1f),
+                Keyframe.ofFloat(1f, 1f)
+        );
+
+        PropertyValuesHolder pvhScaleY = PropertyValuesHolder.ofKeyframe(View.SCALE_Y,
+                Keyframe.ofFloat(0f, 1f),
+                Keyframe.ofFloat(.1f, .9f),
+                Keyframe.ofFloat(.2f, .9f),
+                Keyframe.ofFloat(.3f, 1.1f),
+                Keyframe.ofFloat(.4f, 1.1f),
+                Keyframe.ofFloat(.5f, 1.1f),
+                Keyframe.ofFloat(.6f, 1.1f),
+                Keyframe.ofFloat(.7f, 1.1f),
+                Keyframe.ofFloat(.8f, 1.1f),
+                Keyframe.ofFloat(.9f, 1.1f),
+                Keyframe.ofFloat(1f, 1f)
+        );
+
+        PropertyValuesHolder pvhRotate = PropertyValuesHolder.ofKeyframe(View.ROTATION,
+                Keyframe.ofFloat(0f, 0f),
+                Keyframe.ofFloat(.1f, -3f * shakeFactor),
+                Keyframe.ofFloat(.2f, -3f * shakeFactor),
+                Keyframe.ofFloat(.3f, 3f * shakeFactor),
+                Keyframe.ofFloat(.4f, -3f * shakeFactor),
+                Keyframe.ofFloat(.5f, 3f * shakeFactor),
+                Keyframe.ofFloat(.6f, -3f * shakeFactor),
+                Keyframe.ofFloat(.7f, 3f * shakeFactor),
+                Keyframe.ofFloat(.8f, -3f * shakeFactor),
+                Keyframe.ofFloat(.9f, 3f * shakeFactor),
+                Keyframe.ofFloat(1f, 0)
+        );
+
+        return ObjectAnimator.ofPropertyValuesHolder(view, pvhScaleX, pvhScaleY, pvhRotate).
+                setDuration(1000);
     }
 
     public static ObjectAnimator nope(View view) {
@@ -236,11 +286,9 @@ public class Utils {
 
     /**
      * 复制提取码到剪切板
-     *
-     * @param context
      */
-    public static void putTextIntoClip(Context context, String string) {
-        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+    public static void putTextIntoClip(String string) {
+        ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         //创建ClipData对象
         ClipData clipData = ClipData.newPlainText("string", string);
         //添加ClipData对象到剪切板中
@@ -266,11 +314,10 @@ public class Utils {
 
     /**
      * 判断当前设备是手机还是平板，代码来自 Google I/O App for Android
-     * @param context
      * @return 平板返回 True，手机返回 False
      */
-    public static boolean isPad(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
+    public static boolean isPad() {
+        return (getContext().getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
@@ -293,15 +340,14 @@ public class Utils {
 
     /**
      * 设置图片竖屏
-     * @param context
      * @param url
      */
-    public static void setImageVertical(Context context, String url, ImageView imageView){
+    public static void setImageVertical(String url, ImageView imageView){
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error);
-        Glide.with(context)
+        Glide.with(getContext())
                 .load(url)
                 .apply(options)
                 .into(imageView);

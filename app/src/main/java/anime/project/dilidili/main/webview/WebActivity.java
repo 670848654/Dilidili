@@ -60,6 +60,8 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
 public class WebActivity extends BaseActivity implements VideoContract.View {
+    private final static String PC_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36";
+    private final static String PHONE_USER_AGENT = "Mozilla/5.0 (Linux; Android 9; ONEPLUS A6010 Build/PKQ1.180716.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36";
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private WebviewAdapter adapter;
@@ -98,6 +100,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     LinearLayout linearLayout;
     private VideoPresenter presenter;
     private List<ApiBean> apiList;
+    private com.tencent.smtt.sdk.WebSettings webSettings;
+    private boolean mModel = false;
+    private MenuItem menuItem;
 
     @Override
     protected Presenter createPresenter() {
@@ -170,19 +175,21 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     public void initAdapter() {
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_1), Api.SOURCE_1_API, true, false, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_2), Api.SOURCE_2_API, false, false, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_3), Api.SOURCE_3_API, false, false, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_4), Api.SOURCE_4_API, false, false, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_5), Api.SOURCE_5_API, false, false, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_6), Api.SOURCE_6_API, false, false, false));
+        webSettings = mX5WebView.getSettings();
+        webSettings.setUserAgentString(PHONE_USER_AGENT);
+        list.add(new WebviewBean(Utils.getString(R.string.source_1), Api.SOURCE_1_API, true, false, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_2), Api.SOURCE_2_API, false, false, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_3), Api.SOURCE_3_API, false, false, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_4), Api.SOURCE_4_API, false, false, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_5), Api.SOURCE_5_API, false, false, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_6), Api.SOURCE_6_API, false, false, false));
         if (apiList.size() > 0) {
             for (int i = 0; i < apiList.size(); i++) {
                 list.add(new WebviewBean(apiList.get(i).getTitle(), apiList.get(i).getUrl(), false, false, false));
             }
         }
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_8), "", false, true, false));
-        list.add(new WebviewBean(Utils.getString(WebActivity.this, R.string.source_9), "", false, false, true));
+        list.add(new WebviewBean(Utils.getString(R.string.source_8), "", false, true, false));
+        list.add(new WebviewBean(Utils.getString(R.string.source_9), "", false, false, true));
         recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager ms = new LinearLayoutManager(this);
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -191,9 +198,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (list.get(position).isOriginalPage()) {
-                Utils.viewInBrowser(WebActivity.this, diliUrl);
+                Utils.viewInBrowser(diliUrl);
             } else if (list.get(position).isOriginalAddress()) {
-                Utils.viewInBrowser(WebActivity.this, url);
+                Utils.viewInBrowser(url);
             } else {
                 for (int i = 0; i < list.size(); i++) {
                     list.get(i).setSelect(false);
@@ -217,7 +224,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
-                        p = Utils.getProDialog(WebActivity.this, "解析中,请稍后...");
+                        p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
                         v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
                         diliUrl = bean.getUrl();
@@ -251,7 +258,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                             WebActivity.this.finish();
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(WebActivity.this, url);
+                            Utils.selectVideoPlayer(url);
                             break;
                     }
                 } else {
@@ -312,7 +319,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                         WebActivity.this.finish();
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
+                        Utils.selectVideoPlayer(videoUrlArr[index]);
                         break;
                 }
             } else {
@@ -485,7 +492,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     @Override
     public void getVideoError() {
         //网络出错
-        runOnUiThread(() -> application.showToastMsg(Utils.getString(WebActivity.this, R.string.error_700)));
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
     }
 
     @Override
@@ -550,18 +557,39 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
+        menuItem = menu.findItem(R.id.model);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.module) {
-            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                drawerLayout.closeDrawer(GravityCompat.END);
-            } else
-                drawerLayout.openDrawer(GravityCompat.END);
-            return true;
+        switch (item.getItemId()){
+            case R.id.module:
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
+                } else
+                    drawerLayout.openDrawer(GravityCompat.END);
+                break;
+            case R.id.model:
+                if (mModel){
+                    //切换成手机版
+                    mModel = false;
+                    webSettings.setUserAgent(PHONE_USER_AGENT);
+                    menuItem.setIcon(R.drawable.baseline_stay_primary_portrait_white_48dp);
+                    menuItem.setTitle(Utils.getString(R.string.phone_model));
+                    application.showToastMsg("已切换成手机版");
+                }else {
+                    //切换成电脑版
+                    mModel = true;
+                    webSettings.setUserAgent(PC_USER_AGENT);
+                    menuItem.setIcon(R.drawable.baseline_language_white_48dp);
+                    menuItem.setTitle(Utils.getString(R.string.pc_model));
+                    application.showToastMsg("已切换成电脑版");
+                }
+                Map<String, String> map = new HashMap<>();
+                map.put(REFERER, diliUrl);
+                mX5WebView.loadUrl(newUrl, map);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -131,7 +131,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
                     break;
                 case R.id.witch:
                     if (Utils.isFastClick()) {
-                        p = Utils.getProDialog(getActivity(), "解析中,请稍后...");
+                        p = Utils.getProDialog(getActivity(), R.string.parsing);
                         diliUrl = bean.getWitchUrl();
                         animeTitle = bean.getTitle();
                         witchTitle = animeTitle + " - " + bean.getWitchTitle();
@@ -169,7 +169,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
                             startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(getActivity(),url);
+                            Utils.selectVideoPlayer(url);
                             break;
                     }
                 }else {
@@ -223,7 +223,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
                         startActivity(new Intent(getActivity(), PlayerActivity.class).putExtras(bundle));
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(getActivity(),videoUrlArr[index]);
+                        Utils.selectVideoPlayer(videoUrlArr[index]);
                         break;
                 }
             }else {
@@ -258,7 +258,7 @@ public class WeekFragment extends Fragment implements VideoContract.View {
     @Override
     public void getVideoError() {
         //网络出错
-        getActivity().runOnUiThread(() -> application.showToastMsg(Utils.getString(getActivity(), R.string.error_700)));
+        getActivity().runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
     }
 
     @Override

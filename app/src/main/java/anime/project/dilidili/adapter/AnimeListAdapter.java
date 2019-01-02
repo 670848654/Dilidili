@@ -12,15 +12,13 @@ import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.util.Utils;
 
 public class AnimeListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHolder> {
-    private Context context;
-    public AnimeListAdapter(Context context, List list) {
+    public AnimeListAdapter(List list) {
         super(R.layout.item_anime, list);
-        this.context = context;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setImageVertical(context,item.getImg(),helper.getView(R.id.img));
+        Utils.setImageVertical(item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.region, item.getRegion());
         helper.setText(R.id.year, item.getYear());

@@ -35,10 +35,10 @@ public class VideoUtils {
 
     public static void showErrorInfo(Context context, String HTML_url) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setPositiveButton(Utils.getString(context, R.string.play_not_found_positive), null);
-        builder.setNegativeButton(Utils.getString(context, R.string.play_not_found_negative), null);
-        builder.setTitle(Utils.getString(context, R.string.play_not_found_title));
-        builder.setMessage(Utils.getString(context, R.string.error_800));
+        builder.setPositiveButton(Utils.getString(R.string.play_not_found_positive), null);
+        builder.setNegativeButton(Utils.getString(R.string.play_not_found_negative), null);
+        builder.setTitle(Utils.getString(R.string.play_not_found_title));
+        builder.setMessage(Utils.getString(R.string.error_800));
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();

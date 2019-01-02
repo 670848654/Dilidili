@@ -2,8 +2,8 @@ package anime.project.dilidili.main.favorite;
 
 import java.util.List;
 
-import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
 public class FavoritePresenter extends Presenter<FavoriteContract.View> implements BasePresenter,FavoriteContract.LoadDataCallback {

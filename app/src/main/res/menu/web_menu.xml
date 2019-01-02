@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/model"
+        android:orderInCategory="100"
+        android:icon="@drawable/baseline_stay_primary_portrait_white_48dp"
+        android:title="@string/phone_model"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/module"
-        android:orderInCategory="60"
+        android:orderInCategory="100"
         android:icon="@drawable/baseline_view_module_white_48dp"
         android:title="@string/module"
         app:showAsAction="always"/>

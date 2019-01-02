@@ -1,11 +1,9 @@
 package anime.project.dilidili.main.home;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -118,11 +116,11 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         View view = navigationView.getHeaderView(0);
         imageView = view.findViewById(R.id.imageView);
         imageView.setOnClickListener(view1 -> {
-            Utils.showSnackbar(imageView, Utils.getString(HomeActivity.this, R.string.huaji));
-            final ObjectAnimator animator = Utils.nope(imageView);
-            animator.setRepeatCount(ValueAnimator.INFINITE);
+            Utils.showSnackbar(imageView, Utils.getString(R.string.huaji));
+            final ObjectAnimator animator = Utils.tada(imageView);
+            animator.setRepeatCount(0);
+            animator.setDuration(1000);
             animator.start();
-            new Handler().postDelayed(() -> animator.cancel(), 500);
         });
         navigationView.getBackground().mutate().setAlpha(150);//0~255透明度值
         navigationView.setNavigationItemSelectedListener(this);
@@ -165,15 +163,11 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             }
         });
         if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(application.getInstance(), "show_x5_info", true).toString()))
-            Utils.showX5Info(this);
+            Utils.showX5Info();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.search) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -182,7 +176,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         getMenuInflater().inflate(R.menu.home_menu, menu);
         final MenuItem item = menu.findItem(R.id.search);
         mSearchView = (SearchView) item.getActionView();
-        mSearchView.setQueryHint(Utils.getString(HomeActivity.this, R.string.search_hint));
+        mSearchView.setQueryHint(Utils.getString(R.string.search_hint));
         mSearchView.setMaxWidth(1000);
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
         textView.setTextColor(getResources().getColor(R.color.md_white_1000));
@@ -207,12 +201,10 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else
-            application.showSnackbarMsg(toolbar,
-                    Utils.getString(HomeActivity.this, R.string.exit_app),
-                    Utils.getString(HomeActivity.this, R.string.exit),
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
+        else application.showSnackbarMsg(toolbar,
+                    Utils.getString(R.string.exit_app),
+                    Utils.getString(R.string.exit),
                     v -> finish());
     }
 
@@ -245,7 +237,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     public void goToNewAnime(String url, String title) {
         if (url.equals("")) {
-            Utils.showSnackbar(imageView, Utils.getString(this, R.string.empty));
+            Utils.showSnackbar(imageView, Utils.getString(R.string.empty));
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", title);
@@ -267,7 +259,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
             mSwipe.setRefreshing(false);
-            navigationView.getMenu().getItem(0).setTitle(Utils.getString(HomeActivity.this, R.string.menu_load_error));
+            navigationView.getMenu().getItem(0).setTitle(Utils.getString(R.string.menu_load_error));
             application.showToastMsg(msg);
             application.error = msg;
             setWeekAdapter();

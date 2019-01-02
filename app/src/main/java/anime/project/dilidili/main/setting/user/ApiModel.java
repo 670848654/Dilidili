@@ -2,8 +2,8 @@ package anime.project.dilidili.main.setting.user;
 
 import java.util.List;
 
-import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.bean.ApiBean;
+import anime.project.dilidili.database.DatabaseUtil;
 
 public class ApiModel implements ApiContract.Model{
 

@@ -58,7 +58,7 @@ public class SettingActivity extends BaseActivity {
 
     public void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(Utils.getString(SettingActivity.this,R.string.setting_title));
+        toolbar.setTitle(Utils.getString(R.string.setting_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());

@@ -23,7 +23,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
         addItemType(AnimeType.TYPE_LEVEL_0, R.layout.item_head);
         addItemType(AnimeType.TYPE_LEVEL_1, R.layout.item_btn);
         addItemType(AnimeType.TYPE_LEVEL_2, R.layout.item_down);
-        addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_recommend);
+        addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_favorite);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                 final AnimeDescBean animeDescBean = (AnimeDescBean) item;
                 String title = animeDescBean.getTitle();
                 if (animeDescBean.getType().equals("play")) {
-                    if (!title.equals(Utils.getString(context, R.string.no_resources))) {
+                    if (!title.equals(Utils.getString(R.string.no_resources))) {
                         title = title.substring(1, title.length());
                         title = title.substring(0, title.length() - 1);
                     }
@@ -57,7 +57,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                     helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_selected, null));
                 else
                     helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_default, null));
-                if (animeDescBean.getTitle().equals(Utils.getString(context, R.string.no_resources)))
+                if (animeDescBean.getTitle().equals(Utils.getString(R.string.no_resources)))
                     helper.getView(R.id.tag_group).setEnabled(false);
                 else
                     helper.getView(R.id.tag_group).setEnabled(true);
@@ -69,7 +69,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
-                Utils.setImageVertical(context, bean.getImg(), helper.getView(R.id.img));
+                Utils.setImageVertical(bean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

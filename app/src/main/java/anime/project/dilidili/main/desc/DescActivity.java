@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -119,7 +121,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     }
 
     public void initToolbar() {
-        toolbar.setTitle(Utils.getString(DescActivity.this, R.string.loading));
+        toolbar.setTitle(Utils.getString(R.string.loading));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -150,7 +152,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
-                        p = Utils.getProDialog(DescActivity.this, "解析中,请稍后...");
+                        p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                         v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
                         diliUrl = bean.getUrl();
@@ -175,9 +177,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 switch (bean.getType()) {
                     case "down":
                         if (!bean.getUrl().isEmpty())
-                            Utils.viewInBrowser(DescActivity.this, bean.getUrl());
+                            Utils.viewInBrowser(bean.getUrl());
                         else
-                            Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.no_resources));
+                            Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
                         break;
                 }
             }
@@ -187,7 +189,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "down":
-                        Utils.putTextIntoClip(DescActivity.this, bean.getTitle());
+                        Utils.putTextIntoClip(bean.getTitle());
                         application.showToastMsg(bean.getTitle() + "已复制到剪切板");
                         break;
                 }
@@ -218,7 +220,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                             break;
                         case 1:
-                            Utils.selectVideoPlayer(DescActivity.this, url);
+                            Utils.selectVideoPlayer(url);
                             break;
                     }
                 } else {
@@ -272,7 +274,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
                         break;
                     case 1:
-                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
+                        Utils.selectVideoPlayer(videoUrlArr[index]);
                         break;
                 }
             } else {
@@ -307,10 +309,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         isFavorite = DatabaseUtil.favorite(animeListBean);
         if (isFavorite) {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
-            Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.join_ok));
+            Utils.showSnackbar(toolbar, Utils.getString(R.string.join_ok));
         } else {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
-            Utils.showSnackbar(toolbar, Utils.getString(DescActivity.this, R.string.join_error));
+            Utils.showSnackbar(toolbar, Utils.getString(R.string.join_error));
         }
     }
 
@@ -390,6 +392,22 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.open_in_browser:
+                Utils.viewInBrowser(url);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.desc_menu, menu);
+        return true;
+    }
+
+    @Override
     public void showSuccessDramaView(List<AnimeDescBean> list) {
         drama = list;
     }
@@ -437,7 +455,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void getVideoError() {
         //网络出错
-        runOnUiThread(() -> application.showToastMsg(Utils.getString(DescActivity.this, R.string.error_700)));
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
     }
 
     @Override

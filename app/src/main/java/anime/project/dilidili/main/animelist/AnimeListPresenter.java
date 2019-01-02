@@ -1,8 +1,9 @@
 package anime.project.dilidili.main.animelist;
 
 import java.util.List;
-import anime.project.dilidili.main.base.BasePresenter;
+
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
 public class AnimeListPresenter extends Presenter<AnimeListContract.View> implements BasePresenter,AnimeListContract.LoadDataCallback {

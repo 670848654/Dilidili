@@ -12,7 +12,7 @@
     <string name="home_tag_title">条件筛选</string>
     <string name="home_recommend_title">动漫推荐</string>
     <string name="home_favorite_title">我的收藏</string>
-    <string name="huaji">嘤嘤嘤嘤嘤~</string>
+    <string name="huaji">嘤嘤嘤嘤嘤 (。・∀・)ノ</string>
     <string name="week1">周一</string>
     <string name="week2">周二</string>
     <string name="week3">周三</string>
@@ -58,10 +58,11 @@
     <!-- btn文本 -->
     <string name="no_resources">暂无资源</string>
     <!-- msg文本 -->
+    <string name="parsing">解析中,请稍后...</string>
     <string name="error_700">网络错误,请重试!</string>
     <string name="error_800">未能获取到播放地址!\n1.解析方法不支持\n2.播放地址不存在\n可以尝试打开原页面去播放.</string>
-    <string name="join_ok">已加入我的收藏</string>
-    <string name="join_error">已从我的收藏中移除</string>
+    <string name="join_ok">自己追的番就要好好看完哦 （&gt;▽&lt;）</string>
+    <string name="join_error">哼！竟然真的抛弃了人家（＝。＝）</string>
     <!-- 播放地址未找到 -->
     <string name="play_not_found_title">解析失败</string>
     <string name="play_not_found_positive">访问原页面</string>
@@ -73,7 +74,7 @@
     <!-- drawer文本 -->
     <string name="recommend_title">推荐动漫-补番(考古)专用</string>
     <string name="tag_title">筛选</string>
-    <string name="favorite_title">我的收藏</string>
+    <string name="favorite_title">我的追番</string>
     <string name="setting_title">自定义</string>
     <!-- 设置界面文本 -->
     <string name="set_api">自定义解析接口</string>
@@ -90,13 +91,12 @@
     <string name="api_title">自定义解析API</string>
     <!-- menu通用文本 -->
     <string name="module">剧集</string>
-    <string name="page">跳转</string>
-    <string name="line">线路1</string>
-    <string name="favorite">未收藏</string>
-    <string name="favorite_yes">已收藏</string>
+    <string name="phone_model">手机版</string>
+    <string name="pc_model">电脑版</string>
+    <string name="open_in_browser">通过浏览器打开</string>
     <!-- 收藏相关文本 -->
-    <string name="empty_favorite">收藏为空</string>
-    <string name="remove_favorite">移除收藏</string>
+    <string name="empty_favorite">空空如也呢(－∀＝)</string>
+    <string name="remove_favorite">取消追番</string>
     <string name="remove_api">移除</string>
     <!-- 关于相关文本 -->
     <string name="about">关于</string>
@@ -108,6 +108,7 @@
     <string name="test_model_desc">OnePlus 6T : Android 9</string>
     <string name="now_version">当前版本</string>
     <string name="check_update">检测更新</string>
+    <string name="check_update_text">检测更新中...</string>
     <string name="final_compile">最后编译</string>
     <string name="final_compile_time">2018年12月26日11:29:58</string>
     <string name="cache">缓存目录</string>

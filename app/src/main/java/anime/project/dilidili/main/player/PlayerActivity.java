@@ -126,7 +126,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
             Jzvd.releaseAllVideos();
             finish();
         });
-        if (Utils.isPad(this)) {
+        if (Utils.isPad()) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
                 pic.setVisibility(View.GONE);
             else
@@ -169,7 +169,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                 final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
                 switch (bean.getType()) {
                     case "play":
-                        p = Utils.getProDialog(PlayerActivity.this, "解析中,请稍后...");
+                        p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                         v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
                         diliUrl = bean.getUrl();
@@ -200,7 +200,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                             break;
                         case 1:
                             Jzvd.releaseAllVideos();
-                            Utils.selectVideoPlayer(PlayerActivity.this, url);
+                            Utils.selectVideoPlayer(url);
                             break;
                     }
                 } else {
@@ -254,7 +254,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                         break;
                     case 1:
                         Jzvd.releaseAllVideos();
-                        Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
+                        Utils.selectVideoPlayer(videoUrlArr[index]);
                         break;
                 }
             } else {
@@ -276,10 +276,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     public void onClick(TextView view){
         switch (view.getId()){
             case R.id.select_player:
-                Utils.selectVideoPlayer(this, url);
+                Utils.selectVideoPlayer(url);
                 break;
             case R.id.open_in_browser:
-                Utils.viewInBrowser(this, diliUrl);
+                Utils.viewInBrowser(diliUrl);
                 break;
         }
     }
@@ -366,7 +366,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @Override
     public void getVideoError() {
         //网络出错
-        runOnUiThread(() -> application.showToastMsg(Utils.getString(PlayerActivity.this, R.string.error_700)));
+        runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
     }
 
     @Override

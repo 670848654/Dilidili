@@ -66,7 +66,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
     }
 
     public void initToolbar() {
-        toolbar.setTitle(Utils.getString(TagActivity.this, R.string.tag_title));
+        toolbar.setTitle(Utils.getString(R.string.tag_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());

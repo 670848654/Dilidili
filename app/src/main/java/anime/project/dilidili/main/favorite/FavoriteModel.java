@@ -2,8 +2,10 @@ package anime.project.dilidili.main.favorite;
 
 import java.util.List;
 
-import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.R;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.util.Utils;
 
 public class FavoriteModel implements FavoriteContract.Model{
 
@@ -13,6 +15,6 @@ public class FavoriteModel implements FavoriteContract.Model{
         if (list.size() > 0)
             callback.success(list);
         else
-            callback.error("收藏为空");
+            callback.error(Utils.getString(R.string.empty_favorite));
     }
 }
