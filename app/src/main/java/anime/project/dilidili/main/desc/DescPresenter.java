@@ -1,7 +1,5 @@
 package anime.project.dilidili.main.desc;
 
-import android.content.Context;
-
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.util.List;
@@ -11,14 +9,12 @@ import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
 public class DescPresenter extends Presenter<DescContract.View> implements BasePresenter,DescContract.LoadDataCallback {
-    private Context context;
     private String url;
     private DescContract.View view;
     private DescModel model;
 
-    public DescPresenter(Context context, String url,DescContract.View view){
+    public DescPresenter(String url,DescContract.View view){
         super(view);
-        this.context = context;
         this.url = url;
         this.view = view;
         model = new DescModel();

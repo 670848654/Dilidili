@@ -46,11 +46,11 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.util.VideoUtils;
 import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 import jp.wasabeef.blurry.Blurry;
 
@@ -83,7 +83,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     protected DescPresenter createPresenter() {
-        return new DescPresenter(this, url, this);
+        return new DescPresenter(url, this);
     }
 
     @Override
@@ -144,6 +144,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mSwipe.setRefreshing(true);
     }
 
+    @SuppressLint("RestrictedApi")
     public void initAdapter() {
         adapter = new DescAdapter(multiItemList, DescActivity.this);
         adapter.openLoadAnimation();
@@ -161,13 +162,21 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         videoPresenter.loadData(true);
                         break;
                     case "html":
-                        Bundle bundle = new Bundle();
+                        ct.setTitle(Utils.getString(R.string.loading));
+                        mSwipe.setRefreshing(true);
                         if (bean.getUrl().indexOf("http") == -1)
-                            bundle.putString("url", Api.URL + bean.getUrl());
+                            url = Api.URL + bean.getUrl();
                         else
-                            bundle.putString("url", bean.getUrl());
-                        bundle.putString("name", bean.getTitle());
-                        startActivityForResult(new Intent(DescActivity.this, DescActivity.class).putExtras(bundle), 3000);
+                            url = bean.getUrl();
+                        animeTitle = bean.getTitle();
+                        imageView.setImageDrawable(null);
+                        animeListBean = new AnimeListBean();
+                        favorite.startAnimation(Utils.animationOut(0));
+                        favorite.setVisibility(View.GONE);
+                        mPresenter = new DescPresenter(url, this);
+                        multiItemList.clear();
+                        adapter.setNewData(multiItemList);
+                        mPresenter.loadData(true);
                         break;
                 }
             }
@@ -295,9 +304,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 200 && requestCode == 3000) {
-            setResult(200);
-        } else if (resultCode == 0x20 && requestCode == 0x10) {
+        if (resultCode == 0x20 && requestCode == 0x10) {
             mSwipe.setRefreshing(true);
             multiItemList = new ArrayList<>();
             adapter.notifyDataSetChanged();
