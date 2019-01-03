@@ -1,10 +1,10 @@
 package anime.project.dilidili.main.base;
 
 import android.Manifest;
-import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.io.File;
@@ -25,7 +25,8 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     public View errorView, emptyView, userEmptyView;
     public TextView errorTitle;
     public DiliDili application;
-    private static Handler sHandler;
+//    private static Handler sHandler;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
 
     protected abstract void initBeforeView();
 
-    public void initCustomViews(){
+    protected void initCustomViews(){
         errorView = getLayoutInflater().inflate(R.layout.base_error_view, null);
         errorTitle = errorView.findViewById(R.id.title);
         emptyView = getLayoutInflater().inflate(R.layout.base_emnty_view, null);
@@ -69,28 +70,49 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     /**
      * 隐藏虚拟按键
      */
-    public void hideNavBar() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        sHandler = new Handler();
-        sHandler.post(mHideRunnable); // hide the navigation bar
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
-            sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
-        });
+    protected void hideNavBar() {
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//        sHandler = new Handler();
+//        sHandler.post(mHideRunnable); // hide the navigation bar
+//        final View decorView = getWindow().getDecorView();
+//        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+//            sHandler.postDelayed(mHideRunnable, 3000); // hide the navigation bar
+//        });
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    Runnable mHideRunnable = () -> {
-        int flags;
-        // This work only for android 4.4+
-        // hide navigation bar permanently in android activity
-        // touch the screen, the navigation bar will not show
-        flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        // must be executed in main thread :)
-        getWindow().getDecorView().setSystemUiVisibility(flags);
-    };
+//    Runnable mHideRunnable = () -> {
+//        int flags;
+//        // This work only for android 4.4+
+//        // hide navigation bar permanently in android activity
+//        // touch the screen, the navigation bar will not show
+//        flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        // must be executed in main thread :)
+//        getWindow().getDecorView().setSystemUiVisibility(flags);
+//    };
+
+    protected void showNavBar(){
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+    }
+
+    //Android 9 异形屏适配
+    protected void hideGap(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+    }
 
     @Override
     protected void onDestroy() {

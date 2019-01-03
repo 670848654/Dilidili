@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,9 +71,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     }
 
     @Override
-    protected void loadData() {
-
-    }
+    protected void loadData() {}
 
     @Override
     protected int setLayoutRes() {
@@ -84,12 +81,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @Override
     protected void init() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        //Android 9 异形屏适配
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
+        hideGap();
         Bundle bundle = getIntent().getExtras();
         init(bundle);
         initAdapter();
@@ -167,7 +159,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                     case "play":
                         p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
-                        v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
+                        v.setBackgroundResource(R.drawable.button_selected);
                         diliUrl = bean.getUrl();
                         witchTitle = animeTitle + " - " + bean.getTitle();
                         presenter = new VideoPresenter(animeTitle, bean.getUrl(), PlayerActivity.this);

@@ -20,6 +20,7 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
@@ -43,6 +44,7 @@ public class DefaultWebActivity extends BaseActivity {
     private View customView;
     private FrameLayout fullscreenContainer;
     private IX5WebChromeClient.CustomViewCallback customViewCallback;
+    private Boolean isFullscreen = false;
 
     @Override
     protected Presenter createPresenter() {
@@ -50,9 +52,7 @@ public class DefaultWebActivity extends BaseActivity {
     }
 
     @Override
-    protected void loadData() {
-
-    }
+    protected void loadData() {}
 
     @Override
     protected int setLayoutRes() {
@@ -61,12 +61,7 @@ public class DefaultWebActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
-        hideNavBar();
+        hideGap();
         getBundle();
         initView();
         initWebView();
@@ -92,6 +87,13 @@ public class DefaultWebActivity extends BaseActivity {
     }
 
     public void initWebView() {
+        getWindow().getDecorView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            ArrayList<View> outView = new ArrayList<>();
+            getWindow().getDecorView().findViewsWithText(outView, "下载该视频", View.FIND_VIEWS_WITH_TEXT);
+            if (outView != null && outView.size() > 0) {
+                outView.get(0).setVisibility(View.GONE);
+            }
+        });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mX5WebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
@@ -175,7 +177,8 @@ public class DefaultWebActivity extends BaseActivity {
         fullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
         decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS);
         customView = view;
-        setStatusBarVisibility(false);
+        isFullscreen = true;
+        hideNavBar();
         customViewCallback = callback;
         // 设置横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
@@ -188,7 +191,8 @@ public class DefaultWebActivity extends BaseActivity {
         if (customView == null) {
             return;
         }
-        setStatusBarVisibility(true);
+        isFullscreen = false;
+        showNavBar();
         FrameLayout decor = (FrameLayout) getWindow().getDecorView();
         decor.removeView(fullscreenContainer);
         fullscreenContainer = null;
@@ -197,11 +201,6 @@ public class DefaultWebActivity extends BaseActivity {
         mX5WebView.setVisibility(View.VISIBLE);
         // 设置竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-    private void setStatusBarVisibility(boolean visible) {
-        int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**
@@ -245,5 +244,12 @@ public class DefaultWebActivity extends BaseActivity {
         if (mX5WebView != null)
             mX5WebView.destroy();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFullscreen) hideNavBar();
+        else showNavBar();
     }
 }

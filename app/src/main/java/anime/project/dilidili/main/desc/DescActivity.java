@@ -155,7 +155,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     case "play":
                         p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
-                        v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
+                        v.setBackgroundResource(R.drawable.button_selected);
                         diliUrl = bean.getUrl();
                         witchTitle = animeTitle + " - " + bean.getTitle();
                         videoPresenter = new VideoPresenter(animeListBean.getTitle(), bean.getUrl(), DescActivity.this);

@@ -37,7 +37,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.DramaAdapter;
@@ -53,7 +52,6 @@ import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.util.SharedPreferencesUtils;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
@@ -61,11 +59,11 @@ import butterknife.BindView;
 public class WebActivity extends BaseActivity implements VideoContract.View {
     private final static String PC_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36";
     private final static String PHONE_USER_AGENT = "Mozilla/5.0 (Linux; Android 9; ONEPLUS A6010 Build/PKQ1.180716.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36";
+    private final static String REFERER = "referer";
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
     private WebviewAdapter adapter;
     private List<WebviewBean> list = new ArrayList<>();
-    private final static String REFERER = "referer";
     private String url = "", diliUrl = "";
     private String animeTilte;
     private String witchTitle;
@@ -101,6 +99,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private com.tencent.smtt.sdk.WebSettings webSettings;
     private boolean mModel = false;
     private MenuItem menuItem;
+    private Boolean isFullscreen = false;
 
     @Override
     protected Presenter createPresenter() {
@@ -120,13 +119,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     @Override
     protected void init() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        //Android P 异形屏适配
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
-        hideNavBar();
+        hideGap();
         getBundle();
         initToolbar();
         initView();
@@ -136,12 +129,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     @Override
-    protected void initBeforeView() {
-        StatusBarUtil.setTranslucent(this, 0);
-    }
+    protected void initBeforeView() {}
 
     public void initToolbar() {
-        toolbar.setTitle("");
+        toolbar.setTitle("加载中");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> {
@@ -189,9 +180,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         list.add(new WebviewBean(Utils.getString(R.string.source_8), "", false, true, false));
         list.add(new WebviewBean(Utils.getString(R.string.source_9), "", false, false, true));
         recyclerView.setNestedScrollingEnabled(false);
-        LinearLayoutManager ms = new LinearLayoutManager(this);
-        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(ms);
+//        LinearLayoutManager ms = new LinearLayoutManager(this);
+//        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recyclerView.setLayoutManager(ms);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         adapter = new WebviewAdapter(this, list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((adapter, view, position) -> {
@@ -224,7 +216,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     case "play":
                         p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
-                        v.setBackground(getResources().getDrawable(R.drawable.button_selected, null));
+                        v.setBackgroundResource(R.drawable.button_selected);
                         diliUrl = bean.getUrl();
                         witchTitle = animeTilte + " - " + bean.getTitle();
                         presenter = new VideoPresenter(animeTilte, bean.getUrl(), WebActivity.this);
@@ -241,7 +233,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
             //如果播放地址只有1个
             if (arr.length == 1) {
-                String url = "http" + arr[0];
+                url = "http" + arr[0];
                 if (url.contains(".m3u8") || url.contains(".mp4")) {
                     switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                         case 0:
@@ -321,10 +313,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         linearLayout.setOnClickListener(view -> {
             return;
         });
-        linearLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
+        linearLayout.getBackground().mutate().setAlpha(150);
         getWindow().getDecorView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             ArrayList<View> outView = new ArrayList<>();
-            getWindow().getDecorView().findViewsWithText(outView, "缓存", View.FIND_VIEWS_WITH_TEXT);
+            getWindow().getDecorView().findViewsWithText(outView, "下载该视频", View.FIND_VIEWS_WITH_TEXT);
             if (outView != null && outView.size() > 0) {
                 outView.get(0).setVisibility(View.GONE);
             }
@@ -381,11 +373,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     pg.setVisibility(View.VISIBLE);
                     pg.setProgress(newProgress);
                 }
-
             }
 
             /** 视频播放相关的方法 **/
-
             @Override
             public View getVideoLoadingProgressView() {
                 FrameLayout frameLayout = new FrameLayout(WebActivity.this);
@@ -420,7 +410,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         fullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
         decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS);
         customView = view;
-        setStatusBarVisibility(false);
+        isFullscreen = true;
+        hideNavBar();
         customViewCallback = callback;
         // 设置横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
@@ -433,7 +424,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         if (customView == null) {
             return;
         }
-        setStatusBarVisibility(true);
+        isFullscreen = false;
+        showNavBar();
         FrameLayout decor = (FrameLayout) getWindow().getDecorView();
         decor.removeView(fullscreenContainer);
         fullscreenContainer = null;
@@ -444,10 +436,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    private void setStatusBarVisibility(boolean visible) {
-        int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
 
     @Override
     public void cancelDialog() {
@@ -515,13 +503,13 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (mX5WebView.canGoBack()) mX5WebView.goBack();//返回上个页面
+        else finish();
     }
 
-    //销毁Webview
     @Override
     protected void onDestroy() {
-        //释放资源
+        //销毁Webview
         if (mX5WebView != null)
             mX5WebView.destroy();
         if (null != presenter)
@@ -567,5 +555,12 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFullscreen) hideNavBar();
+        else showNavBar();
     }
 }
