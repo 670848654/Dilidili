@@ -119,8 +119,6 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         //取消View的关联
         if (null != mPresenter )
             mPresenter.detachView();
-        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
-        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
         super.onDestroy();
     }
 

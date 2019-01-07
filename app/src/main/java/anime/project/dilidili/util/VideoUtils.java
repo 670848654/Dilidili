@@ -3,19 +3,15 @@ package anime.project.dilidili.util;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import anime.project.dilidili.R;
-import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.webview.DefaultWebActivity;
-import anime.project.dilidili.main.webview.WebActivity;
 
 public class VideoUtils {
     public static AlertDialog alertDialog;

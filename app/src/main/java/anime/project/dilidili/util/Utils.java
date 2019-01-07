@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import anime.project.dilidili.BuildConfig;
@@ -140,9 +141,14 @@ public class Utils {
         }
     }
 
-    public static String getString( @StringRes int id) {
+    public static String getString(@StringRes int id) {
         return getContext().getResources().getString(id);
     }
+
+    public static String[] getArray(@ArrayRes int id){
+        return getContext().getResources().getStringArray(id);
+    }
+
     /**
      * Snackbar
      *

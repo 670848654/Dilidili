@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SearchAdapter;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
@@ -97,11 +98,11 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) {
-                final SearchBean bean = (SearchBean) adapter.getItem(position);
+                SearchBean bean = (SearchBean) adapter.getItem(position);
                 if (bean.getUrl().indexOf("ceshi") == -1) {
                     Bundle bundle = new Bundle();
                     bundle.putString("name", bean.getTitle());
-                    bundle.putString("url", bean.getUrl());
+                    bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
                     startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
                 } else application.showSnackbarMsg(toolbar, Utils.getString(R.string.ceshi_error));
             }

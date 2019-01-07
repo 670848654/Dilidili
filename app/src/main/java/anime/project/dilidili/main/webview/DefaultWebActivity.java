@@ -19,6 +19,7 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
 public class DefaultWebActivity extends BaseActivity {
@@ -243,6 +245,8 @@ public class DefaultWebActivity extends BaseActivity {
         //释放资源
         if (mX5WebView != null)
             mX5WebView.destroy();
+        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
+        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
         super.onDestroy();
     }
 

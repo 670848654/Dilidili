@@ -111,10 +111,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
                 final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", bean.getTitle());
-                if (bean.getUrl().indexOf("http") == -1)
-                    bundle.putString("url", Api.URL + bean.getUrl());
-                else
-                    bundle.putString("url", bean.getUrl());
+                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
                 startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
             }
         });

@@ -88,10 +88,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
             if (Utils.isFastClick()) {
                 final RecommendBean bean = (RecommendBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
-                if (bean.getUrl().indexOf("http") == -1)
-                    bundle.putString("url", Api.URL + bean.getUrl());
-                else
-                    bundle.putString("url", bean.getUrl());
+                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
                 bundle.putString("name", bean.getTitle());
                 startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
             }

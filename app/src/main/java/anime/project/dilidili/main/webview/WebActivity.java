@@ -25,6 +25,7 @@ import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
+import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -514,6 +515,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             mX5WebView.destroy();
         if (null != presenter)
             presenter.detachView();
+        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
+        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
         super.onDestroy();
     }
 

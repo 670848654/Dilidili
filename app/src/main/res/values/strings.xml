@@ -110,7 +110,7 @@
     <string name="check_update">检测更新</string>
     <string name="check_update_text">检测更新中...</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年1月3日14:03:59</string>
+    <string name="final_compile_time">2019年1月7日15:47:39</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->
@@ -121,4 +121,13 @@
     <string name="favoriteLongName">我的收藏</string>
     <string name="recommendShortName">推荐动漫</string>
     <string name="recommendLongName">推荐动漫</string>
+    <string-array name="week_array">
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+    </string-array>
 </resources>

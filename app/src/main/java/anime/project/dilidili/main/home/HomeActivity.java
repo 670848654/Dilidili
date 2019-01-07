@@ -58,10 +58,9 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     private WeekAdapter adapter;
-    private int position;
     private int week;
     private SearchView mSearchView;
-    private String[] tabs = new String[]{"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+    private String[] tabs =  Utils.getArray(R.array.week_array);
 
     @Override
     protected HomePresenter createPresenter() {
@@ -87,9 +86,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     }
 
     @Override
-    protected void initBeforeView() {
-
-    }
+    protected void initBeforeView() {}
 
     public void initToolbar() {
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -140,28 +137,11 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             tab.addTab(tab.newTab());
         }
         tab.setupWithViewPager(viewpager);
-        setWeekAdapter();
+        //手动 添加标题必须在 setupwidthViewPager后
+        for (int i = 0; i < tabs.length; i++) {
+            tab.getTabAt(i).setText(tabs[i]);
+        }
         tab.setSelectedTabIndicatorColor(getResources().getColor(R.color.pinka200));
-        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                position = tab.getPosition();
-                viewpager.setCurrentItem(position);
-                switch (position) {
-
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
         if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(application.getInstance(), "show_x5_info", true).toString()))
             Utils.showX5Info(this);
     }
@@ -241,10 +221,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", title);
-            if (url.indexOf("http") == -1)
-                bundle.putString("url", Api.URL + url);
-            else
-                bundle.putString("url", url);
+            bundle.putString("url", url.startsWith("http") ? url : Api.URL + url);
             startActivity(new Intent(this, AnimeListActivity.class).putExtras(bundle));
         }
     }
@@ -262,6 +239,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             navigationView.getMenu().getItem(0).setTitle(Utils.getString(R.string.menu_load_error));
             application.showToastMsg(msg);
             application.error = msg;
+            application.week = new JSONObject();
             setWeekAdapter();
         });
     }
@@ -274,6 +252,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     public void showLoadSuccess(LinkedHashMap map) {
         runOnUiThread(() -> {
             mSwipe.setRefreshing(false);
+            application.error = "";
             application.week = map.get("week") == null ? new JSONObject() : (JSONObject) map.get("week");
             title = map.get("title").toString() == null ? "加载失败" : map.get("title").toString();
             animeUrl = map.get("url").toString() == null ? "" : map.get("url").toString();

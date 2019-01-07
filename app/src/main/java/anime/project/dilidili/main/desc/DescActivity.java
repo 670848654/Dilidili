@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,13 +22,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,7 +69,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private String animeTitle;
     private String witchTitle;
     private ProgressDialog p;
-    private AlertDialog alertDialog;
     @BindView(R.id.favorite)
     FloatingActionButton favorite;
     private boolean isFavorite;
@@ -156,9 +152,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                         p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                         v.setBackgroundResource(R.drawable.button_selected);
-                        diliUrl = bean.getUrl();
+                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
                         witchTitle = animeTitle + " - " + bean.getTitle();
-                        videoPresenter = new VideoPresenter(animeListBean.getTitle(), bean.getUrl(), DescActivity.this);
+                        videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
                         videoPresenter.loadData(true);
                         break;
                     case "html":
@@ -244,61 +240,38 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             } else {
                 videoUrlArr = new String[arr.length];
                 videoTitleArr = new String[arr.length];
-                for (int i = 0; i < arr.length; i++) {
-                    String str = "http" + arr[i];
-                    Log.e("video", str);
-                    videoUrlArr[i] = str;
-                    java.net.URL urlHost;
-                    try {
-                        urlHost = new java.net.URL(str);
-                        if (str.contains(".mp4"))
-                            videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                        else if (str.contains(".m3u8"))
-                            videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                        else
-                            videoTitleArr[i] = urlHost.getHost() + " <HTML>";
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                selectVideoDialog();
+                VideoUtils.showMultipleVideoSources(this,
+                        arr,
+                        videoTitleArr,
+                        videoUrlArr,
+                        (dialog, index) -> {
+                            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
+                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                                    case 0:
+                                        //调用播放器
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("title", witchTitle);
+                                        bundle.putString("animeTitle", animeTitle);
+                                        bundle.putString("url", videoUrlArr[index]);
+                                        bundle.putString("dili", diliUrl);
+                                        bundle.putSerializable("list", (Serializable) drama);
+                                        startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
+                                        break;
+                                    case 1:
+                                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
+                                        break;
+                                }
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("title", animeTitle);
+                                bundle.putString("url", videoUrlArr[index]);
+                                bundle.putString("dili", diliUrl);
+                                bundle.putSerializable("list", (Serializable) drama);
+                                startActivityForResult(new Intent(DescActivity.this, WebActivity.class).putExtras(bundle), 0x10);
+                            }
+                        });
             }
         }, 200);
-    }
-
-    private void selectVideoDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle("选择视频源");
-        builder.setCancelable(false);
-        builder.setItems(videoTitleArr, (dialogInterface, index) -> {
-            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
-                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                    case 0:
-                        //调用播放器
-                        Bundle bundle = new Bundle();
-                        bundle.putString("title", witchTitle);
-                        bundle.putString("animeTitle", animeTitle);
-                        bundle.putString("url", videoUrlArr[index]);
-                        bundle.putString("dili", diliUrl);
-                        bundle.putSerializable("list", (Serializable) drama);
-                        startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
-                        break;
-                    case 1:
-                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
-                        break;
-                }
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString("title", animeTitle);
-                bundle.putString("url", videoUrlArr[index]);
-                bundle.putString("dili", diliUrl);
-                bundle.putSerializable("list", (Serializable) drama);
-                startActivityForResult(new Intent(DescActivity.this, WebActivity.class).putExtras(bundle), 0x10);
-            }
-        });
-        builder.setNegativeButton("取消", (dialogInterface, which) -> dialogInterface.dismiss());
-        alertDialog = builder.create();
-        alertDialog.show();
     }
 
     @Override

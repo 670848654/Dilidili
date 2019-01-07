@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.DramaAdapter;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
@@ -160,9 +161,9 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
                         p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
                         Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                         v.setBackgroundResource(R.drawable.button_selected);
-                        diliUrl = bean.getUrl();
+                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
                         witchTitle = animeTitle + " - " + bean.getTitle();
-                        presenter = new VideoPresenter(animeTitle, bean.getUrl(), PlayerActivity.this);
+                        presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
                         presenter.loadData(true);
                         break;
                 }

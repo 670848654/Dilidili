@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.FavoriteListAdapter;
+import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -86,7 +87,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
                 AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", bean.getTitle());
-                bundle.putString("url", bean.getUrl());
+                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
                 startActivityForResult(new Intent(FavoriteActivity.this, DescActivity.class).putExtras(bundle),3000);
             }
         });
