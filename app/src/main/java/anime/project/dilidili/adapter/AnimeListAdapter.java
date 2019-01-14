@@ -20,7 +20,7 @@ public class AnimeListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setImageVertical(context, item.getImg(),helper.getView(R.id.img));
+        Utils.setDefaultImage(context, item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.region, item.getRegion());
         helper.setText(R.id.year, item.getYear());

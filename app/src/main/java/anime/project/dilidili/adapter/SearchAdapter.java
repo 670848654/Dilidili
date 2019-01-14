@@ -20,7 +20,7 @@ public class SearchAdapter extends BaseQuickAdapter<SearchBean, BaseViewHolder> 
 
     @Override
     protected void convert(BaseViewHolder helper, SearchBean item) {
-        Utils.setImageVertical(context, item.getImg(), helper.getView(R.id.img));
+        Utils.setDefaultImage(context, item.getImg(), helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.tags, item.getTags());
         helper.setText(R.id.desc, item.getDesc());

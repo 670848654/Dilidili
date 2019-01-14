@@ -39,6 +39,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import anime.project.dilidili.BuildConfig;
 import anime.project.dilidili.R;
+import anime.project.dilidili.custom.CircleImageView;
 
 public class Utils {
     private final static Pattern IMAGE_PATTERN = Pattern.compile("http://(.*jpg|.*jpeg|.*png)");
@@ -349,10 +350,10 @@ public class Utils {
     }
 
     /**
-     * 设置图片竖屏
+     * 设置默认图片
      * @param url
      */
-    public static void setImageVertical(Context context, String url, ImageView imageView){
+    public static void setDefaultImage(Context context, String url, ImageView imageView){
         DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(300).setCrossFadeEnabled(true).build();
         RequestOptions options = new RequestOptions()
                 .centerCrop()
@@ -362,6 +363,25 @@ public class Utils {
         Glide.with(context)
                 .load(url)
                 .transition(DrawableTransitionOptions.withCrossFade(drawableCrossFadeFactory))
+                .apply(options)
+                .into(imageView);
+    }
+
+    /**
+     * 设置圆形图片
+     * @param context
+     * @param url
+     * @param imageView
+     */
+    public static void setCircleImage(Context context, String url, CircleImageView imageView){
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .format(DecodeFormat.PREFER_RGB_565)
+                .dontAnimate()//防止设置placeholder导致第一次不显示网络图片,只显示默认图片的问题
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.error);
+        Glide.with(context)
+                .load(url)
                 .apply(options)
                 .into(imageView);
     }

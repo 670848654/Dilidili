@@ -42,7 +42,7 @@ public class RecommendAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity,
             case RecommendType.TYPE_LEVEL_1:
                 final RecommendBean recommendBean = (RecommendBean) item;
                 helper.setText(R.id.title,recommendBean.getTitle());
-                Utils.setImageVertical(context, recommendBean.getImg(), helper.getView(R.id.img));
+                Utils.setDefaultImage(context, recommendBean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

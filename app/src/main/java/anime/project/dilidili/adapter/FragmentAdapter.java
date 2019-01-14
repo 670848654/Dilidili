@@ -21,7 +21,7 @@ public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean,BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, HomeWekBean item) {
-        Utils.setImageVertical(context, item.getImg().startsWith("http") ? item.getImg() : Api.URL + item.getImg(),helper.getView(R.id.img));
+        Utils.setCircleImage(context, item.getImg().startsWith("http") ? item.getImg() : Api.URL + item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.drama, item.getDrama());
     }

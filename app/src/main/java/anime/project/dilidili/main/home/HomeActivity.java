@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.WeekAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.custom.VpSwipeRefreshLayout;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.about.AboutActivity;
@@ -142,7 +143,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             tab.getTabAt(i).setText(tabs[i]);
         }
         tab.setSelectedTabIndicatorColor(getResources().getColor(R.color.pinka200));
-        if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(application.getInstance(), "show_x5_info", true).toString()))
+        if (Boolean.parseBoolean(SharedPreferencesUtils.getParam(DiliDili.getInstance(), "show_x5_info", true).toString()))
             Utils.showX5Info(this);
     }
 

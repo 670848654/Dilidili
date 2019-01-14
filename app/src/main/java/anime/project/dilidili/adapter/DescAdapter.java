@@ -69,7 +69,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
-                Utils.setImageVertical(context, bean.getImg(), helper.getView(R.id.img));
+                Utils.setDefaultImage(context, bean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

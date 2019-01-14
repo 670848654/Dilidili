@@ -42,7 +42,7 @@ public class WeekFragment extends LazyFragment {
     private DiliDili application;
     private View view;
     private View errorView;
-    public TextView errorTitle;
+    private TextView errorTitle;
     private String week;
 
     public WeekFragment(String week) {
@@ -90,7 +90,7 @@ public class WeekFragment extends LazyFragment {
         }
     }
 
-    public void initWeekData() {
+    private void initWeekData() {
         loading.setVisibility(View.GONE);
         if (adapter.getData().isEmpty()) {
             list = getList(week);
@@ -103,7 +103,7 @@ public class WeekFragment extends LazyFragment {
         }
     }
 
-    public List getList(String week) {
+    private List getList(String week) {
         list = new ArrayList<>();
         if (application.week.length() > 0) {
             try {
