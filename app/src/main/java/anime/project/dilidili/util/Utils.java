@@ -20,7 +20,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.google.android.material.snackbar.Snackbar;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
@@ -38,6 +41,7 @@ import anime.project.dilidili.BuildConfig;
 import anime.project.dilidili.R;
 
 public class Utils {
+    private final static Pattern IMAGE_PATTERN = Pattern.compile("http://(.*jpg|.*jpeg|.*png)");
     private static Context context;
 
     private Utils() {
@@ -336,9 +340,7 @@ public class Utils {
      */
     public static String getImageUrl(String style){
         String url = "";
-        String reg = "http://(.*jpg|.*jpeg|.*png)";
-        Pattern p = Pattern.compile(reg);
-        Matcher m = p.matcher(style);
+        Matcher m = IMAGE_PATTERN.matcher(style);
         while (m.find()) {
             url = m.group();
             break;
@@ -350,13 +352,16 @@ public class Utils {
      * 设置图片竖屏
      * @param url
      */
-    public static void setImageVertical(String url, ImageView imageView){
+    public static void setImageVertical(Context context, String url, ImageView imageView){
+        DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(300).setCrossFadeEnabled(true).build();
         RequestOptions options = new RequestOptions()
                 .centerCrop()
+                .format(DecodeFormat.PREFER_RGB_565)
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error);
-        Glide.with(getContext())
+        Glide.with(context)
                 .load(url)
+                .transition(DrawableTransitionOptions.withCrossFade(drawableCrossFadeFactory))
                 .apply(options)
                 .into(imageView);
     }

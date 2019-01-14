@@ -190,27 +190,26 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (Utils.isFastClick()) {
-            switch (item.getItemId()) {
-                case R.id.new_anim:
-                    goToNewAnime(animeUrl, title);
-                    break;
-                case R.id.recommend_anime:
-                    startActivity(new Intent(this, RecommendActivity.class));
-                    break;
-                case R.id.find_anim:
-                    startActivity(new Intent(this, TagActivity.class));
-                    break;
-                case R.id.about:
-                    startActivity(new Intent(this, AboutActivity.class));
-                    break;
-                case R.id.favorite:
-                    startActivity(new Intent(this, FavoriteActivity.class));
-                    break;
-                case R.id.setting:
-                    startActivity(new Intent(this, SettingActivity.class));
-                    break;
-            }
+        if (!Utils.isFastClick()) return false;
+        switch (item.getItemId()) {
+            case R.id.new_anim:
+                goToNewAnime(animeUrl, title);
+                break;
+            case R.id.recommend_anime:
+                startActivity(new Intent(this, RecommendActivity.class));
+                break;
+            case R.id.find_anim:
+                startActivity(new Intent(this, TagActivity.class));
+                break;
+            case R.id.about:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.favorite:
+                startActivity(new Intent(this, FavoriteActivity.class));
+                break;
+            case R.id.setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
         }
         return true;
     }

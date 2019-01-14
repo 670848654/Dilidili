@@ -44,7 +44,7 @@ public class SearchModel implements SearchContract.Model {
                         if (array.length() > 0){
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = new JSONObject(array.getString(i));
-                                if (!obj.getString("zhuangtai").isEmpty())
+//                                if (obj.getString("typedir").contains("/anime/"))
                                     list.add(
                                             new SearchBean(
                                                     obj.getString("typename"),

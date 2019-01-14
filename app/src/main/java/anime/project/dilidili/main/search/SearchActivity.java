@@ -10,6 +10,8 @@ import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +23,7 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SearchAdapter;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.bean.SearchBean;
+import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
@@ -28,6 +31,7 @@ import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
 public class SearchActivity extends BaseActivity<SearchContract.View, SearchPresenter> implements SearchContract.View {
+    private final static Pattern NUM_PATTERN = Pattern.compile("^[0-9]*$");
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -93,19 +97,25 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
 
     public void initAdapter(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SearchAdapter(searchList);
+        adapter = new SearchAdapter(this, searchList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                SearchBean bean = (SearchBean) adapter.getItem(position);
-                if (bean.getUrl().indexOf("ceshi") == -1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", bean.getTitle());
-                    bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                    startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
-                } else application.showSnackbarMsg(toolbar, Utils.getString(R.string.ceshi_error));
-            }
+            if (!Utils.isFastClick()) return;
+            SearchBean bean = (SearchBean) adapter.getItem(position);
+            String url = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+            String title = bean.getTitle();
+            if (url.contains("/anime/")) {
+                String[] arr = bean.getUrl().split("/");
+                Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
+                boolean isAnimeList = false;
+                while (m.find()) {
+                    isAnimeList = true;
+                    break;
+                }
+                if (isAnimeList) openAnimeList(title, url);
+                else openAnimeDesc(title, url);
+            } else openAnimeList(title, url);
         });
         adapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             if (page >= pageCount) {
@@ -125,6 +135,20 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
             }
         }, 500), mRecyclerView);
         mRecyclerView.setAdapter(adapter);
+    }
+
+    public void openAnimeDesc(String title, String url){
+        Bundle bundle = new Bundle();
+        bundle.putString("name", title);
+        bundle.putString("url", url);
+        startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
+    }
+
+    public void openAnimeList(String title, String url){
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        bundle.putString("url", url);
+        startActivity(new Intent(SearchActivity.this, AnimeListActivity.class).putExtras(bundle));
     }
 
     @Override

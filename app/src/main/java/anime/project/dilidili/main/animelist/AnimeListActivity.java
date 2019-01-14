@@ -103,17 +103,16 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     public void initAdapter(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AnimeListAdapter(list);
+        adapter = new AnimeListAdapter(this, list);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
-                Bundle bundle = new Bundle();
-                bundle.putString("name", bean.getTitle());
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
-            }
+            if (!Utils.isFastClick()) return;
+            final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", bean.getTitle());
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);
     }

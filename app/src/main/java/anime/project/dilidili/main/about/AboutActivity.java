@@ -81,8 +81,7 @@ public class AboutActivity extends BaseActivity {
         version.setText(Utils.getASVersionName());
         cache.setText(Environment.getExternalStorageDirectory() + Utils.getString(R.string.cache_text));
         open_source.setOnClickListener(v -> {
-            if (Utils.isFastClick())
-                startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
+            if (Utils.isFastClick()) startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
         });
     }
 
@@ -101,8 +100,7 @@ public class AboutActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.check_update) {
-            if (Utils.isFastClick())
-                checkUpdate();
+            if (Utils.isFastClick()) checkUpdate();
             return true;
         }
         return super.onOptionsItemSelected(item);

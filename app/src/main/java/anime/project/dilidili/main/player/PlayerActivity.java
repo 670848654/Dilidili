@@ -106,9 +106,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         //剧集list
         list = (List<AnimeDescBean>) bundle.getSerializable("list");
         //禁止冒泡
-        linearLayout.setOnClickListener(view -> {
-            return;
-        });
+        linearLayout.setOnClickListener(view -> {return;});
         linearLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         player.backButton.setOnClickListener(v -> {
@@ -125,11 +123,9 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
         Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
         player.fullscreenButton.setOnClickListener(view -> {
-            if (Utils.isFastClick())
-                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    drawerLayout.closeDrawer(GravityCompat.END);
-                } else
-                    drawerLayout.openDrawer(GravityCompat.END);
+            if (!Utils.isFastClick()) return;
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END);
+            else drawerLayout.openDrawer(GravityCompat.END);
         });
         Glide.with(PlayerActivity.this).load(R.drawable.baseline_arrow_back_white_24dp).apply(new RequestOptions().centerCrop()).into(player.backButton);
         player.backButton.setPadding(0, 0, 15, 0);
@@ -152,23 +148,22 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         dramaAdapter = new DramaAdapter(this, list);
         recyclerView.setAdapter(dramaAdapter);
         dramaAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                setResult(0x20);
-                drawerLayout.closeDrawer(GravityCompat.END);
-                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-                switch (bean.getType()) {
-                    case "play":
-                        p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
-                        Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
-                        v.setBackgroundResource(R.drawable.button_selected);
-                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
-                        witchTitle = animeTitle + " - " + bean.getTitle();
-                        presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
-                        presenter.loadData(true);
-                        break;
-                }
-
+            if (!Utils.isFastClick()) return;
+            setResult(0x20);
+            drawerLayout.closeDrawer(GravityCompat.END);
+            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+            switch (bean.getType()) {
+                case "play":
+                    p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
+                    Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
+                    v.setBackgroundResource(R.drawable.button_selected);
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+                    witchTitle = animeTitle + " - " + bean.getTitle();
+                    presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
+                    presenter.loadData(true);
+                    break;
             }
+
         });
     }
 
@@ -252,8 +247,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.END))
-            drawerLayout.closeDrawer(GravityCompat.END);
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END);
         else {
             Jzvd.releaseAllVideos();
             finish();

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -25,9 +26,7 @@ public class VideoUtils {
      */
     public static String[] removeByIndex(String[] oldArr, int index) {
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < oldArr.length; i++) {
-            list.add(oldArr[i]);
-        }
+        Collections.addAll(list, oldArr);
         list.remove(index);
         String[] newArr = new String[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -64,12 +63,9 @@ public class VideoUtils {
             java.net.URL urlHost;
             try {
                 urlHost = new java.net.URL(str);
-                if (str.contains(".mp4"))
-                    videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                else if (str.contains(".m3u8"))
-                    videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                else
-                    videoTitleArr[i] = urlHost.getHost() + " <HTML>";
+                if (str.contains(".mp4")) videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
+                else if (str.contains(".m3u8")) videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
+                else videoTitleArr[i] = urlHost.getHost() + " <HTML>";
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

@@ -75,17 +75,16 @@ public class WeekFragment extends LazyFragment {
     public void initAdapter() {
         if (adapter == null) {
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            adapter = new FragmentAdapter(list);
+            adapter = new FragmentAdapter(getActivity(), list);
             adapter.openLoadAnimation();
             adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
             adapter.setOnItemClickListener((adapter, view, position) -> {
-                if (Utils.isFastClick()) {
-                    HomeWekBean bean = (HomeWekBean) adapter.getItem(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", bean.getTitle());
-                    bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                    startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
-                }
+                if (!Utils.isFastClick()) return;
+                HomeWekBean bean = (HomeWekBean) adapter.getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", bean.getTitle());
+                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+                startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
             });
             recyclerView.setAdapter(adapter);
         }

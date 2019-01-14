@@ -24,6 +24,8 @@ import com.r0adkll.slidr.Slidr;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +41,7 @@ import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
@@ -52,6 +55,7 @@ import butterknife.BindView;
 import jp.wasabeef.blurry.Blurry;
 
 public class DescActivity extends BaseActivity<DescContract.View, DescPresenter> implements DescContract.View, VideoContract.View {
+    private final static Pattern NUM_PATTERN = Pattern.compile("^[0-9]*$");
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -125,8 +129,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     public void initFab() {
         favorite.setOnClickListener(view -> {
-            if (Utils.isFastClick())
-                favoriteAnime();
+            if (Utils.isFastClick()) favoriteAnime();
         });
     }
 
@@ -142,69 +145,85 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @SuppressLint("RestrictedApi")
     public void initAdapter() {
-        adapter = new DescAdapter(multiItemList, DescActivity.this);
+        adapter = new DescAdapter(this, multiItemList);
         adapter.openLoadAnimation();
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-                switch (bean.getType()) {
-                    case "play":
-                        p = Utils.getProDialog(DescActivity.this, R.string.parsing);
-                        Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
-                        v.setBackgroundResource(R.drawable.button_selected);
-                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
-                        witchTitle = animeTitle + " - " + bean.getTitle();
-                        videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
-                        videoPresenter.loadData(true);
-                        break;
-                    case "html":
-                        ct.setTitle(Utils.getString(R.string.loading));
-                        mSwipe.setRefreshing(true);
-                        if (bean.getUrl().indexOf("http") == -1)
-                            url = Api.URL + bean.getUrl();
-                        else
-                            url = bean.getUrl();
-                        animeTitle = bean.getTitle();
-                        imageView.setImageDrawable(null);
-                        animeListBean = new AnimeListBean();
-                        favorite.startAnimation(Utils.animationOut(0));
-                        favorite.setVisibility(View.GONE);
-                        mPresenter = new DescPresenter(url, this);
-                        multiItemList.clear();
-                        adapter.setNewData(multiItemList);
-                        mPresenter.loadData(true);
-                        break;
-                }
+            if (!Utils.isFastClick()) return;
+            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+            switch (bean.getType()) {
+                case "play":
+                    p = Utils.getProDialog(DescActivity.this, R.string.parsing);
+                    Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
+                    v.setBackgroundResource(R.drawable.button_selected);
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+                    witchTitle = animeTitle + " - " + bean.getTitle();
+                    videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
+                    videoPresenter.loadData(true);
+                    break;
+                case "html":
+                    animeTitle = bean.getTitle();
+                    url = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+                    if (url.contains("/anime/")) {
+                        String[] arr = bean.getUrl().split("/");
+                        Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
+                        boolean isAnimeList = false;
+                        while (m.find()) {
+                            isAnimeList = true;
+                            break;
+                        }
+                        if (isAnimeList) openAnimeList();
+                        else openAnimeDesc();
+                    } else openAnimeList();
+                    break;
             }
         });
         adapter.setOnItemChildClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-                switch (bean.getType()) {
-                    case "down":
-                        if (!bean.getUrl().isEmpty())
-                            Utils.viewInBrowser(DescActivity.this, bean.getUrl());
-                        else
-                            Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
-                        break;
-                }
+            if (!Utils.isFastClick()) return;
+            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+            switch (bean.getType()) {
+                case "down":
+                    if (!bean.getUrl().isEmpty())
+                        Utils.viewInBrowser(DescActivity.this, bean.getUrl());
+                    else
+                        Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
+                    break;
             }
         });
         adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-                switch (bean.getType()) {
-                    case "down":
-                        Utils.putTextIntoClip(bean.getTitle());
-                        application.showToastMsg(bean.getTitle() + "已复制到剪切板");
-                        break;
-                }
+            if (!Utils.isFastClick()) return true;
+            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+            switch (bean.getType()) {
+                case "down":
+                    Utils.putTextIntoClip(bean.getTitle());
+                    application.showToastMsg(bean.getTitle() + "已复制到剪切板");
+                    break;
             }
             return true;
         });
         mRecyclerView.setAdapter(adapter);
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.isFirstOnly((Boolean) SharedPreferencesUtils.getParam(DescActivity.this, "anim_is_first", true));//init firstOnly state
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void openAnimeDesc(){
+        ct.setTitle(Utils.getString(R.string.loading));
+        mSwipe.setRefreshing(true);
+        imageView.setImageDrawable(null);
+        animeListBean = new AnimeListBean();
+        favorite.startAnimation(Utils.animationOut(0));
+        favorite.setVisibility(View.GONE);
+        mPresenter = new DescPresenter(url, this);
+        multiItemList.clear();
+        adapter.setNewData(multiItemList);
+        mPresenter.loadData(true);
+    }
+
+    public void openAnimeList(){
+        Bundle bundle = new Bundle();
+        bundle.putString("title", animeTitle);
+        bundle.putString("url", url);
+        startActivity(new Intent(DescActivity.this, AnimeListActivity.class).putExtras(bundle));
     }
 
     public void goToPlay(String videoUrl) {
@@ -408,10 +427,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         isFavorite = is;
         runOnUiThread(() -> {
             if (!favorite.isShown()) {
-                if (isFavorite)
-                    Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
-                else
-                    Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
+                if (isFavorite) Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
+                else Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
                 favorite.startAnimation(Utils.animationOut(1));
                 favorite.setVisibility(View.VISIBLE);
             }

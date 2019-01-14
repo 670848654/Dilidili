@@ -83,8 +83,12 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
         adapter = new ApiAdapter(apiList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setOnItemClickListener((adapter, view, position) -> setApi(true, position));
-        adapter.setOnItemChildClickListener((adapter, view, position) -> delete(position));
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) setApi(true, position);
+        });
+        adapter.setOnItemChildClickListener((adapter, view, position) -> {
+            if (Utils.isFastClick()) delete(position);
+        });
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -146,8 +150,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
                 error++;
                 url.setError(Utils.getString(R.string.api_error_2));
             }
-            if (error > 0)
-                return;
+            if (error > 0) return;
             else {
                 if (isEdit) {
                     DatabaseUtil.updateApi(adapter.getData().get(position).getId(), name, api);

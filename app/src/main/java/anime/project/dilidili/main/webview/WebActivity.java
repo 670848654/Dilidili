@@ -66,7 +66,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private WebviewAdapter adapter;
     private List<WebviewBean> list = new ArrayList<>();
     private String url = "", diliUrl = "";
-    private String animeTilte;
+    private String animeTitle;
     private String witchTitle;
     private String api;
     private String newUrl = "";
@@ -147,11 +147,11 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     public void getBundle() {
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
-            animeTilte = bundle.getString("title");
+            animeTitle = bundle.getString("title");
             url = bundle.getString("url");
             diliUrl = bundle.getString("dili");
             dramaList = (List<AnimeDescBean>) bundle.getSerializable("list");
-            titleView.setText(animeTilte);
+            titleView.setText(animeTitle);
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
@@ -209,23 +209,22 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         dramaAdapter = new DramaAdapter(this, dramaList);
         recyclerView2.setAdapter(dramaAdapter);
         dramaAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                setResult(0x20);
-                drawerLayout.closeDrawer(GravityCompat.END);
-                final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-                switch (bean.getType()) {
-                    case "play":
-                        p = Utils.getProDialog(WebActivity.this, R.string.parsing);
-                        Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
-                        v.setBackgroundResource(R.drawable.button_selected);
-                        diliUrl = bean.getUrl();
-                        witchTitle = animeTilte + " - " + bean.getTitle();
-                        presenter = new VideoPresenter(animeTilte, bean.getUrl(), WebActivity.this);
-                        presenter.loadData(true);
-                        break;
-                }
-
+            if (!Utils.isFastClick()) return;
+            setResult(0x20);
+            drawerLayout.closeDrawer(GravityCompat.END);
+            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
+            switch (bean.getType()) {
+                case "play":
+                    p = Utils.getProDialog(WebActivity.this, R.string.parsing);
+                    Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
+                    v.setBackgroundResource(R.drawable.button_selected);
+                    diliUrl = bean.getUrl();
+                    witchTitle = animeTitle + " - " + bean.getTitle();
+                    presenter = new VideoPresenter(animeTitle, bean.getUrl(), WebActivity.this);
+                    presenter.loadData(true);
+                    break;
             }
+
         });
     }
 
@@ -242,7 +241,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                             Bundle bundle = new Bundle();
                             bundle.putString("title", witchTitle);
                             bundle.putString("url", url);
-                            bundle.putString("animeTitle", animeTilte);
+                            bundle.putString("animeTitle", animeTitle);
                             bundle.putString("dili", diliUrl);
                             bundle.putSerializable("list", (Serializable) dramaList);
                             startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
@@ -281,7 +280,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                                         Bundle bundle = new Bundle();
                                         bundle.putString("title", witchTitle);
                                         bundle.putString("url", videoUrlArr[index]);
-                                        bundle.putString("animeTitle", animeTilte);
+                                        bundle.putString("animeTitle", animeTitle);
                                         bundle.putString("dili", diliUrl);
                                         bundle.putSerializable("list", (Serializable) dramaList);
                                         startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
@@ -345,7 +344,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        if (url.indexOf("yylep") != -1) {
+        if (url.contains("yylep")) {
             newUrl = url;
             Map<String, String> map = new HashMap<>();
             map.put(REFERER, diliUrl);

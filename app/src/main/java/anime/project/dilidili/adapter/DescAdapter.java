@@ -17,7 +17,7 @@ import anime.project.dilidili.util.Utils;
 public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
     private Context context;
 
-    public DescAdapter(List data, Context context) {
+    public DescAdapter(Context context, List data) {
         super(data);
         this.context = context;
         addItemType(AnimeType.TYPE_LEVEL_0, R.layout.item_head);
@@ -69,7 +69,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
-                Utils.setImageVertical(bean.getImg(), helper.getView(R.id.img));
+                Utils.setImageVertical(context, bean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

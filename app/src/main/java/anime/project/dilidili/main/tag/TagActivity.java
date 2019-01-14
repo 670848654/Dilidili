@@ -87,17 +87,16 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final HomeBean bean = (HomeBean) adapter.getItem(position);
-                String title = "";
-                Matcher m = YEAR.matcher(bean.getDesc());
-                while (m.find()) title += m.group();
-                if (!title.isEmpty()) title += "年";
-                Bundle bundle = new Bundle();
-                bundle.putString("title", title + bean.getTitle());
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
-            }
+            if (!Utils.isFastClick()) return;
+            final HomeBean bean = (HomeBean) adapter.getItem(position);
+            StringBuilder title = new StringBuilder();
+            Matcher m = YEAR.matcher(bean.getDesc());
+            while (m.find()) title.append(m.group());
+            if (title.length() > 0) title.append("年");
+            Bundle bundle = new Bundle();
+            bundle.putString("title", title + bean.getTitle());
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);
         final GridLayoutManager manager = new GridLayoutManager(this, 4);

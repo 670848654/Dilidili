@@ -81,17 +81,16 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     }
 
     public void initAdapter(){
-        adapter = new RecommendAdapter(recommendList);
+        adapter = new RecommendAdapter(this, recommendList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                final RecommendBean bean = (RecommendBean) adapter.getItem(position);
-                Bundle bundle = new Bundle();
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                bundle.putString("name", bean.getTitle());
-                startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
-            }
+            if (!Utils.isFastClick()) return;
+            final RecommendBean bean = (RecommendBean) adapter.getItem(position);
+            Bundle bundle = new Bundle();
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            bundle.putString("name", bean.getTitle());
+            startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);
         final GridLayoutManager manager = new GridLayoutManager(this, 3);

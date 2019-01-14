@@ -79,17 +79,16 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
 
     public void initAdapter(){
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        adapter = new FavoriteListAdapter(favoriteList);
+        adapter = new FavoriteListAdapter(this, favoriteList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) {
-                AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
-                Bundle bundle = new Bundle();
-                bundle.putString("name", bean.getTitle());
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
-                startActivityForResult(new Intent(FavoriteActivity.this, DescActivity.class).putExtras(bundle),3000);
-            }
+            if (!Utils.isFastClick()) return;
+            AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", bean.getTitle());
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            startActivityForResult(new Intent(FavoriteActivity.this, DescActivity.class).putExtras(bundle),3000);
         });
         adapter.setOnItemLongClickListener((adapter, view, position) -> {
             View v = adapter.getViewByPosition(mRecyclerView, position, R.id.img);

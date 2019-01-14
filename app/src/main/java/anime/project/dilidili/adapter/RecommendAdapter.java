@@ -1,5 +1,7 @@
 package anime.project.dilidili.adapter;
 
+import android.content.Context;
+
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -13,14 +15,10 @@ import anime.project.dilidili.config.RecommendType;
 import anime.project.dilidili.util.Utils;
 
 public class RecommendAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
-    /**
-     * Same as QuickAdapter#QuickAdapter(Context,int) but with
-     * some initialization data.
-     *
-     * @param data A new list is created out of this one to avoid mutable list
-     */
-    public RecommendAdapter(List<MultiItemEntity> data) {
+    private Context context;
+    public RecommendAdapter(Context context, List<MultiItemEntity> data) {
         super(data);
+        this.context = context;
         addItemType(RecommendType.TYPE_LEVEL_0, R.layout.item_head);
         addItemType(RecommendType.TYPE_LEVEL_1, R.layout.item_favorite);
     }
@@ -44,7 +42,7 @@ public class RecommendAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity,
             case RecommendType.TYPE_LEVEL_1:
                 final RecommendBean recommendBean = (RecommendBean) item;
                 helper.setText(R.id.title,recommendBean.getTitle());
-                Utils.setImageVertical(recommendBean.getImg(), helper.getView(R.id.img));
+                Utils.setImageVertical(context, recommendBean.getImg(), helper.getView(R.id.img));
                 break;
         }
     }

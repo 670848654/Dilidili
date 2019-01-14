@@ -23,7 +23,7 @@
     <string name="menu_load_error">加载失败</string>
     <string name="exit_app">是否退出应用?</string>
     <string name="exit">退出</string>
-    <string name="search_hint">请输入动漫名</string>
+    <string name="search_hint">请输入动漫名/声优</string>
     <!-- 主页dialog文本 -->
     <string name="x5_info_title">注意</string>
     <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用或卸载重装应用。</string>
@@ -110,7 +110,7 @@
     <string name="check_update">检测更新</string>
     <string name="check_update_text">检测更新中...</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年1月7日15:47:39</string>
+    <string name="final_compile_time">2019年1月14日10:59:28</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->

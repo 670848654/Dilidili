@@ -1,5 +1,7 @@
 package anime.project.dilidili.adapter;
 
+import android.content.Context;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -10,13 +12,15 @@ import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.util.Utils;
 
 public class FavoriteListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHolder> {
-    public FavoriteListAdapter(List list) {
+    private Context context;
+    public FavoriteListAdapter(Context context, List list) {
         super(R.layout.item_favorite, list);
+        this.context = context;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setImageVertical(item.getImg(),helper.getView(R.id.img));
+        Utils.setImageVertical(context, item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
     }
 }
