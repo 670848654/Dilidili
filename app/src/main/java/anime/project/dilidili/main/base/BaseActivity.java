@@ -17,6 +17,7 @@ import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
@@ -24,13 +25,14 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     public View errorView, emptyView;
     public TextView errorTitle;
     public DiliDili application;
+    private Unbinder mUnBinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initBeforeView();
         setContentView(setLayoutRes());
-        ButterKnife.bind(this);
+        mUnBinder = ButterKnife.bind(this);
         if (application == null) {
             application = (DiliDili) getApplication();
         }
@@ -101,6 +103,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         //取消View的关联
         if (null != mPresenter )
             mPresenter.detachView();
+        mUnBinder.unbind();
         super.onDestroy();
     }
 

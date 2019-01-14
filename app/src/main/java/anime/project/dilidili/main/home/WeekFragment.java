@@ -30,6 +30,7 @@ import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 @SuppressLint("ValidFragment")
 public class WeekFragment extends LazyFragment {
@@ -44,6 +45,7 @@ public class WeekFragment extends LazyFragment {
     private View errorView;
     private TextView errorTitle;
     private String week;
+    private Unbinder mUnBinder;
 
     public WeekFragment(String week) {
         this.week = week;
@@ -53,7 +55,7 @@ public class WeekFragment extends LazyFragment {
     protected View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_week, container, false);
-            ButterKnife.bind(this, view);
+            mUnBinder = ButterKnife.bind(this, view);
         } else {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) {
@@ -120,5 +122,11 @@ public class WeekFragment extends LazyFragment {
             }
         }
         return list;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnBinder.unbind();
     }
 }
