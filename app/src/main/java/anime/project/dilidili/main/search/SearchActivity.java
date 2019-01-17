@@ -174,7 +174,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
             Utils.hideKeyboard(mSearchView);
         }
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
-        textView.setTextColor(getResources().getColor(R.color.md_white_1000));
+        textView.setTextColor(getResources().getColor(R.color.grey50));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

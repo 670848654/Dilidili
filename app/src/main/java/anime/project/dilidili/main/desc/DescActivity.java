@@ -21,7 +21,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,10 +42,8 @@ import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -77,7 +74,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     FloatingActionButton favorite;
     private boolean isFavorite;
     private String[] videoUrlArr;
-    private String[] videoTitleArr;
     private VideoPresenter videoPresenter;
     private AnimeListBean animeListBean = new AnimeListBean();
 
@@ -229,74 +225,61 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void goToPlay(String videoUrl) {
         new Handler().postDelayed(() -> {
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
-            //如果播放地址只有1个
-            if (arr.length == 1) {
-                String url = "http" + arr[0];
-                if (url.contains(".m3u8") || url.contains(".mp4")) {
-                    Bundle bundle = new Bundle();
-                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                        case 0:
-                            //调用播放器
-                            bundle.putString("animeTitle", animeTitle);
-                            bundle.putString("title", witchTitle);
-                            bundle.putString("url", url);
-                            bundle.putString("dili", diliUrl);
-                            bundle.putSerializable("list", (Serializable) drama);
-                            startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
-                            break;
-                        case 1:
-                            Utils.selectVideoPlayer(DescActivity.this, url);
-                            break;
-                    }
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", animeTitle);
-                    bundle.putString("url", url);
-                    bundle.putString("dili", diliUrl);
-                    bundle.putSerializable("list", (Serializable) drama);
-                    startActivityForResult(new Intent(DescActivity.this, WebActivity.class).putExtras(bundle), 0x10);
-                }
-            } else {
-                videoUrlArr = new String[arr.length];
-                videoTitleArr = new String[arr.length];
-                VideoUtils.showMultipleVideoSources(this,
-                        arr,
-                        videoTitleArr,
-                        videoUrlArr,
-                        (dialog, index) -> {
-                            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
-                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                                    case 0:
-                                        //调用播放器
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("title", witchTitle);
-                                        bundle.putString("animeTitle", animeTitle);
-                                        bundle.putString("url", videoUrlArr[index]);
-                                        bundle.putString("dili", diliUrl);
-                                        bundle.putSerializable("list", (Serializable) drama);
-                                        startActivityForResult(new Intent(DescActivity.this, PlayerActivity.class).putExtras(bundle), 0x10);
-                                        break;
-                                    case 1:
-                                        Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
-                                        break;
-                                }
-                            } else {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("title", animeTitle);
-                                bundle.putString("url", videoUrlArr[index]);
-                                bundle.putString("dili", diliUrl);
-                                bundle.putSerializable("list", (Serializable) drama);
-                                startActivityForResult(new Intent(DescActivity.this, WebActivity.class).putExtras(bundle), 0x10);
-                            }
-                        });
-            }
+            if (arr.length == 1) oneSource(arr);
+            else multipleSource(arr);
         }, 200);
+    }
+
+    /**
+     * 只有一个播放地址
+     * @param arr
+     */
+    private void oneSource(String[] arr) {
+        url = "http" + arr[0];
+        if (url.contains(".m3u8") || url.contains(".mp4")) {
+            switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                case 0:
+                    //调用播放器
+                    VideoUtils.openPlayer(true, this, witchTitle, url, animeTitle, diliUrl, drama);
+                    break;
+                case 1:
+                    Utils.selectVideoPlayer(DescActivity.this, url);
+                    break;
+            }
+        } else VideoUtils.openWebview(true, this, animeTitle, url, diliUrl, drama);
+    }
+
+    /**
+     * 多个播放地址
+     * @param arr
+     */
+    private void multipleSource(String[] arr) {
+        videoUrlArr = new String[arr.length];
+        String[] videoTitleArr = new String[arr.length];
+        VideoUtils.showMultipleVideoSources(this,
+                arr,
+                videoTitleArr,
+                videoUrlArr,
+                (dialog, index) -> {
+                    url = videoUrlArr[index];
+                    if (url.contains(".m3u8") || url.contains(".mp4")) {
+                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                            case 0:
+                                //调用播放器
+                                VideoUtils.openPlayer(true, this, witchTitle, url, animeTitle, diliUrl, drama);
+                                break;
+                            case 1:
+                                Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
+                                break;
+                        }
+                    } else VideoUtils.openWebview(true, this, animeTitle, url, diliUrl, drama);
+                });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 0x20 && requestCode == 0x10) {
+        if (requestCode == 0x10 && resultCode == 0x20) {
             mSwipe.setRefreshing(true);
             multiItemList = new ArrayList<>();
             adapter.notifyDataSetChanged();

@@ -2,7 +2,6 @@ package anime.project.dilidili.main.player;
 
 import android.app.PictureInPictureParams;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,10 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.DramaAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
-import anime.project.dilidili.main.webview.WebActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -44,9 +39,9 @@ import butterknife.OnClick;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class PlayerActivity extends BaseActivity implements VideoContract.View {
+public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener{
     @BindView(R.id.player)
-    JzvdStd player;
+    JZPlayer player;
     private String witchTitle, url, diliUrl;
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
@@ -55,7 +50,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     private ProgressDialog p;
     private String animeTitle;
     private String[] videoUrlArr;
-    private String[] videoTitleArr;
     @BindView(R.id.nav_view)
     LinearLayout linearLayout;
     @BindView(R.id.drawer_layout)
@@ -81,6 +75,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void init() {
+        DiliDili.addDestoryActivity(this, "player");
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         hideGap();
         Bundle bundle = getIntent().getExtras();
@@ -106,29 +101,28 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
         //剧集list
         list = (List<AnimeDescBean>) bundle.getSerializable("list");
         //禁止冒泡
-        linearLayout.setOnClickListener(view -> {return;});
-        linearLayout.getBackground().mutate().setAlpha(150);//0~255透明度值
+        linearLayout.setOnClickListener(view -> { return;});
+        linearLayout.getBackground().mutate().setAlpha(150);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        player.setListener(this, this);
         player.backButton.setOnClickListener(v -> {
             Jzvd.releaseAllVideos();
             finish();
         });
-        if (Utils.isPad()) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+//        if (Utils.isPad()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 pic.setVisibility(View.GONE);
-            else
+            } else {
                 pic.setVisibility(View.VISIBLE);
-        } else
-            pic.setVisibility(View.GONE);
+            }
+//        } else
+//            pic.setVisibility(View.GONE);
         player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-        Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
         player.fullscreenButton.setOnClickListener(view -> {
             if (!Utils.isFastClick()) return;
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END);
             else drawerLayout.openDrawer(GravityCompat.END);
         });
-        Glide.with(PlayerActivity.this).load(R.drawable.baseline_arrow_back_white_24dp).apply(new RequestOptions().centerCrop()).into(player.backButton);
-        player.backButton.setPadding(0, 0, 15, 0);
         Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         player.startButton.performClick();
@@ -170,67 +164,61 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     public void goToPlay(String videoUrl) {
         new Handler().postDelayed(() -> {
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
-            //如果播放地址只有1个
-            if (arr.length == 1) {
-                url = "http" + arr[0];
-                if (url.contains(".m3u8") || url.contains(".mp4")) {
-                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                        case 0:
-                            //调用播放器
-                            Jzvd.releaseAllVideos();
-                            player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-                            Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
-                            player.startVideo();
-                            break;
-                        case 1:
-                            Jzvd.releaseAllVideos();
-                            Utils.selectVideoPlayer(PlayerActivity.this, url);
-                            break;
-                    }
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", animeTitle);
-                    bundle.putString("url", url);
-                    bundle.putString("dili", diliUrl);
-                    bundle.putSerializable("list", (Serializable) list);
-                    startActivity(new Intent(PlayerActivity.this, WebActivity.class).putExtras(bundle));
-                    PlayerActivity.this.finish();
-                }
-            } else {
-                videoUrlArr = new String[arr.length];
-                videoTitleArr = new String[arr.length];
-                VideoUtils.showMultipleVideoSources(this,
-                        arr,
-                        videoTitleArr,
-                        videoUrlArr,
-                        (dialog, index) -> {
-                            url = videoUrlArr[index];
-                            if (url.contains(".m3u8") || url.contains(".mp4")) {
-                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                                    case 0:
-                                        //调用播放器
-                                        Jzvd.releaseAllVideos();
-                                        player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
-                                        Glide.with(PlayerActivity.this).load(R.drawable.baseline_view_module_white_48dp).into(player.fullscreenButton);
-                                        player.startVideo();
-                                        break;
-                                    case 1:
-                                        Jzvd.releaseAllVideos();
-                                        Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
-                                        break;
-                                }
-                            } else {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("title", animeTitle);
-                                bundle.putString("url", url);
-                                bundle.putString("dili", diliUrl);
-                                bundle.putSerializable("list", (Serializable) list);
-                                startActivity(new Intent(PlayerActivity.this, WebActivity.class).putExtras(bundle));
-                                PlayerActivity.this.finish();
-                            }
-                        });
-            }
+            if (arr.length == 1) oneSource(arr);
+            else multipleSource(arr);
         }, 200);
+    }
+
+    /**
+     * 只有一个播放地址
+     * @param arr
+     */
+    private void oneSource(String[] arr) {
+        url = "http" + arr[0];
+        if (url.contains(".m3u8") || url.contains(".mp4")) {
+            switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                case 0:
+                    //调用播放器
+                    Jzvd.releaseAllVideos();
+                    player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                    player.startVideo();
+                    break;
+                case 1:
+                    Jzvd.releaseAllVideos();
+                    Utils.selectVideoPlayer(PlayerActivity.this, url);
+                    break;
+            }
+        } else VideoUtils.openWebview(false, this, animeTitle, url, diliUrl, list);
+    }
+
+    /**
+     * 多个播放地址
+     * @param arr
+     */
+    private void multipleSource(String[] arr) {
+        videoUrlArr = new String[arr.length];
+        String[] videoTitleArr = new String[arr.length];
+        VideoUtils.showMultipleVideoSources(this,
+                arr,
+                videoTitleArr,
+                videoUrlArr,
+                (dialog, index) -> {
+                    url = videoUrlArr[index];
+                    if (url.contains(".m3u8") || url.contains(".mp4")) {
+                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                            case 0:
+                                //调用播放器
+                                Jzvd.releaseAllVideos();
+                                player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                                player.startVideo();
+                                break;
+                            case 1:
+                                Jzvd.releaseAllVideos();
+                                Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
+                                break;
+                        }
+                    } else VideoUtils.openWebview(false, this, animeTitle, url, diliUrl, list);
+                });
     }
 
     @OnClick({R.id.select_player, R.id.open_in_browser})
@@ -248,31 +236,35 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END);
-        else {
-            Jzvd.releaseAllVideos();
-            finish();
-        }
+        else finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!PlayerActivity.this.isInMultiWindowMode())
-                JzvdStd.goOnPlayOnPause();
-        } else
-            JzvdStd.goOnPlayOnPause();
+        if (!inMultiWindow()) JzvdStd.goOnPlayOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideNavBar();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!PlayerActivity.this.isInMultiWindowMode())
-                JzvdStd.goOnPlayOnResume();
-        } else
-            JzvdStd.goOnPlayOnResume();
+        if (!inMultiWindow()) JzvdStd.goOnPlayOnResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        JzvdStd.releaseAllVideos();
+    }
+
+    /**
+     * 是否为分屏模式
+     * @return
+     */
+    public boolean inMultiWindow(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return this.isInMultiWindowMode();
+        else return false;
     }
 
     /**
@@ -295,17 +287,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
     @Override
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
-        if (isInPictureInPictureMode) {
-            player.fullscreenButton.setVisibility(View.INVISIBLE);
-            player.backButton.setVisibility(View.INVISIBLE);
-            player.titleTextView.setVisibility(View.INVISIBLE);
-            player.batteryTimeLayout.setVisibility(View.INVISIBLE);
-        } else {
-            player.fullscreenButton.setVisibility(View.VISIBLE);
-            player.backButton.setVisibility(View.VISIBLE);
-            player.titleTextView.setVisibility(View.VISIBLE);
-            player.batteryTimeLayout.setVisibility(View.VISIBLE);
-        }
+        if (isInPictureInPictureMode) player.startPIP();
+        else player.exitPIP();
     }
 
     @Override
@@ -315,18 +298,28 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     public void getVideoSuccess(String url) {
-        runOnUiThread(() -> goToPlay(url));
+        runOnUiThread(() -> {
+            hideNavBar();
+            goToPlay(url);
+        });
     }
 
     @Override
     public void getVideoEmpty() {
-        runOnUiThread(() -> VideoUtils.showErrorInfo(PlayerActivity.this, diliUrl));
+        runOnUiThread(() -> {
+            hideNavBar();
+            VideoUtils.showErrorInfo(PlayerActivity.this, diliUrl);
+
+        });
     }
 
     @Override
     public void getVideoError() {
         //网络出错
-        runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
+        runOnUiThread(() -> {
+            hideNavBar();
+            application.showToastMsg(Utils.getString(R.string.error_700));
+        });
     }
 
     @Override
@@ -343,8 +336,13 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void onDestroy() {
+        if (null != presenter) presenter.detachView();
         super.onDestroy();
-        if (null != presenter)
-            presenter.detachView();
+    }
+
+    @Override
+    public void complete() {
+        application.showToastMsg("播放完毕");
+        if (!drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.openDrawer(GravityCompat.END);
     }
 }

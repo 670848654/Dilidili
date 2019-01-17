@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <cn.jzvd.JzvdStd
+            <anime.project.dilidili.main.player.JZPlayer
                 android:id="@+id/player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -30,71 +30,73 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <LinearLayout
-                    android:descendantFocusability="blocksDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:id="@+id/anime_title"
-                            android:textColor="@android:color/white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:padding="5dp"
+                            android:textColor="@android:color/white"
                             android:textSize="18sp" />
 
                         <ImageView
                             android:id="@+id/pic"
-                            android:layout_marginTop="5dp"
-                            android:padding="5dp"
-                            android:layout_alignParentEnd="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:src="@drawable/baseline_picture_in_picture_alt_white_48dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="5dp"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:padding="5dp"
+                            android:src="@drawable/baseline_picture_in_picture_alt_white_48dp" />
                     </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:layout_below="@+id/anime_title"
-                        android:layout_margin="2dp"
                         android:id="@+id/rv_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/anime_title"
+                        android:layout_margin="2dp" />
 
                     <TextView
-                        android:layout_below="@+id/rv_list"
                         android:id="@+id/select_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rv_list"
                         android:layout_marginTop="5dp"
-                        android:padding="5dp"
-                        android:textSize="15sp"
-                        android:gravity="center_vertical"
-                        android:textColor="@android:color/white"
-                        android:foreground="?android:attr/selectableItemBackground"
                         android:drawableLeft="@drawable/baseline_open_in_new_white_48dp"
                         android:drawablePadding="5dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         android:text="使用外部播放器播放"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:layout_below="@+id/select_player"
                         android:id="@+id/open_in_browser"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/select_player"
                         android:layout_marginTop="5dp"
-                        android:padding="5dp"
-                        android:textSize="15sp"
-                        android:gravity="center_vertical"
-                        android:textColor="@android:color/white"
-                        android:foreground="?android:attr/selectableItemBackground"
                         android:drawableLeft="@drawable/baseline_language_white_48dp"
                         android:drawablePadding="5dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         android:text="通过浏览器访问原地址"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>

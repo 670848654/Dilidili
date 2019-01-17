@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/img"
                 android:src="@drawable/github"
-                android:tint="@color/md_white_1000"
+                android:tint="@color/grey50"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -38,7 +38,7 @@
                 android:id="@+id/title"
                 android:layout_toRightOf="@+id/img"
                 android:layout_centerVertical="true"
-                android:textColor="@color/md_white_1000"
+                android:textColor="@color/grey50"
                 android:padding="5dp"
                 android:textSize="16sp"
                 android:maxEms="12"
@@ -49,7 +49,7 @@
                 android:id="@+id/author"
                 android:padding="5dp"
                 android:textSize="16sp"
-                android:textColor="@color/md_white_1000"
+                android:textColor="@color/grey50"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:padding="5dp"
             android:id="@+id/desc"
             android:textSize="16sp"
-            android:textColor="@color/md_white_1000"
+            android:textColor="@color/grey50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -1,4 +1,4 @@
-package anime.project.dilidili.util;
+package anime.project.dilidili.main.player;
 
 import android.content.Context;
 import android.net.Uri;

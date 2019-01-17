@@ -25,7 +25,7 @@ public class WebviewAdapter extends BaseQuickAdapter<WebviewBean, BaseViewHolder
         button.setTextColor(context.getResources().getColor(R.color.grey1000));
         button.setBackgroundResource(R.drawable.button_unpress);
         if (item.isSelect()){
-            button.setTextColor(context.getResources().getColor(R.color.md_white_1000));
+            button.setTextColor(context.getResources().getColor(R.color.grey50));
             button.setBackgroundResource(R.drawable.button_onpress);
         }
         else

@@ -30,7 +30,7 @@
             <TextView
                 android:id="@+id/title"
                 android:text="白玉阁免费解析"
-                android:textColor="@color/md_white_1000"
+                android:textColor="@color/grey50"
                 android:padding="5dp"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -58,7 +58,7 @@
             android:id="@+id/url"
             android:padding="5dp"
             android:text="http://app.baiyug.cn:2019/vip/?url= "
-            android:textColor="@color/md_white_1000"
+            android:textColor="@color/grey50"
             android:layout_gravity="center"
             android:textSize="16sp"
             android:layout_width="match_parent"

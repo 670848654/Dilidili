@@ -105,7 +105,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
                 new int[]{-android.R.attr.state_checked},
                 new int[]{android.R.attr.state_checked}
         };
-        int[] colors = new int[]{getResources().getColor(R.color.md_white_1000),
+        int[] colors = new int[]{getResources().getColor(R.color.grey50),
                 getResources().getColor(R.color.pinka200)
         };
         ColorStateList csl = new ColorStateList(states, colors);
@@ -160,7 +160,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         mSearchView.setQueryHint(Utils.getString(R.string.search_hint));
         mSearchView.setMaxWidth(1000);
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
-        textView.setTextColor(getResources().getColor(R.color.md_white_1000));
+        textView.setTextColor(getResources().getColor(R.color.grey50));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

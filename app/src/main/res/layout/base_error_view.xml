@@ -13,5 +13,5 @@
         android:textSize="24sp"
         android:lineSpacingExtra="8dp"
         android:gravity="center"
-        android:textColor="@color/md_white_1000"/>
+        android:textColor="@color/grey50"/>
 </RelativeLayout>

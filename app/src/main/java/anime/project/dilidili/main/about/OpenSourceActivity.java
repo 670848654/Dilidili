@@ -73,7 +73,6 @@ public class OpenSourceActivity extends BaseActivity {
     public void initList(){
         list.add(new SourceBean("jsoup","jhy","jsoup: Java HTML Parser, with best of DOM, CSS, and jquery","https://github.com/jhy/jsoup"));
         list.add(new SourceBean("BaseRecyclerViewAdapterHelper","CymChad","BRVAH:Powerful and flexible RecyclerAdapter","https://github.com/CymChad/BaseRecyclerViewAdapterHelper"));
-        list.add(new SourceBean("MaterialDrawer","mikepenz","The flexible, easy to use, all in one drawer library for your Android project. Now brand new with material 2 design.","https://github.com/mikepenz/MaterialDrawer"));
         list.add(new SourceBean("Glide","bumptech","An image loading and caching library for Android focused on smooth scrolling","https://github.com/bumptech/glide"));
         list.add(new SourceBean("EasyPermissions","googlesamples","Simplify Android M system permissions","https://github.com/googlesamples/easypermissions"));
         list.add(new SourceBean("MaterialEditText","rengwuxian","EditText in Material Design","https://github.com/rengwuxian/MaterialEditText"));

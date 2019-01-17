@@ -1,10 +1,13 @@
 package anime.project.dilidili.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +15,11 @@ import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import anime.project.dilidili.R;
+import anime.project.dilidili.application.DiliDili;
+import anime.project.dilidili.bean.AnimeDescBean;
+import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.webview.DefaultWebActivity;
+import anime.project.dilidili.main.webview.WebActivity;
 
 public class VideoUtils {
     public static AlertDialog alertDialog;
@@ -77,5 +84,35 @@ public class VideoUtils {
         builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public static void openPlayer(boolean isDescActivity, Activity activity, String witchTitle, String url, String animeTitle, String diliUrl, List<AnimeDescBean> list) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", witchTitle);
+        bundle.putString("url", url);
+        bundle.putString("animeTitle", animeTitle);
+        bundle.putString("dili", diliUrl);
+        bundle.putSerializable("list", (Serializable) list);
+        DiliDili.destoryActivity("player");
+        if (isDescActivity)
+            activity.startActivityForResult(new Intent(activity, PlayerActivity.class).putExtras(bundle), 0x10);
+        else {
+            activity.startActivity(new Intent(activity, PlayerActivity.class).putExtras(bundle));
+            activity.finish();
+        }
+    }
+
+    public static void openWebview(boolean isDescActivity, Activity activity, String animeTitle, String url, String diliUrl, List<AnimeDescBean> list) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", animeTitle);
+        bundle.putString("url", url);
+        bundle.putString("dili", diliUrl);
+        bundle.putSerializable("list", (Serializable) list);
+        if (isDescActivity)
+            activity.startActivityForResult(new Intent(activity, WebActivity.class).putExtras(bundle), 0x10);
+        else {
+            activity.startActivity(new Intent(activity, WebActivity.class).putExtras(bundle));
+            activity.finish();
+        }
     }
 }

@@ -2,7 +2,6 @@ package anime.project.dilidili.main.webview;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,9 +25,9 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
 import java.io.File;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +48,6 @@ import anime.project.dilidili.bean.WebviewBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
-import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.util.SharedPreferencesUtils;
@@ -83,7 +81,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private DramaAdapter dramaAdapter;
     private ProgressDialog p;
     private String[] videoUrlArr;
-    private String[] videoTitleArr;
     /**
      * 视频全屏参数
      */
@@ -230,89 +227,15 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     public void goToPlay(String videoUrl) {
         new Handler().postDelayed(() -> {
+            //获取播放地址数组
             String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
-            //如果播放地址只有1个
-            if (arr.length == 1) {
-                url = "http" + arr[0];
-                if (url.contains(".m3u8") || url.contains(".mp4")) {
-                    switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                        case 0:
-                            //调用播放器
-                            Bundle bundle = new Bundle();
-                            bundle.putString("title", witchTitle);
-                            bundle.putString("url", url);
-                            bundle.putString("animeTitle", animeTitle);
-                            bundle.putString("dili", diliUrl);
-                            bundle.putSerializable("list", (Serializable) dramaList);
-                            startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
-                            WebActivity.this.finish();
-                            break;
-                        case 1:
-                            Utils.selectVideoPlayer(WebActivity.this, url);
-                            break;
-                    }
-                } else {
-                    //视频源地址
-                    java.net.URL urlHost;
-                    try {
-                        urlHost = new java.net.URL(url);
-                        toolbar.setTitle(urlHost.getHost());
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                    Map<String, String> map = new HashMap<>();
-                    map.put(REFERER, diliUrl);
-                    newUrl = api + url;
-                    mX5WebView.loadUrl(newUrl, map);
-                }
-            } else {
-                videoUrlArr = new String[arr.length];
-                videoTitleArr = new String[arr.length];
-                VideoUtils.showMultipleVideoSources(this,
-                        arr,
-                        videoTitleArr,
-                        videoUrlArr,
-                        (dialog, index) -> {
-                            if (videoUrlArr[index].contains(".m3u8") || videoUrlArr[index].contains(".mp4")) {
-                                switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                                    case 0:
-                                        //调用播放器
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("title", witchTitle);
-                                        bundle.putString("url", videoUrlArr[index]);
-                                        bundle.putString("animeTitle", animeTitle);
-                                        bundle.putString("dili", diliUrl);
-                                        bundle.putSerializable("list", (Serializable) dramaList);
-                                        startActivity(new Intent(WebActivity.this, PlayerActivity.class).putExtras(bundle));
-                                        WebActivity.this.finish();
-                                        break;
-                                    case 1:
-                                        Utils.selectVideoPlayer(WebActivity.this, videoUrlArr[index]);
-                                        break;
-                                }
-                            } else {
-                                //视频源地址
-                                java.net.URL urlHost;
-                                try {
-                                    urlHost = new java.net.URL(url);
-                                    toolbar.setTitle(urlHost.getHost());
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
-                                Map<String, String> map = new HashMap<>();
-                                map.put(REFERER, diliUrl);
-                                newUrl = api + url;
-                                mX5WebView.loadUrl(newUrl, map);
-                            }
-                        });
-            }
+            if (arr.length == 1) oneSource(arr);
+            else multipleSource(arr);
         }, 200);
     }
 
     public void initWebView() {
-        linearLayout.setOnClickListener(view -> {
-            return;
-        });
+        linearLayout.setOnClickListener(view -> { return; });
         linearLayout.getBackground().mutate().setAlpha(150);
         getWindow().getDecorView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             ArrayList<View> outView = new ArrayList<>();
@@ -491,13 +414,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
      */
     private void initHardwareAccelerate() {
         try {
-            if (Integer.parseInt(Build.VERSION.SDK) >= 11) {
-                getWindow()
-                        .setFlags(
-                                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-            }
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -505,6 +425,13 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     public void onBackPressed() {
         if (mX5WebView.canGoBack()) mX5WebView.goBack();//返回上个页面
         else finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFullscreen) hideNavBar();
+        else showNavBar();
     }
 
     @Override
@@ -517,6 +444,71 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
         Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
         super.onDestroy();
+    }
+
+
+    /**
+     * 只有一个播放地址
+     * @param arr
+     */
+    private void oneSource(String[] arr) {
+        url = "http" + arr[0];
+        if (url.contains(".m3u8") || url.contains(".mp4")) {
+            switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                case 0:
+                    //调用播放器
+                    VideoUtils.openPlayer(false, this, witchTitle, url, animeTitle, diliUrl, dramaList);
+                    break;
+                case 1:
+                    Utils.selectVideoPlayer(WebActivity.this, url);
+                    break;
+            }
+        } else loadUrl();
+    }
+
+    /**
+     * 多个播放地址
+     * @param arr
+     */
+    private void multipleSource(String[] arr) {
+        videoUrlArr = new String[arr.length];
+        String[] videoTitleArr = new String[arr.length];
+        VideoUtils.showMultipleVideoSources(this,
+                arr,
+                videoTitleArr,
+                videoUrlArr,
+                (dialog, index) -> {
+                    url = videoUrlArr[index];
+                    if (url.contains(".m3u8") || url.contains(".mp4")) {
+                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+                            case 0:
+                                //调用播放器
+                                VideoUtils.openPlayer(false, this, witchTitle, url, animeTitle, diliUrl, dramaList);
+                                break;
+                            case 1:
+                                Utils.selectVideoPlayer(WebActivity.this, url);
+                                break;
+                        }
+                    } else loadUrl();
+                });
+    }
+
+    /**
+     * 加载新地址
+     */
+    private void loadUrl() {
+        //视频源地址
+        URL urlHost;
+        try {
+            urlHost = new URL(url);
+            toolbar.setTitle(urlHost.getHost());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put(REFERER, diliUrl);
+        newUrl = api + url;
+        mX5WebView.loadUrl(newUrl, map);
     }
 
     @Override
@@ -557,12 +549,5 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isFullscreen) hideNavBar();
-        else showNavBar();
     }
 }
