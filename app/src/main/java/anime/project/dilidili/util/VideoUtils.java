@@ -53,7 +53,8 @@ public class VideoUtils {
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             alertDialog.dismiss();
-            context.startActivity(new Intent(context, DefaultWebActivity.class).putExtra("url", HTML_url));
+//            context.startActivity(new Intent(context, DefaultWebActivity.class).putExtra("url", HTML_url));
+            Utils.viewInChrome(context, HTML_url);
         });
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> alertDialog.dismiss());
     }

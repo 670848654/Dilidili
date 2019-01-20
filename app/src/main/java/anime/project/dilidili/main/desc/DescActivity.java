@@ -79,7 +79,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     protected DescPresenter createPresenter() {
-        return new DescPresenter(url, this);
+        return new DescPresenter(diliUrl, this);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void getBundle() {
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
-            url = bundle.getString("url");
+            diliUrl = bundle.getString("url");
             animeTitle = bundle.getString("name");
         }
     }
@@ -158,8 +158,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     break;
                 case "html":
                     animeTitle = bean.getTitle();
-                    url = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
-                    if (url.contains("/anime/")) {
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+                    if (diliUrl.contains("/anime/")) {
                         String[] arr = bean.getUrl().split("/");
                         Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
                         boolean isAnimeList = false;
@@ -179,7 +179,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             switch (bean.getType()) {
                 case "down":
                     if (!bean.getUrl().isEmpty())
-                        Utils.viewInBrowser(DescActivity.this, bean.getUrl());
+                        Utils.viewInChrome(DescActivity.this, bean.getUrl());
                     else
                         Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
                     break;
@@ -209,7 +209,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         animeListBean = new AnimeListBean();
         favorite.startAnimation(Utils.animationOut(0));
         favorite.setVisibility(View.GONE);
-        mPresenter = new DescPresenter(url, this);
+        mPresenter = new DescPresenter(diliUrl, this);
         multiItemList.clear();
         adapter.setNewData(multiItemList);
         mPresenter.loadData(true);
@@ -218,7 +218,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void openAnimeList(){
         Bundle bundle = new Bundle();
         bundle.putString("title", animeTitle);
-        bundle.putString("url", url);
+        bundle.putString("url", diliUrl);
         startActivity(new Intent(DescActivity.this, AnimeListActivity.class).putExtras(bundle));
     }
 
@@ -325,11 +325,13 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            setCollapsingToolbar();
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(DescActivity.this));
-            errorTitle.setText(msg);
-            adapter.setEmptyView(errorView);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                setCollapsingToolbar();
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(DescActivity.this));
+                errorTitle.setText(msg);
+                adapter.setEmptyView(errorView);
+            }
         });
     }
 
@@ -342,35 +344,37 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showSuccessMainView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
-            final GridLayoutManager manager = new GridLayoutManager(DescActivity.this, 15);
-            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    int index = 0;
-                    switch (adapter.getItemViewType(position)) {
-                        case AnimeType.TYPE_LEVEL_0:
-                            index = manager.getSpanCount();
-                            break;
-                        case AnimeType.TYPE_LEVEL_1:
-                            index = 3;
-                            break;
-                        case AnimeType.TYPE_LEVEL_2:
-                            index = manager.getSpanCount();
-                            break;
-                        case AnimeType.TYPE_LEVEL_3:
-                            index = 5;
-                            break;
+            if (!mActivityFinish) {
+                final GridLayoutManager manager = new GridLayoutManager(DescActivity.this, 15);
+                manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        int index = 0;
+                        switch (adapter.getItemViewType(position)) {
+                            case AnimeType.TYPE_LEVEL_0:
+                                index = manager.getSpanCount();
+                                break;
+                            case AnimeType.TYPE_LEVEL_1:
+                                index = 3;
+                                break;
+                            case AnimeType.TYPE_LEVEL_2:
+                                index = manager.getSpanCount();
+                                break;
+                            case AnimeType.TYPE_LEVEL_3:
+                                index = 5;
+                                break;
+                        }
+                        return index;
                     }
-                    return index;
-                }
-            });
-            // important! setLayoutManager should be called after setAdapter
-            mRecyclerView.setLayoutManager(manager);
-            multiItemList = list;
-            mSwipe.setRefreshing(false);
-            setCollapsingToolbar();
-            adapter.setNewData(multiItemList);
-            adapter.expand(0);
+                });
+                // important! setLayoutManager should be called after setAdapter
+                mRecyclerView.setLayoutManager(manager);
+                multiItemList = list;
+                mSwipe.setRefreshing(false);
+                setCollapsingToolbar();
+                adapter.setNewData(multiItemList);
+                adapter.expand(0);
+            }
         });
     }
 
@@ -378,7 +382,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.open_in_browser:
-                Utils.viewInBrowser(this, url);
+                Utils.viewInChrome(this, diliUrl);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -409,11 +413,13 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void showSuccessFavorite(boolean is) {
         isFavorite = is;
         runOnUiThread(() -> {
-            if (!favorite.isShown()) {
-                if (isFavorite) Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
-                else Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
-                favorite.startAnimation(Utils.animationOut(1));
-                favorite.setVisibility(View.VISIBLE);
+            if (!mActivityFinish) {
+                if (!favorite.isShown()) {
+                    if (isFavorite) Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
+                    else Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
+                    favorite.startAnimation(Utils.animationOut(1));
+                    favorite.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

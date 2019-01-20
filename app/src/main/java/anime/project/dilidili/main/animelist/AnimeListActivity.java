@@ -130,18 +130,22 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     @Override
     public void showSuccessView(List<AnimeListBean> animeList) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            list = animeList;
-            adapter.setNewData(list);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                list = animeList;
+                adapter.setNewData(list);
+            }
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            errorTitle.setText(msg);
-            adapter.setEmptyView(errorView);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                errorTitle.setText(msg);
+                adapter.setEmptyView(errorView);
+            }
         });
     }
 

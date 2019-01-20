@@ -112,18 +112,22 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     @Override
     public void showSuccessView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            recommendList = list;
-            adapter.setNewData(recommendList);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                recommendList = list;
+                adapter.setNewData(recommendList);
+            }
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            errorTitle.setText(msg);
-            adapter.setEmptyView(errorView);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                errorTitle.setText(msg);
+                adapter.setEmptyView(errorView);
+            }
         });
     }
 

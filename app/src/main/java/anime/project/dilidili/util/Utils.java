@@ -9,6 +9,8 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -37,6 +39,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.browser.customtabs.CustomTabsIntent;
 import anime.project.dilidili.BuildConfig;
 import anime.project.dilidili.R;
 import anime.project.dilidili.custom.CircleImageView;
@@ -144,6 +147,17 @@ public class Utils {
         } else {
             Toast.makeText(context, "没有匹配的程序", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void viewInChrome(Context context, String url){
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        //Sets the toolbar color.
+        builder.setToolbarColor(context.getResources().getColor(R.color.night));
+        Bitmap closeBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.baseline_arrow_back_white_24dp);
+        builder.setCloseButtonIcon(closeBitmap);// 关闭按钮
+        builder.setShowTitle(true); //显示网页标题
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(context, Uri.parse(url));
     }
 
     public static String getString(@StringRes int id) {

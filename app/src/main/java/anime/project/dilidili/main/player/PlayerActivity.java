@@ -228,7 +228,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                 Utils.selectVideoPlayer(this, url);
                 break;
             case R.id.open_in_browser:
-                Utils.viewInBrowser(this, diliUrl);
+                Utils.viewInChrome(this, diliUrl);
                 break;
         }
     }

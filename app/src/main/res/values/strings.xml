@@ -60,7 +60,7 @@
     <!-- msg文本 -->
     <string name="parsing">解析中,请稍后...</string>
     <string name="error_700">网络错误,请重试!</string>
-    <string name="error_800">未能获取到播放地址!\n1.解析方法不支持\n2.播放地址不存在\n可以尝试打开原页面去播放.</string>
+    <string name="error_800">未能获取到播放地址\n1.解析方法不支持\n2.播放地址不存在\n3.可以尝试打开原页面去播放</string>
     <string name="join_ok">自己追的番就要好好看完哦 （&gt;▽&lt;）</string>
     <string name="join_error">哼！竟然真的抛弃了人家（＝。＝）</string>
     <!-- 播放地址未找到 -->
@@ -110,7 +110,7 @@
     <string name="check_update">检测更新</string>
     <string name="check_update_text">检测更新中...</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年1月17日11:38:03</string>
+    <string name="final_compile_time">2019年1月19日20:57:54</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->

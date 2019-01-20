@@ -186,9 +186,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (list.get(position).isOriginalPage()) {
-                Utils.viewInBrowser(WebActivity.this, diliUrl);
+                Utils.viewInChrome(WebActivity.this, diliUrl);
             } else if (list.get(position).isOriginalAddress()) {
-                Utils.viewInBrowser(WebActivity.this, url);
+                Utils.viewInChrome(WebActivity.this, url);
             } else {
                 for (int i = 0; i < list.size(); i++) {
                     list.get(i).setSelect(false);

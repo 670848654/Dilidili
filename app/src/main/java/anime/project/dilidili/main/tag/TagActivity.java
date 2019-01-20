@@ -118,18 +118,22 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
     @Override
     public void showSuccessView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            tagList = list;
-            adapter.setNewData(tagList);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                tagList = list;
+                adapter.setNewData(tagList);
+            }
         });
     }
 
     @Override
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
-            mSwipe.setRefreshing(false);
-            errorTitle.setText(msg);
-            adapter.setEmptyView(errorView);
+            if (!mActivityFinish) {
+                mSwipe.setRefreshing(false);
+                errorTitle.setText(msg);
+                adapter.setEmptyView(errorView);
+            }
         });
     }
 

@@ -223,13 +223,15 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     @Override
     public void showSuccessView(boolean isMain, List<SearchBean> list) {
         runOnUiThread(() -> {
-            if (isMain){
-                mSwipe.setRefreshing(false);
-                searchList = list;
-                adapter.setNewData(searchList);
-            } else {
-                adapter.addData(list);
-                setLoadState(true);
+            if (!mActivityFinish) {
+                if (isMain){
+                    mSwipe.setRefreshing(false);
+                    searchList = list;
+                    adapter.setNewData(searchList);
+                } else {
+                    adapter.addData(list);
+                    setLoadState(true);
+                }
             }
         });
     }
@@ -237,13 +239,15 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     @Override
     public void showErrorView(boolean isMain, String msg) {
         runOnUiThread(() -> {
-            if (isMain){
-                mSwipe.setRefreshing(false);
-                errorTitle.setText(msg);
-                adapter.setEmptyView(errorView);
-            } else {
-                setLoadState(false);
-                application.showToastMsg(msg);
+            if (!mActivityFinish) {
+                if (isMain){
+                    mSwipe.setRefreshing(false);
+                    errorTitle.setText(msg);
+                    adapter.setEmptyView(errorView);
+                } else {
+                    setLoadState(false);
+                    application.showToastMsg(msg);
+                }
             }
         });
     }

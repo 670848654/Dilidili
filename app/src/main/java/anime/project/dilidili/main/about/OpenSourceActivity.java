@@ -82,6 +82,7 @@ public class OpenSourceActivity extends BaseActivity {
         list.add(new SourceBean("Slidr","r0adkll","Easily add slide to dismiss functionality to an Activity","https://github.com/r0adkll/Slidr"));
         list.add(new SourceBean("butterknife","JakeWharton","Bind Android views and callbacks to fields and methods.","https://github.com/JakeWharton/butterknife"));
         list.add(new SourceBean("okhttp","square","An HTTP+HTTP/2 client for Android and Java applications.","https://github.com/square/okhttp"));
+        list.add(new SourceBean("customtabs","GoogleChrome","mirrored from https://chromium.googlesource.com/custom-tabs-client","https://github.com/GoogleChrome/custom-tabs-client"));
     }
 
     public void initAdapter(){
@@ -90,7 +91,7 @@ public class OpenSourceActivity extends BaseActivity {
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            if (Utils.isFastClick()) Utils.viewInBrowser(this, list.get(position).getUrl());
+            if (Utils.isFastClick()) Utils.viewInChrome(this, list.get(position).getUrl());
         });
         recyclerView.setAdapter(adapter);
     }

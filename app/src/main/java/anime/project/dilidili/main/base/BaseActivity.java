@@ -3,6 +3,7 @@ package anime.project.dilidili.main.base;
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     public TextView errorTitle;
     public DiliDili application;
     private Unbinder mUnBinder;
+    protected boolean mActivityFinish = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +102,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
 
     @Override
     protected void onDestroy() {
+        mActivityFinish = true;
         //取消View的关联
         if (null != mPresenter )
             mPresenter.detachView();
