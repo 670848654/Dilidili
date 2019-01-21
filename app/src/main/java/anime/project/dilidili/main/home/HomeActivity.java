@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -58,7 +59,6 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     TabLayout tab;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-    private WeekAdapter adapter;
     private int week;
     private SearchView mSearchView;
     private String[] tabs =  Utils.getArray(R.array.week_array);
@@ -134,7 +134,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
 
     public void initFragment() {
         week = Utils.getWeekOfDate(new Date());
-        for (int i = 0; i < tabs.length; i++) {
+        for (String title : tabs) {
             tab.addTab(tab.newTab());
         }
         tab.setupWithViewPager(viewpager);
@@ -254,15 +254,15 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             mSwipe.setRefreshing(false);
             application.error = "";
             application.week = map.get("week") == null ? new JSONObject() : (JSONObject) map.get("week");
-            title = map.get("title").toString() == null ? "加载失败" : map.get("title").toString();
-            animeUrl = map.get("url").toString() == null ? "" : map.get("url").toString();
+            title = map.get("title") == null ? "加载失败" : map.get("title").toString();
+            animeUrl = map.get("url") == null ? "" : map.get("url").toString();
             navigationView.getMenu().getItem(0).setTitle(title);
             setWeekAdapter();
         });
     }
 
     public void setWeekAdapter() {
-        adapter = new WeekAdapter(getSupportFragmentManager(), tab.getTabCount());
+        WeekAdapter adapter = new WeekAdapter(getSupportFragmentManager(), tab.getTabCount());
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(week);
         for (int i = 0; i < tabs.length; i++) {

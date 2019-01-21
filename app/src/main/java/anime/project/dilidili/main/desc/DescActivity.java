@@ -198,7 +198,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         });
         mRecyclerView.setAdapter(adapter);
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.isFirstOnly((Boolean) SharedPreferencesUtils.getParam(DescActivity.this, "anim_is_first", true));//init firstOnly state
     }
 
     @SuppressLint("RestrictedApi")
