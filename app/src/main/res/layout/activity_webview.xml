@@ -5,83 +5,41 @@
     android:layout_height="match_parent"
     android:background="@color/night"
     android:orientation="vertical">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include layout="@layout/toolbar" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/night"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <androidx.drawerlayout.widget.DrawerLayout xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:openDrawer="start">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dip"
-                    android:progressDrawable="@drawable/pg"
-                    android:visibility="gone" />
-
-                <!--显示网页区域-->
-                <anime.project.dilidili.main.webview.X5WebView
-                    android:id="@+id/x5_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="8" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:background="@color/grey1000">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/grey1000"
-                        android:clipToPadding="false"
-                        android:fadingEdge="none" />
-                </RelativeLayout>
-            </LinearLayout>
-        </FrameLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/nav_view"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:background="@color/grey900"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:padding="5dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list_two"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp" />
+                android:layout_height="2dp"
+                android:progressDrawable="@drawable/pg"
+                android:visibility="gone"/>
+
+            <!--显示网页区域-->
+            <anime.project.dilidili.main.webview.X5WebView
+                android:id="@+id/x5_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         </LinearLayout>
-    </androidx.drawerlayout.widget.DrawerLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/drama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="40dp"
+            app:srcCompat="@drawable/ic_eject_white_48dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

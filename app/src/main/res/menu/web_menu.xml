@@ -8,10 +8,4 @@
         android:title="@string/phone_model"
         app:showAsAction="always"
         />
-    <item
-        android:id="@+id/module"
-        android:orderInCategory="100"
-        android:icon="@drawable/baseline_view_module_white_48dp"
-        android:title="@string/module"
-        app:showAsAction="always"/>
 </menu>

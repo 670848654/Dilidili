@@ -18,7 +18,6 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.main.player.PlayerActivity;
-import anime.project.dilidili.main.webview.DefaultWebActivity;
 import anime.project.dilidili.main.webview.WebActivity;
 
 public class VideoUtils {

@@ -186,7 +186,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         else application.showSnackbarMsg(toolbar,
                     Utils.getString(R.string.exit_app),
                     Utils.getString(R.string.exit),
-                    v -> finish());
+                    v -> application.removeALLActivity());
     }
 
     @Override

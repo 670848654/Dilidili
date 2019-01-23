@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,10 +17,10 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
@@ -34,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
@@ -54,14 +53,12 @@ import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class WebActivity extends BaseActivity implements VideoContract.View {
     private final static String PC_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36";
     private final static String PHONE_USER_AGENT = "Mozilla/5.0 (Linux; Android 9; ONEPLUS A6010 Build/PKQ1.180716.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36";
     private final static String REFERER = "referer";
-    @BindView(R.id.rv_list)
-    RecyclerView recyclerView;
-    private WebviewAdapter adapter;
     private List<WebviewBean> list = new ArrayList<>();
     private String url = "", diliUrl = "";
     private String animeTitle;
@@ -73,12 +70,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private ProgressBar pg;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.title)
-    TextView titleView;
-    @BindView(R.id.rv_list_two)
-    RecyclerView recyclerView2;
     private List<AnimeDescBean> dramaList = new ArrayList<>();
     private DramaAdapter dramaAdapter;
+    private BottomSheetDialog mBottomSheetDialog;
     private ProgressDialog p;
     private String[] videoUrlArr;
     /**
@@ -88,10 +82,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private View customView;
     private FrameLayout fullscreenContainer;
     private IX5WebChromeClient.CustomViewCallback customViewCallback;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.nav_view)
-    LinearLayout linearLayout;
     private VideoPresenter presenter;
     private List<ApiBean> apiList;
     private com.tencent.smtt.sdk.WebSettings webSettings;
@@ -116,7 +106,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     @Override
     protected void init() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         hideGap();
         getBundle();
         initToolbar();
@@ -133,12 +122,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         toolbar.setTitle("加载中");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> {
-            if (drawerLayout.isDrawerOpen(GravityCompat.END))
-                drawerLayout.closeDrawer(GravityCompat.END);
-            else
-                finish();
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     public void getBundle() {
@@ -148,8 +132,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             url = bundle.getString("url");
             diliUrl = bundle.getString("dili");
             dramaList = (List<AnimeDescBean>) bundle.getSerializable("list");
-            titleView.setText(animeTitle);
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
@@ -162,8 +144,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     public void initAdapter() {
-        webSettings = mX5WebView.getSettings();
-        webSettings.setUserAgentString(PHONE_USER_AGENT);
         list.add(new WebviewBean(Utils.getString(R.string.source_1), Api.SOURCE_1_API, true, false, false));
         list.add(new WebviewBean(Utils.getString(R.string.source_2), Api.SOURCE_2_API, false, false, false));
         list.add(new WebviewBean(Utils.getString(R.string.source_3), Api.SOURCE_3_API, false, false, false));
@@ -177,19 +157,18 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         }
         list.add(new WebviewBean(Utils.getString(R.string.source_8), "", false, true, false));
         list.add(new WebviewBean(Utils.getString(R.string.source_9), "", false, false, true));
-        recyclerView.setNestedScrollingEnabled(false);
-//        LinearLayoutManager ms = new LinearLayoutManager(this);
-//        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        recyclerView.setLayoutManager(ms);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-        adapter = new WebviewAdapter(this, list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener((adapter, view, position) -> {
+        View dramaView = LayoutInflater.from(this).inflate(R.layout.dialog_webview, null);
+        RecyclerView lineRecyclerView = dramaView.findViewById(R.id.line_list);
+        lineRecyclerView.setNestedScrollingEnabled(false);
+        lineRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        WebviewAdapter webviewAdapter = new WebviewAdapter(this, list);
+        webviewAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (list.get(position).isOriginalPage()) {
                 Utils.viewInChrome(WebActivity.this, diliUrl);
             } else if (list.get(position).isOriginalAddress()) {
                 Utils.viewInChrome(WebActivity.this, url);
             } else {
+                mBottomSheetDialog.dismiss();
                 for (int i = 0; i < list.size(); i++) {
                     list.get(i).setSelect(false);
                 }
@@ -202,18 +181,22 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 mX5WebView.loadUrl(newUrl, map);
             }
         });
-        recyclerView2.setLayoutManager(new GridLayoutManager(this, 4));
+        lineRecyclerView.setAdapter(webviewAdapter);
+        RecyclerView dramaRecyclerView = dramaView.findViewById(R.id.drama_list);
+        dramaRecyclerView.setNestedScrollingEnabled(false);
+        TextView titleTextView = dramaView.findViewById(R.id.title);
+        titleTextView.setText(animeTitle);
+        dramaRecyclerView.setLayoutManager(new GridLayoutManager(this, 5));
         dramaAdapter = new DramaAdapter(this, dramaList);
-        recyclerView2.setAdapter(dramaAdapter);
         dramaAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (!Utils.isFastClick()) return;
             setResult(0x20);
-            drawerLayout.closeDrawer(GravityCompat.END);
+            mBottomSheetDialog.dismiss();
             final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
             switch (bean.getType()) {
                 case "play":
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
-                    Button v = (Button) adapter.getViewByPosition(recyclerView2, position, R.id.tag_group);
+                    Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
                     diliUrl = bean.getUrl();
                     witchTitle = animeTitle + " - " + bean.getTitle();
@@ -223,6 +206,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             }
 
         });
+        dramaRecyclerView.setAdapter(dramaAdapter);
+        mBottomSheetDialog = new BottomSheetDialog(this);
+        mBottomSheetDialog.setContentView(dramaView);
     }
 
     public void goToPlay(String videoUrl) {
@@ -235,8 +221,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     public void initWebView() {
-        linearLayout.setOnClickListener(view -> { return; });
-        linearLayout.getBackground().mutate().setAlpha(150);
+        webSettings = mX5WebView.getSettings();
+        webSettings.setUserAgentString(PHONE_USER_AGENT);
         getWindow().getDecorView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             ArrayList<View> outView = new ArrayList<>();
             getWindow().getDecorView().findViewsWithText(outView, "下载该视频", View.FIND_VIEWS_WITH_TEXT);
@@ -518,15 +504,14 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         return true;
     }
 
+    @OnClick(R.id.drama)
+    public void dramaClick() {
+        if (!mBottomSheetDialog.isShowing()) mBottomSheetDialog.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.module:
-                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    drawerLayout.closeDrawer(GravityCompat.END);
-                } else
-                    drawerLayout.openDrawer(GravityCompat.END);
-                break;
             case R.id.model:
                 if (mModel) {
                     //切换成手机版
