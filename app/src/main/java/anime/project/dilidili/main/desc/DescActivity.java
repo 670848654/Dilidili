@@ -245,7 +245,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     Utils.selectVideoPlayer(DescActivity.this, url);
                     break;
             }
-        } else VideoUtils.openWebview(true, this, animeTitle, url, diliUrl, drama);
+        } else VideoUtils.openWebview(true, this, witchTitle, animeTitle, url, diliUrl, drama);
     }
 
     /**
@@ -271,7 +271,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                                 Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
                                 break;
                         }
-                    } else VideoUtils.openWebview(true, this, animeTitle, url, diliUrl, drama);
+                    } else VideoUtils.openWebview(true, this, witchTitle, animeTitle, url, diliUrl, drama);
                 });
     }
 

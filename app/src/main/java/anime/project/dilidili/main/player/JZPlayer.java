@@ -36,7 +36,7 @@ public class JZPlayer extends JzvdStd {
         super.setUp(jzDataSource, screen);
         batteryTimeLayout.setVisibility(GONE);
         Glide.with(context).load(R.drawable.baseline_view_module_white_48dp).into(fullscreenButton);
-        Glide.with(context).load(R.drawable.baseline_arrow_back_white_24dp).apply(new RequestOptions().centerCrop()).into(backButton);
+        Glide.with(context).load(R.drawable.baseline_close_white_48dp).apply(new RequestOptions().fitCenter()).into(backButton);
         backButton.setPadding(0, 0, 15, 0);
         changeButtonSize(backButton, 70);
     }

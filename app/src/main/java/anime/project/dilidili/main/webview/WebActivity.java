@@ -63,7 +63,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private String url = "", diliUrl = "";
     private String animeTitle;
     private String witchTitle;
-    private String api;
+    private String api = Api.SOURCE_1_API;
     private String newUrl = "";
     @BindView(R.id.x5_webview)
     X5WebView mX5WebView;
@@ -119,7 +119,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     protected void initBeforeView() {}
 
     public void initToolbar() {
-        toolbar.setTitle("加载中");
+        toolbar.setTitle(witchTitle);
+        toolbar.setSubtitle("loading...");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -128,6 +129,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     public void getBundle() {
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
+            witchTitle = bundle.getString("witchTitle");
             animeTitle = bundle.getString("title");
             url = bundle.getString("url");
             diliUrl = bundle.getString("dili");
@@ -195,11 +197,12 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
             switch (bean.getType()) {
                 case "play":
+                    toolbar.setSubtitle("loading...");
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
                     diliUrl = bean.getUrl();
-                    witchTitle = animeTitle + " - " + bean.getTitle();
+                    witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, bean.getUrl(), WebActivity.this);
                     presenter.loadData(true);
                     break;
@@ -249,7 +252,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         java.net.URL urlHost;
         try {
             urlHost = new java.net.URL(url);
-            toolbar.setTitle(urlHost.getHost());
+            toolbar.setSubtitle(urlHost.getHost());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -483,11 +486,12 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
      * 加载新地址
      */
     private void loadUrl() {
+        toolbar.setTitle(witchTitle);
         //视频源地址
         URL urlHost;
         try {
             urlHost = new URL(url);
-            toolbar.setTitle(urlHost.getHost());
+            toolbar.setSubtitle(urlHost.getHost());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

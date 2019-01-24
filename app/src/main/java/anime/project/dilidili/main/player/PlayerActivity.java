@@ -105,10 +105,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         linearLayout.getBackground().mutate().setAlpha(150);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         player.setListener(this, this);
-        player.backButton.setOnClickListener(v -> {
-            Jzvd.releaseAllVideos();
-            finish();
-        });
+        player.backButton.setOnClickListener(v -> finish());
 //        if (Utils.isPad()) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 pic.setVisibility(View.GONE);
@@ -152,7 +149,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
                     diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
-                    witchTitle = animeTitle + " - " + bean.getTitle();
+                    witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
                     presenter.loadData(true);
                     break;
@@ -188,7 +185,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     Utils.selectVideoPlayer(PlayerActivity.this, url);
                     break;
             }
-        } else VideoUtils.openWebview(false, this, animeTitle, url, diliUrl, list);
+        } else VideoUtils.openWebview(false, this, witchTitle, animeTitle, url, diliUrl, list);
     }
 
     /**
@@ -217,7 +214,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                                 Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
                                 break;
                         }
-                    } else VideoUtils.openWebview(false, this, animeTitle, url, diliUrl, list);
+                    } else VideoUtils.openWebview(false, this, witchTitle, animeTitle, url, diliUrl, list);
                 });
     }
 

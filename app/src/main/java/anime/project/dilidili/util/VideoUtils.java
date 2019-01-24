@@ -102,8 +102,9 @@ public class VideoUtils {
         }
     }
 
-    public static void openWebview(boolean isDescActivity, Activity activity, String animeTitle, String url, String diliUrl, List<AnimeDescBean> list) {
+    public static void openWebview(boolean isDescActivity, Activity activity,String witchTitle, String animeTitle, String url, String diliUrl, List<AnimeDescBean> list) {
         Bundle bundle = new Bundle();
+        bundle.putString("witchTitle", witchTitle);
         bundle.putString("title", animeTitle);
         bundle.putString("url", url);
         bundle.putString("dili", diliUrl);

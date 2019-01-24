@@ -153,7 +153,7 @@ public class Utils {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         //Sets the toolbar color.
         builder.setToolbarColor(context.getResources().getColor(R.color.night));
-        Bitmap closeBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.baseline_arrow_back_white_24dp);
+        Bitmap closeBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.baseline_close_white_48dp);
         builder.setCloseButtonIcon(closeBitmap);// 关闭按钮
         builder.setShowTitle(true); //显示网页标题
         CustomTabsIntent customTabsIntent = builder.build();
