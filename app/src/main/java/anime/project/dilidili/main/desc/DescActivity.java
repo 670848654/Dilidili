@@ -148,6 +148,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
             switch (bean.getType()) {
                 case "play":
+                    animeTitle = bean.getTitle();
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
@@ -157,7 +158,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     videoPresenter.loadData(true);
                     break;
                 case "html":
-                    animeTitle = bean.getTitle();
                     diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
                     if (diliUrl.contains("/anime/")) {
                         String[] arr = bean.getUrl().split("/");
@@ -167,9 +167,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             isAnimeList = true;
                             break;
                         }
-                        if (isAnimeList) openAnimeList();
+                        if (isAnimeList) openAnimeList(bean.getTitle());
                         else openAnimeDesc();
-                    } else openAnimeList();
+                    } else openAnimeList(bean.getTitle());
                     break;
             }
         });
@@ -214,9 +214,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mPresenter.loadData(true);
     }
 
-    public void openAnimeList(){
+    public void openAnimeList(String title){
         Bundle bundle = new Bundle();
-        bundle.putString("title", animeTitle);
+        bundle.putString("title", title);
         bundle.putString("url", diliUrl);
         startActivity(new Intent(DescActivity.this, AnimeListActivity.class).putExtras(bundle));
     }
