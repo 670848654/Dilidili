@@ -148,7 +148,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
             switch (bean.getType()) {
                 case "play":
-                    animeTitle = bean.getTitle();
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
