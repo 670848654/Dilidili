@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.util.List;
 
 import anime.project.dilidili.R;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.util.Utils;
 
@@ -20,7 +21,7 @@ public class FavoriteListAdapter extends BaseQuickAdapter<AnimeListBean, BaseVie
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setDefaultImage(context, item.getImg(),helper.getView(R.id.img));
+        Utils.setDefaultImage(context, DiliDili.DOMAIN + item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
     }
 }

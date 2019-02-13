@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
@@ -47,21 +48,21 @@ public class VideoModel implements VideoContract.Model {
                 if (videoUrl.isEmpty())
                     videoUrl = doc.getElementsByClass("player").select("a").attr("href");//尝试第二种方式[版权页面]
                 if (!videoUrl.isEmpty()) {
-                    if (!Patterns.WEB_URL.matcher(videoUrl).matches()) callback.empty();
+                    if (!Patterns.WEB_URL.matcher(videoUrl.replace(" ","")).matches()) callback.empty();
                     else callback.success(videoUrl);
                 } else callback.empty();
             }
         });
     }
 
-    public static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList) {
+    private static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList) {
         List<AnimeDescBean> list = new ArrayList<>();
         try {
             String dataBaseDrama = DatabaseUtil.queryAllIndex(fid);
             String dramaTitle;
             String dramaUrl;
             for (int i = 0; i < dramaList.size(); i++) {
-                dramaUrl = dramaList.get(i).attr("href");
+                dramaUrl = dramaList.get(i).attr("href").substring(DiliDili.DOMAIN.length());
                 dramaTitle = dramaList.get(i).text();
                 if (dataBaseDrama.contains(dramaUrl))
                     list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, true, dramaTitle, dramaUrl, "play"));
@@ -80,7 +81,7 @@ public class VideoModel implements VideoContract.Model {
      *
      * @param script
      */
-    public static String getSourceUrl(Elements script) {
+    private static String getSourceUrl(Elements script) {
         String url = "";
         for (int i = 0; i < script.size(); i++) {
             Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());

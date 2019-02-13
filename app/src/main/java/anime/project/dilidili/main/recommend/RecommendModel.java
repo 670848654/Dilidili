@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.bean.RecommendHeaderBean;
 import anime.project.dilidili.net.HttpGet;
@@ -23,7 +24,7 @@ public class RecommendModel implements RecommendContract.Model{
 
     @Override
     public void getData(RecommendContract.LoadDataCallback callback) {
-        new HttpGet(Api.RECOMMEND_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.RECOMMEND_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

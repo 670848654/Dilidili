@@ -12,6 +12,7 @@ import java.util.List;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.bean.AnimeListBean;
@@ -116,6 +117,7 @@ public class DescModel implements DescContract.Model {
                     String watchUrl = els.get(i).select("a").attr("href");
                     if (!watchUrl.isEmpty()) {
                         k++;
+                        watchUrl = watchUrl.substring(DiliDili.DOMAIN.length());
                         if (dramaStr.contains(watchUrl))
                             select = true;
                         else
@@ -156,7 +158,7 @@ public class DescModel implements DescContract.Model {
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_3, els.get(i).select("p").text(), Api.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_3, els.get(i).select("p").text(), DiliDili.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
         }
         list.add(animeHeaderBean);
     }

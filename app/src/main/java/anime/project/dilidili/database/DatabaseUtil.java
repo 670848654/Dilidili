@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.bean.ApiBean;
 
@@ -79,7 +80,7 @@ public class DatabaseUtil {
     public static void addIndex(String fid, String url){
         if (!checkIndex(fid, url))
             db.execSQL("insert into f_index values(?,?,?)",
-                    new Object[] { null, fid, url});
+                    new Object[] { null, fid, url.substring(DiliDili.DOMAIN.length()) });
     }
 
     /**
@@ -161,8 +162,8 @@ public class DatabaseUtil {
         db.execSQL("insert into f_favorite values(?,?,?,?,?,?,?,?,?,?)",
                 new Object[] { null,
                 bean.getTitle(),
-                bean.getUrl(),
-                bean.getImg(),
+                bean.getUrl().substring(DiliDili.DOMAIN.length()),
+                bean.getImg().substring(DiliDili.DOMAIN.length()),
                 bean.getRegion(),
                 bean.getYear(),
                 bean.getTag(),

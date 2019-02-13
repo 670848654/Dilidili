@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.RecommendAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.config.RecommendType;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -88,7 +89,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
             if (!Utils.isFastClick()) return;
             final RecommendBean bean = (RecommendBean) adapter.getItem(position);
             Bundle bundle = new Bundle();
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
             bundle.putString("name", bean.getTitle());
             startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
         });

@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -209,7 +210,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
                 startActivity(new Intent(this, FavoriteActivity.class));
                 break;
             case R.id.setting:
-                startActivity(new Intent(this, SettingActivity.class));
+                startActivityForResult(new Intent(this, SettingActivity.class), 0x10);
                 break;
         }
         return true;
@@ -221,8 +222,17 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", title);
-            bundle.putString("url", url.startsWith("http") ? url : Api.URL + url);
+            bundle.putString("url", url.startsWith("http") ? url : DiliDili.URL + url);
             startActivity(new Intent(this, AnimeListActivity.class).putExtras(bundle));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0x10 && resultCode== 0x20) {
+            viewpager.removeAllViews();
+            mPresenter.loadData(true);
         }
     }
 

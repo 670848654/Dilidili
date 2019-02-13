@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
@@ -23,7 +24,7 @@ public class HomeModel implements HomeContract.Model {
 
     @Override
     public void getData(final HomeContract.LoadDataCallback callback) {
-        new HttpGet(Api.HOME_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.HOME_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

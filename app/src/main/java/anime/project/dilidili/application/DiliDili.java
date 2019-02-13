@@ -17,16 +17,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import anime.project.dilidili.R;
 import anime.project.dilidili.main.player.JZExoPlayer;
+import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.Utils;
 import cn.jzvd.JzvdStd;
 
 public class DiliDili extends Application {
     private static DiliDili appContext;
     private List<Activity> oList;
+    private static Map<String, Activity> destoryMap = new HashMap<>();
+    public static String DOMAIN;
+    public static String URL;
+    public static String HOME_API;
+    public static String TAG_API;
+    public static String RECOMMEND_API;
     public String error;
     public JSONObject week = new JSONObject();
-    private static Map<String, Activity> destoryMap = new HashMap<>();
 
     public static DiliDili getInstance() {
         return appContext;
@@ -39,6 +46,8 @@ public class DiliDili extends Application {
         oList = new ArrayList<>();
         appContext = this;
         Utils.init(this);
+        DOMAIN = (String) SharedPreferencesUtils.getParam(this, "domain", Utils.getString(R.string.domain_url));
+        setApi();
         initTBS();
     }
 
@@ -55,6 +64,13 @@ public class DiliDili extends Application {
     public void onLowMemory() {
         super.onLowMemory();
         Glide.get(this).clearMemory();
+    }
+
+    public static void setApi() {
+        URL = DiliDili.DOMAIN;
+        HOME_API = DiliDili.DOMAIN;
+        TAG_API = DiliDili.DOMAIN + "/anime/201510/";
+        RECOMMEND_API = DiliDili.DOMAIN + "/zttj.html";
     }
 
     private void initTBS() {

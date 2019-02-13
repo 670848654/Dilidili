@@ -85,7 +85,7 @@ public class WeekFragment extends LazyFragment {
                 HomeWekBean bean = (HomeWekBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", bean.getTitle());
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
                 startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
             });
             recyclerView.setAdapter(adapter);

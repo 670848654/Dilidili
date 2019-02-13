@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.bean.HomeHeaderBean;
 import anime.project.dilidili.net.HttpGet;
@@ -23,7 +24,7 @@ public class TagModel implements TagContract.Model{
 
     @Override
     public void getData(TagContract.LoadDataCallback callback) {
-        new HttpGet(Api.TAG_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.TAG_API, 10, 20, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());
@@ -64,12 +65,12 @@ public class TagModel implements TagContract.Model{
         });
     }
 
-    public void setData(String title, Elements els) {
+    private void setData(String title, Elements els) {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean(title);
         for (int j = 0; j < els.size(); j++) {
             if (j != 0){
                 HomeBean homeBean = new HomeBean( els.get(j).text(),
-                        Api.URL + els.get(j).attr("href"),
+                        DiliDili.URL + els.get(j).attr("href"),
                         title + " - ",
                         true);
                 homeHeaderBean.addSubItem(homeBean);
@@ -78,42 +79,42 @@ public class TagModel implements TagContract.Model{
         list.add(homeHeaderBean);
     }
 
-    public void setZeroData() {
+    private void setZeroData() {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean("更多");
-        homeHeaderBean.addSubItem(new HomeBean("00年代", "http://www.dilidili.wang/anime/2010xq/", "更多 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("更早", "http://www.dilidili.wang/anime/2000xqq/", "更多 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("00年代", DiliDili.DOMAIN + "/anime/2010xq/", "更多 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("更早", DiliDili.DOMAIN + "/anime/2000xqq/", "更多 - ", true));
         list.add(homeHeaderBean);
     }
 
-    public void setRegionData() {
+    private void setRegionData() {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean("地区");
-        homeHeaderBean.addSubItem(new HomeBean("日本", "http://www.dilidili.wang/riyu/", "地区 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("中国", "http://www.dilidili.wang/guoyu/", "地区 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("欧美", "http://www.dilidili.wang/yingyu/", "地区 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("港台", "http://www.dilidili.wang/yueyu/", "地区 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("日本", DiliDili.DOMAIN + "/riyu/", "地区 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("中国", DiliDili.DOMAIN + "/guoyu/", "地区 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("欧美", DiliDili.DOMAIN + "/yingyu/", "地区 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("港台", DiliDili.DOMAIN + "/yueyu/", "地区 - ", true));
         list.add(homeHeaderBean);
     }
 
-    public void setModel() {
+    private void setModel() {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean("播放方式");
-        homeHeaderBean.addSubItem(new HomeBean("TV版", "http://www.dilidili.wang/tvdh/", "播放方式 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("剧场版", "http://www.dilidili.wang/jcdh/", "播放方式 - ", true));
-        homeHeaderBean.addSubItem(new HomeBean("独立电影", "http://www.dilidili.wang/independentfilm/", "播放方式 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("TV版", DiliDili.DOMAIN + "/tvdh/", "播放方式 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("剧场版", DiliDili.DOMAIN + "/jcdh/", "播放方式 - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("独立电影", DiliDili.DOMAIN + "/independentfilm/", "播放方式 - ", true));
         list.add(homeHeaderBean);
     }
 
-    public void setDataTag(String title, Elements tag) {
+    private void setDataTag(String title, Elements tag) {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean(title);
-        homeHeaderBean.addSubItem(new HomeBean("肉番", "http://www.dilidili.wang/roufan/", title + " - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("肉番", DiliDili.DOMAIN + "/roufan/", title + " - ", true));
         for (int i = 0; i < tag.size(); i++) {
             if (!tag.get(i).text().equals(""))
-                homeHeaderBean.addSubItem(new HomeBean(tag.get(i).text(), Api.URL + tag.get(i).attr("href"), title + " - ", true));
+                homeHeaderBean.addSubItem(new HomeBean(tag.get(i).text(), DiliDili.URL + tag.get(i).attr("href"), title + " - ", true));
         }
-        homeHeaderBean.addSubItem(new HomeBean("日剧", "http://www.dilidili.wang/anime/riju/", title + " - ", true));
+        homeHeaderBean.addSubItem(new HomeBean("日剧", DiliDili.DOMAIN + "/anime/riju/", title + " - ", true));
         list.add(homeHeaderBean);
     }
 
-    public void setA_Z(String title, Elements tag) {
+    private void setA_Z(String title, Elements tag) {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean(title);
         for (int i = 0; i < tag.size(); i++) {
             if (!tag.get(i).select("a").text().equals(""))

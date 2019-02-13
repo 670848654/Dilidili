@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.TagAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -95,7 +96,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             if (title.length() > 0) title.append("年");
             Bundle bundle = new Bundle();
             bundle.putString("title", title + bean.getTitle());
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl());
+            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
             startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);

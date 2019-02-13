@@ -9,6 +9,7 @@ import java.util.List;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeWekBean;
 import anime.project.dilidili.util.Utils;
 
@@ -21,7 +22,7 @@ public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean,BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, HomeWekBean item) {
-        Utils.setCircleImage(context, item.getImg().startsWith("http") ? item.getImg() : Api.URL + item.getImg(),helper.getView(R.id.img));
+        Utils.setCircleImage(context, item.getImg().startsWith("http") ? item.getImg() : DiliDili.URL + item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.drama, item.getDrama());
     }

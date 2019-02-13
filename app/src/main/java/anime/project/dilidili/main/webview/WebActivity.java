@@ -41,6 +41,7 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.DramaAdapter;
 import anime.project.dilidili.adapter.WebviewAdapter;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.ApiBean;
 import anime.project.dilidili.bean.WebviewBean;
@@ -201,9 +202,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    diliUrl = bean.getUrl();
+                    diliUrl = DiliDili.DOMAIN + bean.getUrl();
                     witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
-                    presenter = new VideoPresenter(animeTitle, bean.getUrl(), WebActivity.this);
+                    presenter = new VideoPresenter(animeTitle, diliUrl, WebActivity.this);
                     presenter.loadData(true);
                     break;
             }

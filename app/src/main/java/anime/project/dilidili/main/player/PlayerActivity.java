@@ -148,7 +148,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
                     witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
                     presenter.loadData(true);

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.net.HttpPost;
 import okhttp3.Call;
@@ -48,7 +49,7 @@ public class SearchModel implements SearchContract.Model {
                                     list.add(
                                             new SearchBean(
                                                     obj.getString("typename"),
-                                                    Api.URL + obj.getString("typedir"),
+                                                    DiliDili.URL + obj.getString("typedir"),
                                                     obj.getString("suoluetudizhi"),
                                                     "标签：" + obj.getString("biaoqian"),
                                                     "看点：" + obj.getString("description"),

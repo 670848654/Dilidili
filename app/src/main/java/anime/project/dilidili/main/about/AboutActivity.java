@@ -20,6 +20,7 @@ import java.io.IOException;
 import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.net.HttpGet;
@@ -87,7 +88,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.dilidili)
     public void openDilidili(){
-        Utils.viewInChrome(this, Api.HOME_API);
+        Utils.viewInChrome(this, DiliDili.URL);
     }
 
     @Override
