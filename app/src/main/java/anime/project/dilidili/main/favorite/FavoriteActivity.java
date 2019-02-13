@@ -87,7 +87,11 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
             AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
             Bundle bundle = new Bundle();
             bundle.putString("name", bean.getTitle());
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
+            String url = bean.getUrl();
+            if (url.contains("http://www.dilidili.wang")) {
+                url = url.replace("http://www.dilidili.wang", DiliDili.DOMAIN);
+                bundle.putString("url", url);
+            }else bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
             startActivityForResult(new Intent(FavoriteActivity.this, DescActivity.class).putExtras(bundle),3000);
         });
         adapter.setOnItemLongClickListener((adapter, view, position) -> {

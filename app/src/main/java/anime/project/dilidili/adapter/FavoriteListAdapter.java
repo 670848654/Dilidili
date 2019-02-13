@@ -21,7 +21,11 @@ public class FavoriteListAdapter extends BaseQuickAdapter<AnimeListBean, BaseVie
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setDefaultImage(context, DiliDili.DOMAIN + item.getImg(),helper.getView(R.id.img));
+        String img = item.getImg();
+        if (img.contains("http://www.dilidili.wang")) {
+            img = img.replace("http://www.dilidili.wang", DiliDili.DOMAIN);
+            Utils.setDefaultImage(context, img, helper.getView(R.id.img));
+        }else Utils.setDefaultImage(context, DiliDili.DOMAIN + item.getImg(), helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
     }
 }
