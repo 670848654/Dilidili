@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import anime.project.dilidili.R;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;

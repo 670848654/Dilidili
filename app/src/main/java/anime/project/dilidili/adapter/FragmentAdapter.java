@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.util.List;
 
 import anime.project.dilidili.R;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeWekBean;
 import anime.project.dilidili.util.Utils;

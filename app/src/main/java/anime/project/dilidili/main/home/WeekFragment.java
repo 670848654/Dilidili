@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.FragmentAdapter;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeWekBean;
 import anime.project.dilidili.main.base.LazyFragment;

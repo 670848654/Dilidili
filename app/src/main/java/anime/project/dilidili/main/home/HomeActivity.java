@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +27,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.WeekAdapter;
-import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.custom.VpSwipeRefreshLayout;
 import anime.project.dilidili.database.DatabaseUtil;
