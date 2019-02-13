@@ -61,17 +61,10 @@
     <string name="page_positive">确定</string>
     <string name="page_positive_edit">修改</string>
     <string name="page_negative">取消</string>
-    <string name="page_def">恢复默认</string>
-    <string name="domain_title">输入嘀哩嘀哩域名(电脑版)</string>
-    <string name="set_domain_ok">域名更改成功</string>
-    <string name="set_domain_error1">参数不能为空</string>
-    <string name="set_domain_error2">参数格式错误</string>
     <string name="api_error_1">参数不能为空</string>
     <string name="api_error_2">参数格式不正确</string>
     <string name="player">视频播放器</string>
     <string name="player_default">内置</string>
-    <string name="domain">域名设置 (备用)</string>
-    <string name="domain_url">http://www.dilidili.name</string>
     <!-- webViewDialog 文本 -->
     <string name="analysis_line">解析线路</string>
     <string name="anthology">选集</string>
@@ -97,7 +90,7 @@
     <string name="check_update">检测更新</string>
     <string name="check_update_text">检测更新中...</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年2月13日11:34:45</string>
+    <string name="final_compile_time">2019年1月23日15:59:44</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->

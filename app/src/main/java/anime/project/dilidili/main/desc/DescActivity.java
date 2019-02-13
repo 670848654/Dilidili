@@ -36,7 +36,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.DescAdapter;
 import anime.project.dilidili.api.Api;
-import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.config.AnimeType;
@@ -152,14 +151,14 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
                     witchTitle = animeTitle + " - " + bean.getTitle();
                     videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
                     videoPresenter.loadData(true);
                     break;
                 case "html":
                     animeTitle = bean.getTitle();
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : Api.URL + bean.getUrl();
                     if (diliUrl.contains("/anime/")) {
                         String[] arr = bean.getUrl().split("/");
                         Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
