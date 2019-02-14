@@ -158,7 +158,7 @@ public class DatabaseUtil {
      * 添加到收藏
      * @param bean
      */
-    public static void addFavorite(AnimeListBean bean){
+    private static void addFavorite(AnimeListBean bean){
         db.execSQL("insert into f_favorite values(?,?,?,?,?,?,?,?,?,?)",
                 new Object[] { null,
                 bean.getTitle(),

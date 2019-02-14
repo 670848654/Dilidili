@@ -2,11 +2,14 @@ package anime.project.dilidili.main.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.r0adkll.slidr.Slidr;
@@ -34,6 +37,7 @@ public class SettingActivity extends BaseActivity {
     TextView player_default;
     @BindView(R.id.api)
     TextView api;
+    private String url;
 
     @Override
     protected Presenter createPresenter() {
@@ -103,7 +107,19 @@ public class SettingActivity extends BaseActivity {
         AlertDialog alertDialog;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_domain, null);
-        final EditText editText = view.findViewById(R.id.domain);
+        Spinner spinner = view.findViewById(R.id.prefix);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                url = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        EditText editText = view.findViewById(R.id.domain);
         builder.setPositiveButton(Utils.getString(R.string.page_positive_edit), null);
         builder.setNegativeButton(Utils.getString(R.string.page_negative), null);
         builder.setNeutralButton(Utils.getString(R.string.page_def), null);
@@ -117,10 +133,11 @@ public class SettingActivity extends BaseActivity {
                 if (Patterns.WEB_URL.matcher(text).matches()) {
                     setResult(0x20);
                     if (text.endsWith("/")) text = text.substring(0, text.length()-1);
-                    SharedPreferencesUtils.setParam(SettingActivity.this, "domain", text);
-                    DiliDili.DOMAIN = text;
+                    url += text;
+                    SharedPreferencesUtils.setParam(SettingActivity.this, "domain", url);
+                    DiliDili.DOMAIN = url;
                     DiliDili.setApi();
-                    domain_default.setText(text);
+                    domain_default.setText(url);
                     alertDialog.dismiss();
                     Utils.showSnackbar(toolbar, Utils.getString(R.string.set_domain_ok));
                 }else editText.setError(Utils.getString(R.string.set_domain_error2));

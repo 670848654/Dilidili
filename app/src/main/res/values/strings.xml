@@ -117,4 +117,8 @@
         <item>周六</item>
         <item>周日</item>
     </string-array>
+    <string-array name="prefix">
+        <item>http://</item>
+        <item>https://</item>
+    </string-array>
 </resources>

@@ -7,17 +7,18 @@
     android:paddingTop="25dp"
     android:paddingRight="25dp">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <Spinner
+        android:id="@+id/prefix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="输入域名">
+        android:entries="@array/prefix" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/domain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:met_baseColor="@android:color/white"
-            app:met_errorColor="#FF0000"
-            app:met_primaryColor="@color/pinka200" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_marginTop="8dp"
+        android:id="@+id/domain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_baseColor="@android:color/white"
+        app:met_errorColor="#FF0000"
+        app:met_primaryColor="@color/pinka200" />
 </LinearLayout>
