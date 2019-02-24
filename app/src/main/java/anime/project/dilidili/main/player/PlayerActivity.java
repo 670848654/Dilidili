@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -328,6 +329,16 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @Override
     public void errorDramaView() {
         runOnUiThread(() -> application.showToastMsg("获取剧集信息出错"));
+    }
+
+    @Override
+    public void hasBanIp() {
+        Log.e("ban", "发现禁止IP");
+        runOnUiThread(() -> {
+            application.showToastMsg((Utils.getString(R.string.has_ban_ip)));
+            presenter = new VideoPresenter(animeTitle, diliUrl + DiliDili.NEW_VERSION, this);
+            presenter.loadData(true);
+        });
     }
 
     @Override

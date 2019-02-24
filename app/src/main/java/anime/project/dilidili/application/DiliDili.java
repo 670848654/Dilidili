@@ -34,6 +34,7 @@ public class DiliDili extends Application {
     public static String RECOMMEND_API;
     public String error;
     public JSONObject week = new JSONObject();
+    public final static String NEW_VERSION = "home.html";
 
     public static DiliDili getInstance() {
         return appContext;

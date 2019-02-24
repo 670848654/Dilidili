@@ -23,8 +23,11 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class VideoModel implements VideoContract.Model {
+    private final static String BAN = "BAN";
+    private final static Pattern BAN_IP = Pattern.compile("禁止ip");
     private final static Pattern SCRIPT_PATTERN = Pattern.compile("sourceUrl = (.*?);");
     private final static Pattern NEW_PATTERN = Pattern.compile("Url = (.*?);");
+    private String videoUrl;
 
     @Override
     public void getData(String title, String HTML_url, VideoContract.LoadDataCallback callback) {
@@ -37,7 +40,6 @@ public class VideoModel implements VideoContract.Model {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String videoUrl;
                 Document doc = Jsoup.parse(response.body().string());
                 String fid = DatabaseUtil.getAnimeID(title);
                 DatabaseUtil.addIndex(fid, HTML_url);
@@ -45,12 +47,16 @@ public class VideoModel implements VideoContract.Model {
                 Elements script = doc.select("script");
                 //第一种方式
                 videoUrl = getSourceUrl(script);
-                if (videoUrl.isEmpty())
-                    videoUrl = doc.getElementsByClass("player").select("a").attr("href");//尝试第二种方式[版权页面]
-                if (!videoUrl.isEmpty()) {
-                    if (!Patterns.WEB_URL.matcher(videoUrl.replace(" ","")).matches()) callback.empty();
-                    else callback.success(videoUrl);
-                } else callback.empty();
+                if (videoUrl.equals(BAN)) {
+                    callback.ban();
+                }else {
+                    if (videoUrl.isEmpty())
+                        videoUrl = doc.getElementsByClass("player").select("a").attr("href");//尝试第二种方式[版权页面]
+                    if (!videoUrl.isEmpty()) {
+                        if (!Patterns.WEB_URL.matcher(videoUrl.replace(" ","")).matches()) callback.empty();
+                        else callback.success(videoUrl);
+                    } else callback.empty();
+                }
             }
         });
     }
@@ -83,28 +89,40 @@ public class VideoModel implements VideoContract.Model {
      */
     private static String getSourceUrl(Elements script) {
         String url = "";
+        boolean hasBanIp = false;
         for (int i = 0; i < script.size(); i++) {
-            Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());
+            Matcher m = BAN_IP.matcher(script.eq(i).html());
             while (m.find()) {
-                url = m.group();
-                url = url.substring(13, url.length());
-                url = url.substring(0, url.length() - 2);
+                hasBanIp = true;
                 break;
             }
         }
-        if (url.isEmpty()) {
-            //新版本解析方式
+        if (hasBanIp)
+            return BAN;
+        else {
             for (int i = 0; i < script.size(); i++) {
-                Matcher m = NEW_PATTERN.matcher(script.eq(i).html());
+                Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());
                 while (m.find()) {
                     url = m.group();
-                    url = url.substring(7, url.length());
+                    url = url.substring(13, url.length());
                     url = url.substring(0, url.length() - 2);
                     break;
                 }
             }
+            if (url.isEmpty()) {
+                //新版本解析方式
+                for (int i = 0; i < script.size(); i++) {
+                    Matcher m = NEW_PATTERN.matcher(script.eq(i).html());
+                    while (m.find()) {
+                        url = m.group();
+                        url = url.substring(7, url.length());
+                        url = url.substring(0, url.length() - 2);
+                        break;
+                    }
+                }
+            }
+            Log.e("视频播放地址", url);
+            return url;
         }
-        Log.d("视频播放地址", url);
-        return url;
     }
 }

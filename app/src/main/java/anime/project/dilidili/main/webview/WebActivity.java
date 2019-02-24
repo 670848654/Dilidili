@@ -382,6 +382,16 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
         runOnUiThread(() -> application.showToastMsg("获取剧集信息出错"));
     }
 
+    @Override
+    public void hasBanIp() {
+        Log.e("ban", "发现禁止IP");
+        runOnUiThread(() -> {
+            application.showToastMsg((Utils.getString(R.string.has_ban_ip)));
+            presenter = new VideoPresenter(animeTitle, diliUrl + DiliDili.NEW_VERSION, this);
+            presenter.loadData(true);
+        });
+    }
+
 
     /**
      * 全屏容器界面

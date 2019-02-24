@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -400,6 +401,16 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public void errorDramaView() {
+    }
+
+    @Override
+    public void hasBanIp() {
+        Log.e("ban", "发现禁止IP");
+        runOnUiThread(() -> {
+            application.showToastMsg((Utils.getString(R.string.has_ban_ip)));
+            videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl + DiliDili.NEW_VERSION, this);
+            videoPresenter.loadData(true);
+        });
     }
 
     @Override
