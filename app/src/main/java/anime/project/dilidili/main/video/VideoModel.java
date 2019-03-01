@@ -97,30 +97,30 @@ public class VideoModel implements VideoContract.Model {
                 break;
             }
         }
-        if (hasBanIp)
-            return BAN;
-        else {
+        for (int i = 0; i < script.size(); i++) {
+            Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());
+            while (m.find()) {
+                url = m.group();
+                url = url.substring(13, url.length());
+                url = url.substring(0, url.length() - 2);
+                break;
+            }
+        }
+        if (url.isEmpty()) {
+            //新版本解析方式
             for (int i = 0; i < script.size(); i++) {
-                Matcher m = SCRIPT_PATTERN.matcher(script.eq(i).html());
+                Matcher m = NEW_PATTERN.matcher(script.eq(i).html());
                 while (m.find()) {
                     url = m.group();
-                    url = url.substring(13, url.length());
+                    url = url.substring(7, url.length());
                     url = url.substring(0, url.length() - 2);
                     break;
                 }
             }
-            if (url.isEmpty()) {
-                //新版本解析方式
-                for (int i = 0; i < script.size(); i++) {
-                    Matcher m = NEW_PATTERN.matcher(script.eq(i).html());
-                    while (m.find()) {
-                        url = m.group();
-                        url = url.substring(7, url.length());
-                        url = url.substring(0, url.length() - 2);
-                        break;
-                    }
-                }
-            }
+        }
+        if (hasBanIp && url.isEmpty())
+            return BAN;
+        else {
             Log.e("视频播放地址", url);
             return url;
         }
