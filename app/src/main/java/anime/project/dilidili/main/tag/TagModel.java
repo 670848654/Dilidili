@@ -104,7 +104,7 @@ public class TagModel implements TagContract.Model{
 
     private void setDataTag(String title, Elements tag) {
         HomeHeaderBean homeHeaderBean = new HomeHeaderBean(title);
-        homeHeaderBean.addSubItem(new HomeBean("肉番", DiliDili.DOMAIN + "/roufan/", title + " - ", true));
+//        homeHeaderBean.addSubItem(new HomeBean("肉番", DiliDili.DOMAIN + "/roufan/", title + " - ", true));
         for (int i = 0; i < tag.size(); i++) {
             if (!tag.get(i).text().equals(""))
                 homeHeaderBean.addSubItem(new HomeBean(tag.get(i).text(), DiliDili.URL + tag.get(i).attr("href"), title + " - ", true));

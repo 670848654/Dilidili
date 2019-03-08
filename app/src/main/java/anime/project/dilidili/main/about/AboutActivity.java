@@ -17,12 +17,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
+import anime.project.dilidili.net.DownloadUtil;
 import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -42,6 +44,7 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version)
     TextView version;
     private ProgressDialog p;
+    private Call call;
 
     @Override
     protected Presenter createPresenter() {
@@ -126,8 +129,10 @@ public class AboutActivity extends BaseActivity {
                         sendMessage(1,null);
                     else {
                         String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+                        String body = obj.getString("body");
                         Bundle bundle = new Bundle();
                         bundle.putString("url",downloadUrl);
+                        bundle.putString("body",body);
                         sendMessage(2,bundle);
                     }
                 } catch (JSONException e) {
@@ -158,10 +163,64 @@ public class AboutActivity extends BaseActivity {
                     application.showToastMsg("没有新版本");
                     break;
                 case 2:
-                    application.showToastMsg("发现新版本,请手动下载");
-                    Utils.viewInChrome(AboutActivity.this, msg.getData().getString("url"));
+                    findNewVersion(msg.getData().getString("url"), msg.getData().getString("body"));
+//                    Utils.viewInChrome(AboutActivity.this, msg.getData().getString("url"));
                     break;
             }
         }
     };
+
+    private void findNewVersion(String downUrl, String body) {
+        AlertDialog alertDialog;
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setMessage(body);
+        builder.setTitle("发现新版本");
+        builder.setPositiveButton("马上更新", (dialog, which) -> {
+            p = Utils.showProgressDialog(AboutActivity.this);
+            p.setButton(ProgressDialog.BUTTON_NEGATIVE, "取消", (dialog1, which1) -> {
+                if (null != call)
+                    call.cancel();
+                dialog1.dismiss();
+            });
+            p.show();
+            downNewVersion(downUrl);
+        });
+        builder.setNegativeButton("暂不更新", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void downNewVersion(String url) {
+        call = DownloadUtil.get().downloadApk(url, new DownloadUtil.OnDownloadListener() {
+            @Override
+            public void onDownloadSuccess(final String fileName) {
+                runOnUiThread(() -> {
+                    Utils.cancelProDialog(p);
+                    Utils.startInstall(AboutActivity.this);
+                });
+            }
+            @Override
+            public void onDownloading(final int progress) {
+                runOnUiThread(() -> p.setProgress(progress));
+            }
+            @Override
+            public void onDownloadFailed() {
+                runOnUiThread(() -> {
+                    Utils.cancelProDialog(p);
+                    application.showSnackbarMsg(toolbar, "下载失败~");
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001){
+            Utils.startInstall(AboutActivity.this);
+        }
+    }
 }

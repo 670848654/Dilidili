@@ -1,8 +1,10 @@
 package anime.project.dilidili.util;
 
+import android.Manifest;
 import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,7 +14,9 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -40,6 +44,7 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.FileProvider;
 import anime.project.dilidili.BuildConfig;
 import anime.project.dilidili.R;
 import anime.project.dilidili.custom.CircleImageView;
@@ -101,6 +106,21 @@ public class Utils {
         p.setCancelable(false);
         p.show();
         return p;
+    }
+
+    /**
+     * 下载进度条
+     * @param context
+     * @return
+     */
+    public static ProgressDialog showProgressDialog(Context context){
+        final ProgressDialog pd = new ProgressDialog(context);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+        pd.setCancelable(false);// 设置是否可以通过点击Back键取消
+        pd.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        pd.setMax(100);
+        pd.setMessage(getString(R.string.download));
+        return pd;
     }
 
     /**
@@ -429,5 +449,52 @@ public class Utils {
                     }
                 }
             }
+    }
+
+    /**
+     * 安装应用
+     * @param activity
+     */
+    public static void startInstall(Activity activity) {
+        //权限不存在，申请权限，并跳到当前包
+        if(!isGranted(activity,Manifest.permission.REQUEST_INSTALL_PACKAGES)){
+            Uri packageURI = Uri.parse("package:" + activity.getPackageName());
+            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
+            activity.startActivityForResult(intent, 10001);
+        }else {
+            install(activity);
+        }
+    }
+
+    /**
+     * 安装应用
+     * @param activity
+     */
+    private static void install(Activity activity){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        //android 7.0权限问题
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID + ".fileProvider", new File(Environment.getExternalStorageDirectory(), "base.apk"));//注意修改
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "base.apk")), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        activity.startActivity(intent);
+    }
+
+    /**
+     * 判断是否为Android O+
+     * @param activity
+     * @param permission
+     * @return
+     */
+    private static boolean isGranted(Activity activity,String permission) {
+        // 8.0 权限 安装apk 权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return activity.getPackageManager().canRequestPackageInstalls();
+        }
+        return true;
     }
 }

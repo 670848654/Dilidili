@@ -157,7 +157,16 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
                     videoPresenter.loadData(true);
                     break;
-                case "html":
+                case "ova":
+                    animeTitle = bean.getTitle();
+                    diliUrl = bean.getUrl();
+                    if (diliUrl.contains("http://www.dilidili.wang"))
+                        diliUrl = diliUrl.replace("http://www.dilidili.wang", DiliDili.URL);
+                    else
+                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    openAnimeDesc();
+                    break;
+                case "recommend":
                     animeTitle = bean.getTitle();
                     diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
                     if (diliUrl.contains("/anime/")) {

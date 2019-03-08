@@ -83,10 +83,10 @@ public class DescModel implements DescContract.Model {
                                 }
                             }
                             if (playOva.size() > 0) {
-                                setDataOva(playOva, "html");
+                                setDataOva(playOva, "ova");
                             }
                             if (recommend.size() > 0) {
-                                setDataOther("相关推荐", recommend, "html");
+                                setDataOther("相关推荐", recommend, "recommend");
                             }
                             callback.isFavorite(DatabaseUtil.checkFavorite(ainmeTitle));
                             callback.successMain(list);
