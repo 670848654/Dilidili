@@ -152,9 +152,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    String playUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
                     witchTitle = animeTitle + " - " + bean.getTitle();
-                    videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl, DescActivity.this);
+                    videoPresenter = new VideoPresenter(animeListBean.getTitle(), playUrl, DescActivity.this);
                     videoPresenter.loadData(true);
                     break;
                 case "ova":
@@ -425,6 +425,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showSuccessDescView(AnimeListBean bean) {
         animeListBean = bean;
+        animeTitle = animeListBean.getTitle();
     }
 
     @SuppressLint("RestrictedApi")
