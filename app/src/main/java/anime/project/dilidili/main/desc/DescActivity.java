@@ -67,7 +67,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     ImageView imageView;
     @BindView(R.id.collaps_toolbar_layout)
     CollapsingToolbarLayout ct;
-    private String url, diliUrl;
+    private String url, diliUrl, dramaUrl;
     private String animeTitle;
     private String witchTitle;
     private ProgressDialog p;
@@ -152,9 +152,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    String playUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    dramaUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
                     witchTitle = animeTitle + " - " + bean.getTitle();
-                    videoPresenter = new VideoPresenter(animeListBean.getTitle(), playUrl, DescActivity.this);
+                    videoPresenter = new VideoPresenter(animeListBean.getTitle(), dramaUrl, DescActivity.this);
                     videoPresenter.loadData(true);
                     break;
                 case "ova":
@@ -456,7 +456,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public void getVideoEmpty() {
-        runOnUiThread(() -> VideoUtils.showErrorInfo(DescActivity.this, diliUrl));
+        runOnUiThread(() -> VideoUtils.showErrorInfo(DescActivity.this, dramaUrl));
     }
 
     @Override
