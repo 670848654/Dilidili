@@ -23,6 +23,7 @@ import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.setting.user.ApiActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -63,7 +64,7 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void initToolbar() {

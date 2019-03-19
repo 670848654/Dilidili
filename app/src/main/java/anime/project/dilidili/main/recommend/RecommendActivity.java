@@ -22,6 +22,7 @@ import anime.project.dilidili.config.RecommendType;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
@@ -61,7 +62,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void initToolbar(){

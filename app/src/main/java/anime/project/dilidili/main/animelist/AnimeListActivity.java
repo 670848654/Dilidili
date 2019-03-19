@@ -24,6 +24,7 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.main.search.SearchActivity;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -69,7 +70,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void getBundle(){
@@ -111,7 +112,12 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
             final AnimeListBean bean = (AnimeListBean) adapter.getItem(position);
             Bundle bundle = new Bundle();
             bundle.putString("name", bean.getTitle());
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
+            String diliUrl = bean.getUrl();
+            if (diliUrl.contains("http://www.dilidili.wang"))
+                diliUrl = diliUrl.replace("http://www.dilidili.wang", DiliDili.URL);
+            else
+                diliUrl = diliUrl.startsWith("http") ? diliUrl : DiliDili.URL + diliUrl;
+            bundle.putString("url", diliUrl);
             startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);

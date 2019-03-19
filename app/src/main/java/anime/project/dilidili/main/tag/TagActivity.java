@@ -23,6 +23,7 @@ import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
@@ -63,7 +64,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void initToolbar() {

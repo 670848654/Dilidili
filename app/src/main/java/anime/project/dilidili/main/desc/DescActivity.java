@@ -47,6 +47,7 @@ import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
@@ -106,7 +107,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void getBundle() {
@@ -163,7 +164,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     if (diliUrl.contains("http://www.dilidili.wang"))
                         diliUrl = diliUrl.replace("http://www.dilidili.wang", DiliDili.URL);
                     else
-                        diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                        diliUrl = diliUrl.startsWith("http") ? diliUrl : DiliDili.URL + diliUrl;
                     openAnimeDesc();
                     break;
                 case "recommend":

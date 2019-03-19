@@ -11,7 +11,8 @@
     </style>
 
     <style name="TranslucentTheme" parent="AppTheme">
-        <item name="android:windowIsTranslucent">true</item>
+        <!-- 透明主题使用SwipeBackLayoutUtil 反射来设置，解决Android O的异常 -->
+        <!--<item name="android:windowIsTranslucent">true</item>-->
         <!--<item name="android:windowDisablePreview">true</item>-->
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>

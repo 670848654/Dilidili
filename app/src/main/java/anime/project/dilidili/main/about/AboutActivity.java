@@ -27,6 +27,7 @@ import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.net.DownloadUtil;
 import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -71,7 +72,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initBeforeView() {
-
+        SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
     public void initToolbar(){
