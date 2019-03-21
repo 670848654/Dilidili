@@ -41,6 +41,7 @@ import anime.project.dilidili.main.tag.TagActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter> implements NavigationView.OnNavigationItemSelectedListener, HomeContract.View {
@@ -220,7 +221,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", title);
-            bundle.putString("url", url.startsWith("http") ? url : DiliDili.URL + url);
+            bundle.putString("url", VideoUtils.getDiliUrl(url));
             startActivity(new Intent(this, AnimeListActivity.class).putExtras(bundle));
         }
     }

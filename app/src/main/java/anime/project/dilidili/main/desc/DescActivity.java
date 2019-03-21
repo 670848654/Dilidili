@@ -14,11 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.bumptech.glide.request.transition.Transition;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
 
@@ -29,7 +30,9 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,6 +62,18 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     Toolbar toolbar;
     @BindView(R.id.rv_list)
     RecyclerView mRecyclerView;
+    @BindView(R.id.anime_img)
+    ImageView animeImg;
+    @BindView(R.id.region)
+    AppCompatTextView region;
+    @BindView(R.id.year)
+    AppCompatTextView year;
+    @BindView(R.id.tag)
+    AppCompatTextView tag;
+    @BindView(R.id.show)
+    AppCompatTextView show;
+    @BindView(R.id.state)
+    AppCompatTextView state;
     private DescAdapter adapter;
     @BindView(R.id.mSwipe)
     SwipeRefreshLayout mSwipe;
@@ -66,8 +81,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private List<AnimeDescBean> drama = new ArrayList<>();
     @BindView(R.id.title_img)
     ImageView imageView;
-    @BindView(R.id.collaps_toolbar_layout)
-    CollapsingToolbarLayout ct;
     private String url, diliUrl, dramaUrl;
     private String animeTitle;
     private String witchTitle;
@@ -78,6 +91,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private String[] videoUrlArr;
     private VideoPresenter videoPresenter;
     private AnimeListBean animeListBean = new AnimeListBean();
+
 
     @Override
     protected DescPresenter createPresenter() {
@@ -153,23 +167,19 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    dramaUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    dramaUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     witchTitle = animeTitle + " - " + bean.getTitle();
                     videoPresenter = new VideoPresenter(animeListBean.getTitle(), dramaUrl, DescActivity.this);
                     videoPresenter.loadData(true);
                     break;
                 case "ova":
                     animeTitle = bean.getTitle();
-                    diliUrl = bean.getUrl();
-                    if (diliUrl.contains("http://www.dilidili.wang"))
-                        diliUrl = diliUrl.replace("http://www.dilidili.wang", DiliDili.URL);
-                    else
-                        diliUrl = diliUrl.startsWith("http") ? diliUrl : DiliDili.URL + diliUrl;
+                    diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     openAnimeDesc();
                     break;
                 case "recommend":
                     animeTitle = bean.getTitle();
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     if (diliUrl.contains("/anime/")) {
                         String[] arr = bean.getUrl().split("/");
                         Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
@@ -212,8 +222,14 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     }
 
     @SuppressLint("RestrictedApi")
-    public void openAnimeDesc(){
-        ct.setTitle(Utils.getString(R.string.loading));
+    public void openAnimeDesc() {
+        toolbar.setTitle(Utils.getString(R.string.loading));
+        animeImg.setImageDrawable(getDrawable(R.drawable.loading));
+        region.setText("");
+        year.setText("");
+        tag.setText("");
+        show.setText("");
+        state.setText("");
         mSwipe.setRefreshing(true);
         imageView.setImageDrawable(null);
         animeListBean = new AnimeListBean();
@@ -225,7 +241,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mPresenter.loadData(true);
     }
 
-    public void openAnimeList(){
+    public void openAnimeList() {
         Bundle bundle = new Bundle();
         bundle.putString("title", animeTitle);
         bundle.putString("url", diliUrl);
@@ -242,6 +258,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     /**
      * 只有一个播放地址
+     *
      * @param arr
      */
     private void oneSource(String[] arr) {
@@ -261,6 +278,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     /**
      * 多个播放地址
+     *
      * @param arr
      */
     private void multipleSource(String[] arr) {
@@ -282,7 +300,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                                 Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
                                 break;
                         }
-                    } else VideoUtils.openWebview(true, this, witchTitle, animeTitle, url, diliUrl, drama);
+                    } else
+                        VideoUtils.openWebview(true, this, witchTitle, animeTitle, url, diliUrl, drama);
                 });
     }
 
@@ -324,7 +343,16 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             .into(imageView);
             }
         });
-        ct.setTitle(animeListBean.getTitle());
+        toolbar.setTitle(animeListBean.getTitle());
+        Glide.with(this)
+                .load(animeListBean.getImg())
+                .transition(DrawableTransitionOptions.withCrossFade(new DrawableCrossFadeFactory.Builder(300).setCrossFadeEnabled(true).build()))
+                .into(animeImg);
+        region.setText(animeListBean.getRegion());
+        year.setText(animeListBean.getYear());
+        tag.setText(animeListBean.getTag());
+        show.setText(animeListBean.getShow());
+        state.setText(animeListBean.getState());
     }
 
     @Override
@@ -390,7 +418,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.open_in_browser:
                 Utils.viewInChrome(this, diliUrl);
                 break;
@@ -436,8 +464,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         runOnUiThread(() -> {
             if (!mActivityFinish) {
                 if (!favorite.isShown()) {
-                    if (isFavorite) Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
-                    else Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
+                    if (isFavorite)
+                        Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
+                    else
+                        Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
                     favorite.startAnimation(Utils.animationOut(1));
                     favorite.setVisibility(View.VISIBLE);
                 }

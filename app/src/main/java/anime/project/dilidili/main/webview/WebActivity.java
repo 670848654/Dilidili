@@ -202,7 +202,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
-                    diliUrl = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+                    diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, diliUrl, WebActivity.this);
                     presenter.loadData(true);

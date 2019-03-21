@@ -12,11 +12,11 @@ import java.util.List;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.RecommendAdapter;
-import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.config.RecommendType;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -24,6 +24,7 @@ import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class RecommendActivity extends BaseActivity<RecommendContract.View, RecommendPresenter> implements RecommendContract.View {
@@ -89,20 +90,12 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
             if (!Utils.isFastClick()) return;
             final RecommendBean bean = (RecommendBean) adapter.getItem(position);
             Bundle bundle = new Bundle();
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
+            String animeUrl = VideoUtils.getDiliUrl(bean.getUrl());
+            bundle.putString("url", animeUrl);
             bundle.putString("name", bean.getTitle());
             startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);
-        final GridLayoutManager manager = new GridLayoutManager(this, 3);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return adapter.getItemViewType(position) == RecommendType.TYPE_LEVEL_1 ? 1 : manager.getSpanCount();
-            }
-        });
-        // important! setLayoutManager should be called after setAdapter
-        mRecyclerView.setLayoutManager(manager);
     }
 
     @Override
@@ -114,6 +107,15 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     public void showSuccessView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                final GridLayoutManager manager = new GridLayoutManager(this, 3);
+                manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return adapter.getItemViewType(position) == RecommendType.TYPE_LEVEL_1 ? 1 : manager.getSpanCount();
+                    }
+                });
+                // important! setLayoutManager should be called after setAdapter
+                mRecyclerView.setLayoutManager(manager);
                 mSwipe.setRefreshing(false);
                 recommendList = list;
                 adapter.setNewData(recommendList);
@@ -125,6 +127,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(RecommendActivity.this));
                 mSwipe.setRefreshing(false);
                 errorTitle.setText(msg);
                 adapter.setEmptyView(errorView);

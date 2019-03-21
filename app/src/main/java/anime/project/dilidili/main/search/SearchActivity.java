@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SearchAdapter;
-import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
@@ -29,6 +28,7 @@ import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class SearchActivity extends BaseActivity<SearchContract.View, SearchPresenter> implements SearchContract.View {
@@ -104,7 +104,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (!Utils.isFastClick()) return;
             SearchBean bean = (SearchBean) adapter.getItem(position);
-            String url = bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl();
+            String url = VideoUtils.getDiliUrl(bean.getUrl());
             String title = bean.getTitle();
             if (url.contains("/anime/")) {
                 String[] arr = bean.getUrl().split("/");

@@ -116,4 +116,17 @@ public class VideoUtils {
             activity.finish();
         }
     }
+
+    /**
+     * 获取链接
+     * @param url
+     * @return
+     */
+    public static String getDiliUrl(String url) {
+        if (url.contains("http://www.dilidili.wang"))
+            url = url.replace("http://www.dilidili.wang", DiliDili.URL);
+        else
+            url = url.startsWith("http") ? url : DiliDili.URL + url;
+        return  url;
+    }
 }

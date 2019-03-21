@@ -27,6 +27,7 @@ import anime.project.dilidili.bean.HomeWekBean;
 import anime.project.dilidili.main.base.LazyFragment;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -84,7 +85,7 @@ public class WeekFragment extends LazyFragment {
                 HomeWekBean bean = (HomeWekBean) adapter.getItem(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", bean.getTitle());
-                bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
+                bundle.putString("url", VideoUtils.getDiliUrl(bean.getUrl()));
                 startActivity(new Intent(getActivity(), DescActivity.class).putExtras(bundle));
             });
             recyclerView.setAdapter(adapter);

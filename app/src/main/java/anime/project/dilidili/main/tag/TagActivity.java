@@ -14,17 +14,18 @@ import java.util.regex.Pattern;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.TagAdapter;
-import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
+import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> implements TagContract.View {
@@ -96,19 +97,10 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             if (title.length() > 0) title.append("年");
             Bundle bundle = new Bundle();
             bundle.putString("title", title + bean.getTitle());
-            bundle.putString("url", bean.getUrl().startsWith("http") ? bean.getUrl() : DiliDili.URL + bean.getUrl());
+            bundle.putString("url", VideoUtils.getDiliUrl(bean.getUrl()));
             startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
         });
         mRecyclerView.setAdapter(adapter);
-        final GridLayoutManager manager = new GridLayoutManager(this, 4);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return adapter.getItemViewType(position) == TagAdapter.TYPE_LEVEL_1 ? 1 : manager.getSpanCount();
-            }
-        });
-        // important! setLayoutManager should be called after setAdapter
-        mRecyclerView.setLayoutManager(manager);
     }
 
     @Override
@@ -120,6 +112,15 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
     public void showSuccessView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                final GridLayoutManager manager = new GridLayoutManager(this, 4);
+                manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return adapter.getItemViewType(position) == TagAdapter.TYPE_LEVEL_1 ? 1 : manager.getSpanCount();
+                    }
+                });
+                // important! setLayoutManager should be called after setAdapter
+                mRecyclerView.setLayoutManager(manager);
                 mSwipe.setRefreshing(false);
                 tagList = list;
                 adapter.setNewData(tagList);
@@ -131,6 +132,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(TagActivity.this));
                 mSwipe.setRefreshing(false);
                 errorTitle.setText(msg);
                 adapter.setEmptyView(errorView);

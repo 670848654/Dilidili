@@ -132,6 +132,7 @@ public class AboutActivity extends BaseActivity {
                         String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
                         String body = obj.getString("body");
                         Bundle bundle = new Bundle();
+                        bundle.putString("version", newVersion);
                         bundle.putString("url",downloadUrl);
                         bundle.putString("body",body);
                         sendMessage(2,bundle);
@@ -164,18 +165,18 @@ public class AboutActivity extends BaseActivity {
                     application.showToastMsg("没有新版本");
                     break;
                 case 2:
-                    findNewVersion(msg.getData().getString("url"), msg.getData().getString("body"));
+                    findNewVersion(msg.getData().getString("version"), msg.getData().getString("url"), msg.getData().getString("body"));
 //                    Utils.viewInChrome(AboutActivity.this, msg.getData().getString("url"));
                     break;
             }
         }
     };
 
-    private void findNewVersion(String downUrl, String body) {
+    private void findNewVersion(String version, String downUrl, String body) {
         AlertDialog alertDialog;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setMessage(body);
-        builder.setTitle("发现新版本");
+        builder.setTitle("发现新版本 " + version);
         builder.setPositiveButton("马上更新", (dialog, which) -> {
             p = Utils.showProgressDialog(AboutActivity.this);
             p.setButton(ProgressDialog.BUTTON_NEGATIVE, "取消", (dialog1, which1) -> {
@@ -186,9 +187,7 @@ public class AboutActivity extends BaseActivity {
             p.show();
             downNewVersion(downUrl);
         });
-        builder.setNegativeButton("暂不更新", (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton("暂不更新", (dialog, which) -> dialog.dismiss());
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();
