@@ -18,14 +18,14 @@ public class AnimeListModel implements AnimeListContract.Model{
 
     @Override
     public void getData(String url, AnimeListContract.LoadDataCallback callback) {
-        new HttpGet(url, 10, 20, new Callback() {
+        new HttpGet(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 try{
                     Document body = Jsoup.parse(response.body().string());
                     Elements animeList = body.getElementsByClass("anime_list").select("dl");
@@ -39,21 +39,21 @@ public class AnimeListModel implements AnimeListContract.Model{
                             Elements label = animeList.get(i).getElementsByClass("d_label");
                             for (int k = 0;k < label.size(); k++){
                                 String str = label.get(k).text();
-                                if (str.indexOf("地区") != -1)
+                                if (str.contains("地区"))
                                     bean.setRegion(str);
-                                else if (str.indexOf("年代") != -1)
+                                else if (str.contains("年代"))
                                     bean.setYear(str);
-                                else if (str.indexOf("标签") != -1)
+                                else if (str.contains("标签"))
                                     bean.setTag(str);
-                                else if (str.indexOf("制作") != -1)
+                                else if (str.contains("制作"))
                                     bean.setPlay_count(str);
                             }
                             Elements p = animeList.get(i).select("p");
                             for (int j = 0;j < p.size(); j++){
                                 String str = p.get(j).text();
-                                if (str.indexOf("看点") != -1)
+                                if (str.contains("看点"))
                                     bean.setShow(str);
-                                else if (str.indexOf("状态") != -1)
+                                else if (str.contains("状态"))
                                     bean.setState(str);
                             }
                             list.add(bean);

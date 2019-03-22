@@ -8,8 +8,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class HttpGet {
-    public HttpGet(String url, int connectTimeout, int readTimeout, Callback callback) {
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS).readTimeout(readTimeout, TimeUnit.SECONDS).build();
+    private final static int connectTimeout = 10;
+    private final static int readTimeout = 20;
+
+    public HttpGet(String url, Callback callback) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .build();
         Request request = new Request.Builder()
                 .url(url)
                 .get()

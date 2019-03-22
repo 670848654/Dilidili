@@ -32,7 +32,7 @@ public class VideoModel implements VideoContract.Model {
     @Override
     public void getData(String title, String HTML_url, VideoContract.LoadDataCallback callback) {
 
-        new HttpGet(HTML_url, 10, 20, new Callback() {
+        new HttpGet(HTML_url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error();

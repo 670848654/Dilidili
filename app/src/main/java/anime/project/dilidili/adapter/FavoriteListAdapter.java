@@ -14,7 +14,7 @@ import anime.project.dilidili.util.Utils;
 
 public class FavoriteListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHolder> {
     private Context context;
-    public FavoriteListAdapter(Context context, List list) {
+    public FavoriteListAdapter(Context context, List<AnimeListBean> list) {
         super(R.layout.item_favorite, list);
         this.context = context;
     }

@@ -21,7 +21,7 @@ import anime.project.dilidili.main.player.PlayerActivity;
 import anime.project.dilidili.main.webview.WebActivity;
 
 public class VideoUtils {
-    public static AlertDialog alertDialog;
+    private static AlertDialog alertDialog;
 
     /**
      * 获取播放列表数组
@@ -41,6 +41,11 @@ public class VideoUtils {
         return newArr;
     }
 
+    /**
+     * 解析失败提示弹窗
+     * @param context
+     * @param HTML_url
+     */
     public static void showErrorInfo(Context context, String HTML_url) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setPositiveButton(Utils.getString(R.string.play_not_found_positive), null);
@@ -58,6 +63,14 @@ public class VideoUtils {
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> alertDialog.dismiss());
     }
 
+    /**
+     * 发现多个播放地址时弹窗
+     * @param context
+     * @param arr
+     * @param videoTitleArr
+     * @param videoUrlArr
+     * @param listener
+     */
     public static void showMultipleVideoSources(Context context,
                                                 String[] arr,
                                                 String[] videoTitleArr,
@@ -86,6 +99,16 @@ public class VideoUtils {
         alertDialog.show();
     }
 
+    /**
+     * 打开播放器
+     * @param isDescActivity
+     * @param activity
+     * @param witchTitle
+     * @param url
+     * @param animeTitle
+     * @param diliUrl
+     * @param list
+     */
     public static void openPlayer(boolean isDescActivity, Activity activity, String witchTitle, String url, String animeTitle, String diliUrl, List<AnimeDescBean> list) {
         Bundle bundle = new Bundle();
         bundle.putString("title", witchTitle);
@@ -102,6 +125,16 @@ public class VideoUtils {
         }
     }
 
+    /**
+     * 打开webview
+     * @param isDescActivity
+     * @param activity
+     * @param witchTitle
+     * @param animeTitle
+     * @param url
+     * @param diliUrl
+     * @param list
+     */
     public static void openWebview(boolean isDescActivity, Activity activity,String witchTitle, String animeTitle, String url, String diliUrl, List<AnimeDescBean> list) {
         Bundle bundle = new Bundle();
         bundle.putString("witchTitle", witchTitle);

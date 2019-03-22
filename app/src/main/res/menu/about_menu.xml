@@ -4,6 +4,7 @@
     <item
         android:id="@+id/check_update"
         android:orderInCategory="60"
+        android:icon="@drawable/baseline_update_white_48dp"
         android:title="@string/check_update"
         app:showAsAction="ifRoom"/>
 </menu>

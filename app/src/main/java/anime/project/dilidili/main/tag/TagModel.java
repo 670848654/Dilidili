@@ -23,7 +23,7 @@ public class TagModel implements TagContract.Model{
 
     @Override
     public void getData(TagContract.LoadDataCallback callback) {
-        new HttpGet(DiliDili.TAG_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.TAG_API, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

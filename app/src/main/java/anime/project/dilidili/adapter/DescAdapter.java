@@ -17,7 +17,7 @@ import anime.project.dilidili.util.Utils;
 public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
     private Context context;
 
-    public DescAdapter(Context context, List data) {
+    public DescAdapter(Context context, List<MultiItemEntity> data) {
         super(data);
         this.context = context;
         addItemType(AnimeType.TYPE_LEVEL_0, R.layout.item_head);

@@ -23,7 +23,7 @@ public class RecommendModel implements RecommendContract.Model{
 
     @Override
     public void getData(RecommendContract.LoadDataCallback callback) {
-        new HttpGet(DiliDili.RECOMMEND_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.RECOMMEND_API, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

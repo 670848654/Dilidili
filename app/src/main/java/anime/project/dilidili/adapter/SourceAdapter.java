@@ -11,7 +11,7 @@ import anime.project.dilidili.bean.SourceBean;
 
 public class SourceAdapter extends BaseQuickAdapter<SourceBean, BaseViewHolder> {
 
-    public SourceAdapter(List list) {
+    public SourceAdapter(List<SourceBean> list) {
         super(R.layout.item_source, list);
     }
 

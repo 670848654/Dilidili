@@ -13,7 +13,7 @@ import anime.project.dilidili.bean.WebviewBean;
 
 public class WebviewAdapter extends BaseQuickAdapter<WebviewBean, BaseViewHolder> {
     private Context context;
-    public WebviewAdapter(Context context, List list) {
+    public WebviewAdapter(Context context, List<WebviewBean> list) {
         super(R.layout.item_webview, list);
         this.context = context;
     }

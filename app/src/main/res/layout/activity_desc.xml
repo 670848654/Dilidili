@@ -60,10 +60,11 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_view"
                     android:layout_width="0dp"
-                    app:cardBackgroundColor="@android:color/transparent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:cardCornerRadius="4dp">
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp">
 
                     <ImageView
                         android:id="@+id/anime_img"
@@ -87,8 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/year"
@@ -96,8 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tag"
@@ -105,8 +104,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/show"
@@ -116,8 +114,7 @@
                         android:layout_weight="1.4"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/state"
@@ -125,8 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical" />
                 </LinearLayout>
             </LinearLayout>
 

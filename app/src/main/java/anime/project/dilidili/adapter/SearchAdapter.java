@@ -13,7 +13,7 @@ import anime.project.dilidili.util.Utils;
 
 public class SearchAdapter extends BaseQuickAdapter<SearchBean, BaseViewHolder> {
     private Context context;
-    public SearchAdapter(Context context, List list) {
+    public SearchAdapter(Context context, List<SearchBean> list) {
         super(R.layout.item_search, list);
         this.context = context;
     }

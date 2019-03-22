@@ -25,7 +25,7 @@ public class SearchModel implements SearchContract.Model {
                 .add("keywords", title)
                 .add("pagesize", "10")
                 .add("page", page + "").build();
-        new HttpPost(Api.SEARCH_API, body, 10, 20, new Callback() {
+        new HttpPost(Api.SEARCH_API, body, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(isMain, e.getMessage());

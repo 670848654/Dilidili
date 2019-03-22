@@ -10,20 +10,10 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.bean.HomeHeaderBean;
 
-/**
- * Created by Administrator on 2018/1/24.
- */
-
 public class TagAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
     public static final int TYPE_LEVEL_0 = 0;
     public static final int TYPE_LEVEL_1 = 1;
 
-    /**
-     * Same as QuickAdapter#QuickAdapter(Context,int) but with
-     * some initialization data.
-     *
-     * @param data A new list is created out of this one to avoid mutable list
-     */
     public TagAdapter(List data) {
         super(data);
         addItemType(TYPE_LEVEL_0, R.layout.item_head);

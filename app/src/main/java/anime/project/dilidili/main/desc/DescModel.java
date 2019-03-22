@@ -30,7 +30,7 @@ public class DescModel implements DescContract.Model {
 
     @Override
     public void getData(String url, DescContract.LoadDataCallback callback) {
-        new HttpGet(url, 10, 20, new Callback() {
+        new HttpGet(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

@@ -2,10 +2,8 @@ package anime.project.dilidili.main.about;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -113,11 +111,10 @@ public class AboutActivity extends BaseActivity {
 
     public void checkUpdate() {
         p = Utils.getProDialog(this, R.string.check_update_text);
-        Handler handler = new Handler();
-        handler.postDelayed(() -> new HttpGet(Api.CHECK_UPDATE, 10, 20, new Callback() {
+        new Handler().postDelayed(() -> new HttpGet(Api.CHECK_UPDATE, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                sendMessage(-1,null);
+                runOnUiThread(() -> application.showSnackbarMsg(toolbar, "连接服务器超时", "重试", view -> checkUpdate()));
             }
 
             @Override
@@ -127,15 +124,17 @@ public class AboutActivity extends BaseActivity {
                     JSONObject obj = new JSONObject(json);
                     String newVersion = obj.getString("tag_name");
                     if (newVersion.equals(Utils.getASVersionName()))
-                        sendMessage(1,null);
+                        runOnUiThread(() -> {
+                            Utils.cancelProDialog(p);
+                            application.showToastMsg("没有新版本");
+                        });
                     else {
                         String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
                         String body = obj.getString("body");
-                        Bundle bundle = new Bundle();
-                        bundle.putString("version", newVersion);
-                        bundle.putString("url",downloadUrl);
-                        bundle.putString("body",body);
-                        sendMessage(2,bundle);
+                        runOnUiThread(() -> {
+                            Utils.cancelProDialog(p);
+                            findNewVersion(newVersion, downloadUrl, body);
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -144,34 +143,12 @@ public class AboutActivity extends BaseActivity {
         }), 1000);
     }
 
-    public void sendMessage(int id, Bundle bundle) {
-        Message msg = new Message();
-        msg.what = id;
-        if (bundle != null)
-            msg.setData(bundle);
-        handler.sendMessage(msg);
-    }
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Utils.cancelProDialog(p);
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case -1:
-                    application.showSnackbarMsg(toolbar, "连接服务器超时", "重试", view -> checkUpdate());
-                    break;
-                case 1:
-                    application.showToastMsg("没有新版本");
-                    break;
-                case 2:
-                    findNewVersion(msg.getData().getString("version"), msg.getData().getString("url"), msg.getData().getString("body"));
-//                    Utils.viewInChrome(AboutActivity.this, msg.getData().getString("url"));
-                    break;
-            }
-        }
-    };
-
+    /**
+     * 发现新版本
+     * @param version 版本号
+     * @param downUrl 下载地址
+     * @param body 更新内容
+     */
     private void findNewVersion(String version, String downUrl, String body) {
         AlertDialog alertDialog;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
@@ -193,6 +170,10 @@ public class AboutActivity extends BaseActivity {
         alertDialog.show();
     }
 
+    /**
+     * 下载apk
+     * @param url 下载地址
+     */
     private void downNewVersion(String url) {
         call = DownloadUtil.get().downloadApk(url, new DownloadUtil.OnDownloadListener() {
             @Override
@@ -219,7 +200,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10001){
+        if (requestCode == 10001) {
             Utils.startInstall(AboutActivity.this);
         }
     }

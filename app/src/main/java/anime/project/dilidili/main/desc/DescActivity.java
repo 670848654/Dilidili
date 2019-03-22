@@ -332,9 +332,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         Glide.with(DescActivity.this).asBitmap().load(animeListBean.getImg()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                if (null == resource)
-                    imageView.setImageDrawable(getDrawable(R.drawable.error));
-                else
                     Blurry.with(DescActivity.this)
                             .radius(4)
                             .sampling(2)
@@ -344,10 +341,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             }
         });
         toolbar.setTitle(animeListBean.getTitle());
-        Glide.with(this)
-                .load(animeListBean.getImg())
-                .transition(DrawableTransitionOptions.withCrossFade(new DrawableCrossFadeFactory.Builder(300).setCrossFadeEnabled(true).build()))
-                .into(animeImg);
+        Utils.setDefaultImage(this, animeListBean.getImg(), animeImg);
         region.setText(animeListBean.getRegion());
         year.setText(animeListBean.getYear());
         tag.setText(animeListBean.getTag());

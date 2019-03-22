@@ -23,7 +23,7 @@ public class HomeModel implements HomeContract.Model {
 
     @Override
     public void getData(final HomeContract.LoadDataCallback callback) {
-        new HttpGet(DiliDili.HOME_API, 10, 20, new Callback() {
+        new HttpGet(DiliDili.HOME_API, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e.getMessage());

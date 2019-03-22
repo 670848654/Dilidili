@@ -16,12 +16,6 @@ public class HomeAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
     public static final int TYPE_LEVEL_0 = 0;
     public static final int TYPE_LEVEL_1 = 1;
 
-    /**
-     * Same as QuickAdapter#QuickAdapter(Context,int) but with
-     * some initialization data.
-     *
-     * @param data A new list is created out of this one to avoid mutable list
-     */
     public HomeAdapter(List<MultiItemEntity> data) {
         super(data);
         addItemType(TYPE_LEVEL_0, R.layout.item_head);
