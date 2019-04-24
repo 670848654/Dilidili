@@ -9,4 +9,6 @@ public class AnimeType {
     public final static int TYPE_LEVEL_2 = 2;
     //推荐
     public final static int TYPE_LEVEL_3 = 3;
+    //番剧相关
+    public final static int TYPE_LEVEL_4 = 4;
 }

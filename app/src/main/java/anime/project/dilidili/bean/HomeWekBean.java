@@ -5,12 +5,14 @@ public class HomeWekBean {
     private String img;
     private String url;
     private String drama;
+    private boolean hasNew;
 
-    public HomeWekBean(String title, String img, String url, String drama){
+    public HomeWekBean(String title, String img, String url, String drama, boolean hasNew){
         this.title = title;
         this.img = img;
         this.url = url;
         this.drama = drama;
+        this.hasNew = hasNew;
     }
 
     public String getTitle() {
@@ -43,5 +45,13 @@ public class HomeWekBean {
 
     public void setDrama(String drama) {
         this.drama = drama;
+    }
+
+    public boolean isHasNew() {
+        return hasNew;
+    }
+
+    public void setHasNew(boolean hasNew) {
+        this.hasNew = hasNew;
     }
 }

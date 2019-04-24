@@ -24,5 +24,7 @@ public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean,BaseViewHolder
         Utils.setCircleImage(context, item.getImg().startsWith("http") ? item.getImg() : DiliDili.URL + item.getImg(),helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.drama, item.getDrama());
+        if (item.isHasNew()) helper.setVisible(R.id.new_img, true);
+        else helper.setVisible(R.id.new_img, false);
     }
 }

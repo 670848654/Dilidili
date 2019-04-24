@@ -24,6 +24,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
         addItemType(AnimeType.TYPE_LEVEL_1, R.layout.item_btn);
         addItemType(AnimeType.TYPE_LEVEL_2, R.layout.item_down);
         addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_favorite);
+        addItemType(AnimeType.TYPE_LEVEL_4, R.layout.item_ova_btn);
     }
 
     @Override
@@ -70,6 +71,10 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
                 Utils.setDefaultImage(context, bean.getImg(), helper.getView(R.id.img));
+                break;
+            case AnimeType.TYPE_LEVEL_4:
+                final AnimeDescBean ova = (AnimeDescBean) item;
+                helper.setText(R.id.tag_group, ova.getTitle());
                 break;
         }
     }

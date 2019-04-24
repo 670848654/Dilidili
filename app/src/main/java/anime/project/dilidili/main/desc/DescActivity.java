@@ -395,6 +395,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             case AnimeType.TYPE_LEVEL_3:
                                 index = 5;
                                 break;
+                            case AnimeType.TYPE_LEVEL_4:
+                                index = 5;
+                                break;
                         }
                         return index;
                     }

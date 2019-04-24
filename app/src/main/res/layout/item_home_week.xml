@@ -59,5 +59,15 @@
                 android:textSize="12sp"
                 android:textColor="@color/pinka200" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/new_img"
+            android:src="@drawable/new_tag"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:paddingTop="3dp"
+            android:paddingRight="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

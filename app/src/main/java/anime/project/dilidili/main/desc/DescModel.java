@@ -1,5 +1,7 @@
 package anime.project.dilidili.main.desc;
 
+import android.util.Log;
+
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.jsoup.Jsoup;
@@ -69,7 +71,7 @@ public class DescModel implements DescContract.Model {
                             //分集
                             Elements play_list = doc.getElementsByClass("time_pic").get(0).getElementsByClass("swiper-slide").select("ul.clear >li");
                             //下载
-                            Elements down = doc.getElementsByClass("time_pic").get(0).getElementsByClass("xfswiper3").select("ul.clear >li");
+                            Elements down = doc.getElementsByClass("time_pic").get(0).getElementsByClass("xfswiper3").select("ul.clear >li >a");
                             //ova或者其他
                             Elements playOva = doc.getElementsByClass("stitle").get(0).select("span >h2");
                             //推荐
@@ -129,10 +131,9 @@ public class DescModel implements DescContract.Model {
             break;
             case "下载":
                 for (int i = 0; i < els.size(); i++) {
-                    String str = els.get(i).select("a").text();
-                    if (!str.equals("")) {
+                    if (!els.get(i).text().isEmpty()) {
                         k++;
-                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, str, els.get(i).select("a").attr("href"), type));
+                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, els.get(i).text(), els.get(i).attr("href"), type));
                     }
                 }
                 if (k == 0)
@@ -147,7 +148,7 @@ public class DescModel implements DescContract.Model {
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).select("a").text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1,false, str, els.get(i).select("a").attr("href"), type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_4,false, str, els.get(i).select("a").attr("href"), type));
         }
         list.add(animeHeaderBean);
     }

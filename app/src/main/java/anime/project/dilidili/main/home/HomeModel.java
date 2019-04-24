@@ -1,5 +1,7 @@
 package anime.project.dilidili.main.home;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +87,8 @@ public class HomeModel implements HomeContract.Model {
             Elements arrs = els.get(i).select("figcaption").select("p");
             if (arrs.size() == 2) object.put("drama", arrs.get(1).text());
             else object.put("drama", "");
+            if (!els.get(i).select("span").text().isEmpty()) object.put("new", true);
+            else object.put("new", false);
             arr.put(object);
         }
         jsonObject.put(title, arr);

@@ -115,7 +115,8 @@ public class WeekFragment extends LazyFragment {
                     list.add(new HomeWekBean(object.getString("title"),
                             object.getString("img"),
                             object.getString("url"),
-                            object.getString("drama")));
+                            object.getString("drama"),
+                            object.getBoolean("new")));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
