@@ -161,6 +161,7 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
                 title = query.replaceAll(" ","");
                 if (!title.isEmpty()) {
                     page = 0;
+                    pageCount = 0;
                     mPresenter = createPresenter();
                     mPresenter.loadData(true);
                     toolbar.setTitle(title);
@@ -234,7 +235,6 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
 
     @Override
     public void getPageCount(int pageCount) {
-        if (this.pageCount == 0)
             this.pageCount = pageCount;
     }
 }

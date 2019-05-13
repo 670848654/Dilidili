@@ -34,8 +34,10 @@ public class SearchV2Model implements SearchV2Contract.Model {
                 Elements result = doc.select("div.result");
                 String count = doc.select("span.support-text-top").text();
                 if (result.size() > 0) {
-                    int resultCount = Integer.parseInt(Pattern.compile("[^\\d]").matcher(count).replaceAll(""));
-                    callback.pageCount((int) Math.ceil(resultCount / 10));
+                    if (isMain) {
+                        int resultCount = Integer.parseInt(Pattern.compile("[^\\d]").matcher(count).replaceAll(""));
+                        callback.pageCount((int) Math.ceil(resultCount / 10));
+                    }
                     List<SearchBean> list = new ArrayList<>();
                     for (int i = 0; i < result.size(); i++) {
                         if (result.get(i).select("h3.c-title > a").text().contains(ONLY)) {
