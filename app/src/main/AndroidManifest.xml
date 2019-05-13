@@ -94,6 +94,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme" />
         <activity
+            android:name=".main.search.SearchV2Activity"
+            android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentTheme" />
+        <activity
             android:name=".main.webview.WebActivity"
             android:screenOrientation="portrait"
             android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden"

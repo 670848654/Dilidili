@@ -22,6 +22,8 @@ import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.main.search.SearchActivity;
+import anime.project.dilidili.main.search.SearchV2Activity;
+import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
@@ -121,7 +123,10 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     @OnClick(R.id.query)
     public void query(){
-        startActivity(new Intent(this, SearchActivity.class));
+        if ((Integer) SharedPreferencesUtils.getParam(this,"search", 1) == 1)
+            startActivity(new Intent(this, SearchV2Activity.class));
+        else
+            startActivity(new Intent(this, SearchActivity.class));
     }
 
     @Override

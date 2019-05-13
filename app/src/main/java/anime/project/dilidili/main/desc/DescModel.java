@@ -1,7 +1,5 @@
 package anime.project.dilidili.main.desc;
 
-import android.util.Log;
-
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.jsoup.Jsoup;

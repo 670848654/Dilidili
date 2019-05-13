@@ -21,6 +21,12 @@ public class SearchBean {
         this.state = state;
     }
 
+    public SearchBean(String title, String url, String desc){
+        this.title = title;
+        this.url = url;
+        this.desc = desc;
+    }
+
     public String getImg() {
         return img;
     }

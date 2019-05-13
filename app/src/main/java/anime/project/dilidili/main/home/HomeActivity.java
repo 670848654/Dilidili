@@ -36,6 +36,7 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.favorite.FavoriteActivity;
 import anime.project.dilidili.main.recommend.RecommendActivity;
 import anime.project.dilidili.main.search.SearchActivity;
+import anime.project.dilidili.main.search.SearchV2Activity;
 import anime.project.dilidili.main.setting.SettingActivity;
 import anime.project.dilidili.main.tag.TagActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
@@ -167,7 +168,10 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
                 if (!query.replaceAll(" ", "").isEmpty()) {
                     Utils.hideKeyboard(mSearchView);
                     mSearchView.clearFocus();
-                    startActivity(new Intent(HomeActivity.this, SearchActivity.class).putExtra("title", query));
+                    if ((Integer) SharedPreferencesUtils.getParam(HomeActivity.this,"search", 1) == 1)
+                        startActivity(new Intent(HomeActivity.this, SearchV2Activity.class).putExtra("title", query));
+                    else
+                        startActivity(new Intent(HomeActivity.this, SearchActivity.class).putExtra("title", query));
                 }
                 return true;
             }

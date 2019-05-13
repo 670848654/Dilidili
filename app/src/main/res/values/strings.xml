@@ -73,6 +73,8 @@
     <string name="player_default">内置</string>
     <string name="domain">域名设置 (备用)</string>
     <string name="domain_url">http://www.dilidili.name</string>
+    <string name="search_title">检索方式</string>
+    <string name="search_default">百度搜索</string>
     <!-- webViewDialog 文本 -->
     <string name="analysis_line">解析线路</string>
     <string name="anthology">选集</string>
@@ -99,7 +101,7 @@
     <string name="check_update_text">检测更新中...</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年4月24日10:41:41</string>
+    <string name="final_compile_time">2019年5月13日10:26:53</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->

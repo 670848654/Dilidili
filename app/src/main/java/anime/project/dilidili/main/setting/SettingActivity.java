@@ -33,11 +33,15 @@ public class SettingActivity extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.domain_default)
     TextView domain_default;
+    @BindView(R.id.search_default)
+    TextView search_default;
     @BindView(R.id.player_default)
     TextView player_default;
     @BindView(R.id.api)
     TextView api;
     private String url;
+    private String [] searchItems = {"官方搜索","百度搜索"};
+    private String [] playerItems = {"内置","外置"};
 
     @Override
     protected Presenter createPresenter() {
@@ -77,18 +81,26 @@ public class SettingActivity extends BaseActivity {
 
     public void getUserCustomSet() {
         api.setText(DatabaseUtil.queryAllApi().size() + "");
-        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 0)) {
             case 0:
-                player_default.setText("内置");
+                search_default.setText(searchItems[0]);
                 break;
             case 1:
-                player_default.setText("外置");
+                search_default.setText(searchItems[1]);
+                break;
+        }
+        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
+            case 0:
+                player_default.setText(playerItems[0]);
+                break;
+            case 1:
+                player_default.setText(playerItems[1]);
                 break;
         }
         domain_default.setText(DiliDili.DOMAIN);
     }
 
-    @OnClick({R.id.set_domain, R.id.set_player, R.id.set_api_source})
+    @OnClick({R.id.set_domain, R.id.set_player, R.id.set_api_source, R.id.set_search})
     public void onClick(RelativeLayout layout) {
         switch (layout.getId()) {
             case R.id.set_domain:
@@ -99,6 +111,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.set_api_source:
                 startActivity(new Intent(this,ApiActivity.class));
+                break;
+            case R.id.set_search:
+                setSearch_default();
                 break;
         }
     }
@@ -153,21 +168,43 @@ public class SettingActivity extends BaseActivity {
         });
     }
 
+    public void setSearch_default() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择检索方式");
+        builder.setSingleChoiceItems(searchItems, (Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 1), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:
+                        SharedPreferencesUtils.setParam(getApplicationContext(),"search",0);
+                        search_default.setText(searchItems[0]);
+                        break;
+                    case 1:
+                        SharedPreferencesUtils.setParam(getApplicationContext(),"search",1);
+                        search_default.setText(searchItems[1]);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     public void setDefaultPlayer() {
-        String [] item = {"内置","外置"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请选择视频播放器");
-        builder.setSingleChoiceItems(item, (Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0), new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(playerItems, (Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case 0:
                         SharedPreferencesUtils.setParam(getApplicationContext(),"player",0);
-                        player_default.setText("内置");
+                        player_default.setText(playerItems[0]);
                         break;
                     case 1:
                         SharedPreferencesUtils.setParam(getApplicationContext(),"player",1);
-                        player_default.setText("外置");
+                        player_default.setText(playerItems[1]);
                         break;
                 }
                 dialog.dismiss();
