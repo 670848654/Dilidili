@@ -81,7 +81,7 @@ public class SettingActivity extends BaseActivity {
 
     public void getUserCustomSet() {
         api.setText(DatabaseUtil.queryAllApi().size() + "");
-        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 0)) {
+        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 1)) {
             case 0:
                 search_default.setText(searchItems[0]);
                 break;
@@ -171,21 +171,18 @@ public class SettingActivity extends BaseActivity {
     public void setSearch_default() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请选择检索方式");
-        builder.setSingleChoiceItems(searchItems, (Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 1), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case 0:
-                        SharedPreferencesUtils.setParam(getApplicationContext(),"search",0);
-                        search_default.setText(searchItems[0]);
-                        break;
-                    case 1:
-                        SharedPreferencesUtils.setParam(getApplicationContext(),"search",1);
-                        search_default.setText(searchItems[1]);
-                        break;
-                }
-                dialog.dismiss();
+        builder.setSingleChoiceItems(searchItems, (Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 1), (dialog, which) -> {
+            switch (which){
+                case 0:
+                    SharedPreferencesUtils.setParam(getApplicationContext(),"search",0);
+                    search_default.setText(searchItems[0]);
+                    break;
+                case 1:
+                    SharedPreferencesUtils.setParam(getApplicationContext(),"search",1);
+                    search_default.setText(searchItems[1]);
+                    break;
             }
+            dialog.dismiss();
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
