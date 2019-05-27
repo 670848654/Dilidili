@@ -88,7 +88,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private String[] videoUrlArr;
     private VideoPresenter videoPresenter;
     private AnimeListBean animeListBean = new AnimeListBean();
-
+    private List<String> animeUrlList = new ArrayList();
+    private boolean mIsLoad = false;
 
     @Override
     protected DescPresenter createPresenter() {
@@ -126,6 +127,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         if (!bundle.isEmpty()) {
             diliUrl = bundle.getString("url");
             animeTitle = bundle.getString("name");
+            animeUrlList.add(diliUrl);
         }
     }
 
@@ -172,6 +174,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 case "ova":
                     animeTitle = bean.getTitle();
                     diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
+                    animeUrlList.add(diliUrl);
                     openAnimeDesc();
                     break;
                 case "recommend":
@@ -186,7 +189,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                             break;
                         }
                         if (isAnimeList) openAnimeList();
-                        else openAnimeDesc();
+                        else {
+                            animeUrlList.add(diliUrl);
+                            openAnimeDesc();
+                        }
                     } else openAnimeList();
                     break;
             }
@@ -313,6 +319,18 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (animeUrlList.size() == 1) super.onBackPressed();
+        else {
+            if (!mIsLoad) {
+                animeUrlList.remove(animeUrlList.size() - 1);
+                diliUrl = animeUrlList.get(animeUrlList.size() - 1);
+                openAnimeDesc();
+            } else DiliDili.getInstance().showToastMsg(Utils.getString(R.string.load_desc_info));
+        }
+    }
+
     public void favoriteAnime() {
         setResult(200);
         isFavorite = DatabaseUtil.favorite(animeListBean);
@@ -329,12 +347,12 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         Glide.with(DescActivity.this).asBitmap().load(animeListBean.getImg()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    Blurry.with(DescActivity.this)
-                            .radius(4)
-                            .sampling(2)
-                            .async()
-                            .from(resource)
-                            .into(imageView);
+                Blurry.with(DescActivity.this)
+                        .radius(4)
+                        .sampling(2)
+                        .async()
+                        .from(resource)
+                        .into(imageView);
             }
         });
         toolbar.setTitle(animeListBean.getTitle());
@@ -348,6 +366,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public void showLoadingView() {
+        mIsLoad = true;
         showEmptyVIew();
     }
 
@@ -355,6 +374,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void showLoadErrorView(String msg) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                mIsLoad = false;
                 mSwipe.setRefreshing(false);
                 setCollapsingToolbar();
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(DescActivity.this));
@@ -374,6 +394,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void showSuccessMainView(List<MultiItemEntity> list) {
         runOnUiThread(() -> {
             if (!mActivityFinish) {
+                mIsLoad = false;
                 final GridLayoutManager manager = new GridLayoutManager(DescActivity.this, 15);
                 manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override

@@ -37,6 +37,7 @@
     <!-- 加载文本 -->
     <string name="loading">加载中</string>
     <string name="load_error">加载失败</string>
+    <string name="load_desc_info">请在番剧详情加载完毕后再进行操作</string>
     <!-- btn文本 -->
     <string name="no_resources">暂无资源</string>
     <!-- msg文本 -->
@@ -101,7 +102,7 @@
     <string name="check_update_text">检测更新中...</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年5月13日15:12:01</string>
+    <string name="final_compile_time">2019年5月27日10:36:06</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->
