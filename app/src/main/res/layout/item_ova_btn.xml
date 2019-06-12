@@ -1,14 +1,18 @@
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tag_group"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:layout_marginLeft="2dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginRight="2dp"
-    android:background="@drawable/button_ova_default"
-    android:ellipsize="end"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:maxLines="2"
-    android:padding="5dp"
-    android:textColor="@android:color/white" />
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tag_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="2dp"
+        android:gravity="center"
+        android:background="@drawable/bangumi_detail_ic_season_middle"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="5dp"
+        android:textColor="@android:color/white" />
+</RelativeLayout>

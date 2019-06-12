@@ -157,9 +157,9 @@ public class VideoUtils {
      */
     public static String getDiliUrl(String url) {
         if (url.contains("http://www.dilidili.wang"))
-            url = url.replace("http://www.dilidili.wang", DiliDili.URL);
+            url = url.replace("http://www.dilidili.wang", DiliDili.DOMAIN);
         else
-            url = url.startsWith("http") ? url : DiliDili.URL + url;
+            url = url.startsWith("http") ? url : DiliDili.DOMAIN + url;
         return  url;
     }
 }

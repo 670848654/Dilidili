@@ -62,11 +62,12 @@
 
         <ImageView
             android:id="@+id/new_img"
-            android:src="@drawable/new_tag"
+            android:src="@drawable/ic_new_feature_pink_dot"
             android:visibility="gone"
+            android:tint="@color/pinka200"
             android:layout_alignParentEnd="true"
-            android:paddingTop="3dp"
-            android:paddingRight="4dp"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>

@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ import anime.project.dilidili.adapter.DescAdapter;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.bean.DownBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
@@ -90,6 +92,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private AnimeListBean animeListBean = new AnimeListBean();
     private List<String> animeUrlList = new ArrayList();
     private boolean mIsLoad = false;
+    private List<DownBean> downBeanList;
+    private MenuItem downView;
 
     @Override
     protected DescPresenter createPresenter() {
@@ -197,29 +201,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     break;
             }
         });
-        adapter.setOnItemChildClickListener((adapter, view, position) -> {
-            if (!Utils.isFastClick()) return;
-            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-            switch (bean.getType()) {
-                case "down":
-                    if (!bean.getUrl().isEmpty())
-                        Utils.viewInChrome(DescActivity.this, bean.getUrl());
-                    else
-                        Utils.showSnackbar(toolbar, Utils.getString(R.string.no_resources));
-                    break;
-            }
-        });
-        adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            if (!Utils.isFastClick()) return true;
-            final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
-            switch (bean.getType()) {
-                case "down":
-                    Utils.putTextIntoClip(bean.getTitle());
-                    application.showToastMsg(bean.getTitle() + "已复制到剪切板");
-                    break;
-            }
-            return true;
-        });
         mRecyclerView.setAdapter(adapter);
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
     }
@@ -236,7 +217,6 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mSwipe.setRefreshing(true);
         imageView.setImageDrawable(null);
         animeListBean = new AnimeListBean();
-        favorite.startAnimation(Utils.animationOut(0));
         favorite.setVisibility(View.GONE);
         mPresenter = new DescPresenter(diliUrl, this);
         multiItemList.clear();
@@ -387,6 +367,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showEmptyVIew() {
         mSwipe.setRefreshing(true);
+        if (downView != null && downView.isVisible())
+            downView.setVisible(false);
         adapter.setEmptyView(emptyView);
     }
 
@@ -408,12 +390,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                                 index = 3;
                                 break;
                             case AnimeType.TYPE_LEVEL_2:
-                                index = manager.getSpanCount();
-                                break;
-                            case AnimeType.TYPE_LEVEL_3:
                                 index = 5;
                                 break;
-                            case AnimeType.TYPE_LEVEL_4:
+                            case AnimeType.TYPE_LEVEL_3:
                                 index = 5;
                                 break;
                         }
@@ -433,7 +412,11 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        View view = findViewById(R.id.down);
         switch (item.getItemId()) {
+            case R.id.down:
+                showDownPop(view);
+                break;
             case R.id.open_in_browser:
                 Utils.viewInChrome(this, diliUrl);
                 break;
@@ -444,7 +427,23 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.desc_menu, menu);
+        downView = menu.findItem(R.id.down);
         return true;
+    }
+
+    private void showDownPop(View view) {
+        final PopupMenu popupMenu = new PopupMenu(this, view);
+        Menu menu_more = popupMenu.getMenu();
+        for (int i = 0; i < downBeanList.size(); i++) {
+            menu_more.add(Menu.NONE, i, i, downBeanList.get(i).getTitle());
+        }
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            Utils.putTextIntoClip(downBeanList.get(menuItem.getItemId()).getTitle());
+            application.showToastMsg(downBeanList.get(menuItem.getItemId()).getTitle() + "已复制到剪切板");
+            Utils.viewInChrome(DescActivity.this, downBeanList.get(menuItem.getItemId()).getUrl());
+            return true;
+        });
+        popupMenu.show();
     }
 
     @Override
@@ -487,6 +486,14 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     favorite.setVisibility(View.VISIBLE);
                 }
             }
+        });
+    }
+
+    @Override
+    public void showDownView(List<DownBean> list) {
+        runOnUiThread(() -> {
+            downBeanList = list;
+            downView.setVisible(true);
         });
     }
 

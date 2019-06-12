@@ -5,7 +5,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- 权限文本 -->
-    <string name="permissions">为了正常使用,需要以下权限!</string>
+    <string name="permissions">为了正常使用，需要以下权限!</string>
     <string name="permissions_error">未能获取到相关权限!</string>
     <!-- Home Title -->
     <string name="home_title">新番时间表</string>
@@ -41,12 +41,15 @@
     <!-- btn文本 -->
     <string name="no_resources">暂无资源</string>
     <!-- msg文本 -->
-    <string name="parsing">解析中,请稍后...</string>
-    <string name="has_ban_ip">常规解析失败,尝试新版解析方案"</string>
-    <string name="error_700">网络错误,请重试!</string>
-    <string name="error_800">未能获取到播放地址\n1.解析方法不支持\n2.播放地址不存在\n3.可以尝试打开原页面去播放</string>
+    <string name="parsing">解析中，请稍后&#8230;</string>
+    <string name="has_ban_ip">常规解析失败，尝试新版解析方案</string>
+    <string name="error_700">网络错误，请重试!</string>
+    <string name="error_800">未能获取到播放地址\n1、解析方法不支持\n2、播放地址不存在\n3、可以尝试打开原页面去播放</string>
     <string name="join_ok">自己追的番就要好好看完哦 （&gt;▽&lt;）</string>
     <string name="join_error">哼！竟然真的抛弃了人家（＝。＝）</string>
+    <string name="parsing_error">OH~解析出错了\n代码无法解析该界面信息~\n</string>
+    <!--<string name="no_playlist_error">根据国家相关部门规定\n本动画不准上架</string>-->
+    <string name="no_playlist_error">该番剧暂时无法观看。</string>
     <!-- 播放地址未找到 -->
     <string name="play_not_found_title">解析失败</string>
     <string name="play_not_found_positive">访问原页面</string>
@@ -84,6 +87,7 @@
     <!-- menu通用文本 -->
     <string name="phone_model">手机版</string>
     <string name="pc_model">电脑版</string>
+    <string name="down">下载</string>
     <string name="open_in_browser">通过浏览器打开</string>
     <!-- 收藏相关文本 -->
     <string name="empty_favorite">空空如也呢(－∀＝)</string>
@@ -99,10 +103,10 @@
     <string name="test_model_desc">OnePlus 6T : Android 9</string>
     <string name="now_version">当前版本</string>
     <string name="check_update">检测更新</string>
-    <string name="check_update_text">检测更新中...</string>
+    <string name="check_update_text">检测更新中&#8230;</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年5月27日10:36:06</string>
+    <string name="final_compile_time">2019年6月12日10:20:15</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <!-- 快捷方式文本 -->

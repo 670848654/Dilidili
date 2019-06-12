@@ -392,7 +392,6 @@
 
 
 #------------------  下方是android平台自带的排除项，这里不要动         ----------------
-
 -keep public class * extends android.app.Activity{
 	public <fields>;
 	public <methods>;

@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import anime.project.dilidili.R;
 import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.net.HttpGet;
+import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -60,11 +62,11 @@ public class AnimeListModel implements AnimeListContract.Model{
                         }
                         callback.success(list);
                     } else {
-                        callback.error("解析方法失效,等待更新");
+                        callback.error(Utils.getString(R.string.parsing_error));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    callback.error("解析方法失效,等待更新");
+                    callback.error(e.getMessage());
                 }
             }
         });

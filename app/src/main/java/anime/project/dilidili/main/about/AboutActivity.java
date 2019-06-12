@@ -43,7 +43,8 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version)
     TextView version;
     private ProgressDialog p;
-    private Call call;
+    private  String downloadUrl;
+    private Call downCall;
 
     @Override
     protected Presenter createPresenter() {
@@ -129,11 +130,26 @@ public class AboutActivity extends BaseActivity {
                             application.showToastMsg("没有新版本");
                         });
                     else {
-                        String downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+                        downloadUrl = obj.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
                         String body = obj.getString("body");
                         runOnUiThread(() -> {
                             Utils.cancelProDialog(p);
-                            findNewVersion(newVersion, downloadUrl, body);
+                           Utils.findNewVersion(AboutActivity.this,
+                                   newVersion,
+                                   body,
+                                   (dialog, which) -> {
+                                       p = Utils.showProgressDialog(AboutActivity.this);
+                                       p.setButton(ProgressDialog.BUTTON_NEGATIVE, "取消", (dialog1, which1) -> {
+                                           if (null != downCall)
+                                               downCall.cancel();
+                                           dialog1.dismiss();
+                                       });
+                                       p.show();
+                                       downNewVersion(downloadUrl);
+                                   },
+                                   (dialog, which) -> {
+                                       dialog.dismiss();
+                                   });
                         });
                     }
                 } catch (JSONException e) {
@@ -144,38 +160,11 @@ public class AboutActivity extends BaseActivity {
     }
 
     /**
-     * 发现新版本
-     * @param version 版本号
-     * @param downUrl 下载地址
-     * @param body 更新内容
-     */
-    private void findNewVersion(String version, String downUrl, String body) {
-        AlertDialog alertDialog;
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setMessage(body);
-        builder.setTitle("发现新版本 " + version);
-        builder.setPositiveButton("马上更新", (dialog, which) -> {
-            p = Utils.showProgressDialog(AboutActivity.this);
-            p.setButton(ProgressDialog.BUTTON_NEGATIVE, "取消", (dialog1, which1) -> {
-                if (null != call)
-                    call.cancel();
-                dialog1.dismiss();
-            });
-            p.show();
-            downNewVersion(downUrl);
-        });
-        builder.setNegativeButton("暂不更新", (dialog, which) -> dialog.dismiss());
-        builder.setCancelable(false);
-        alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    /**
      * 下载apk
      * @param url 下载地址
      */
     private void downNewVersion(String url) {
-        call = DownloadUtil.get().downloadApk(url, new DownloadUtil.OnDownloadListener() {
+        downCall = DownloadUtil.get().downloadApk(url, new DownloadUtil.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(final String fileName) {
                 runOnUiThread(() -> {

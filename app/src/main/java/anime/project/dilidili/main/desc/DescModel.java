@@ -15,6 +15,7 @@ import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.bean.DownBean;
 import anime.project.dilidili.config.AnimeType;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.net.HttpGet;
@@ -77,9 +78,23 @@ public class DescModel implements DescContract.Model {
                             for (int i = 0; i < playDesc.size(); i++) {
                                 String str = playDesc.get(i).text();
                                 if (str.equals("在线")) {
-                                    setData(str, play_list, "play");
+                                    setData(play_list, "play");
                                 } else if (str.equals("下载")) {
-                                    setData(str, down, "down");
+//                                    setData(str, down, "down");
+                                    if (down.size() > 0) {
+                                        List<DownBean> downList = new ArrayList<>();
+                                        for (int j = 0; j < down.size(); j++) {
+                                            if (!down.get(j).text().isEmpty()) {
+                                                downList.add(
+                                                        new DownBean(
+                                                                down.get(j).text(),
+                                                                down.get(j).attr("href")
+                                                        )
+                                                );
+                                            }
+                                        }
+                                        callback.hasDown(downList);
+                                    }
                                 }
                             }
                             if (playOva.size() > 0) {
@@ -91,62 +106,48 @@ public class DescModel implements DescContract.Model {
                             callback.isFavorite(DatabaseUtil.checkFavorite(ainmeTitle));
                             callback.successMain(list);
                         } else {
-                            callback.error("根据国家相关部门规定\n本动画不准上架");
+                            callback.error(Utils.getString(R.string.no_playlist_error));
                         }
                     } else {
                         //解析失败
-                        callback.error("解析方法不适用此番\n等待修复(也许)");
+                        callback.error(Utils.getString(R.string.parsing_error));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    callback.error("解析方法失效,等待更新");
+                    callback.error(e.getMessage());
                 }
             }
         });
     }
 
-    public void setData(String title, Elements els, String type) {
-        AnimeHeaderBean animeHeaderBean = new AnimeHeaderBean(title);
+    public void setData(Elements els, String type) {
+        AnimeHeaderBean animeHeaderBean = new AnimeHeaderBean("在线");
         int k = 0;
         boolean select;
-        switch (title) {
-            case "在线":
-                for (int i = 0; i < els.size(); i++) {
-                    String name = els.get(i).select("a>em>span").text();
-                    String watchUrl = els.get(i).select("a").attr("href");
-                    if (!watchUrl.isEmpty()) {
-                        k++;
-                        watchUrl = watchUrl.substring(DiliDili.DOMAIN.length());
-                        if (dramaStr.contains(watchUrl))
-                            select = true;
-                        else
-                            select = false;
-                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, els.get(i).select("a").attr("href"), type));
-                    }
-                }
-                if (k == 0)
-                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(R.string.no_resources), "", type));
-            break;
-            case "下载":
-                for (int i = 0; i < els.size(); i++) {
-                    if (!els.get(i).text().isEmpty()) {
-                        k++;
-                        animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, els.get(i).text(), els.get(i).attr("href"), type));
-                    }
-                }
-                if (k == 0)
-                    animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, false, Utils.getString(R.string.no_resources), "", type));
-                break;
+        for (int i = 0; i < els.size(); i++) {
+            String name = els.get(i).select("a>em>span").text();
+            String watchUrl = els.get(i).select("a").attr("href");
+            if (!watchUrl.isEmpty()) {
+                k++;
+                watchUrl = watchUrl.substring(DiliDili.DOMAIN.length());
+                if (dramaStr.contains(watchUrl))
+                    select = true;
+                else
+                    select = false;
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, els.get(i).select("a").attr("href"), type));
+            }
         }
+        if (k == 0)
+            animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, Utils.getString(R.string.no_resources), "", type));
         list.add(animeHeaderBean);
     }
 
     public void setDataOva(Elements els, String type) {
-        AnimeHeaderBean animeHeaderBean = new AnimeHeaderBean("该番剧相关");
+        AnimeHeaderBean animeHeaderBean = new AnimeHeaderBean("多季");
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).select("a").text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_4,false, str, els.get(i).select("a").attr("href"), type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_3,false, str, els.get(i).select("a").attr("href"), type));
         }
         list.add(animeHeaderBean);
     }
@@ -156,7 +157,7 @@ public class DescModel implements DescContract.Model {
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_3, els.get(i).select("p").text(), DiliDili.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, els.get(i).select("p").text(), DiliDili.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
         }
         list.add(animeHeaderBean);
     }

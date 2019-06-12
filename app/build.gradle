@@ -6,8 +6,8 @@ android {
         applicationId "anime.project.DiliDili"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 27
-        versionName "1.9_a5"
+        versionCode 29
+        versionName "1.9_a7"
         ndk{abiFilters "armeabi", "armeabi-v7a", "x86"}
         resConfigs"zh"
     }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.RecommendBean;
 import anime.project.dilidili.bean.RecommendHeaderBean;
@@ -54,7 +55,7 @@ public class RecommendModel implements RecommendContract.Model{
                         callback.success(list);
                     } else {
                         //解析失败
-                        callback.error("解析方法失效,等待更新");
+                        callback.error(Utils.getString(R.string.parsing_error));
                     }
                 }catch (Exception e){
                     e.printStackTrace();

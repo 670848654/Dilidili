@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 import java.util.List;
 
 import anime.project.dilidili.bean.AnimeListBean;
+import anime.project.dilidili.bean.DownBean;
 import anime.project.dilidili.main.base.BasePresenter;
 import anime.project.dilidili.main.base.Presenter;
 
@@ -40,6 +41,11 @@ public class DescPresenter extends Presenter<DescContract.View> implements BaseP
     @Override
     public void isFavorite(boolean favorite) {
         view.showSuccessFavorite(favorite);
+    }
+
+    @Override
+    public void hasDown(List<DownBean> list) {
+        view.showDownView(list);
     }
 
     @Override

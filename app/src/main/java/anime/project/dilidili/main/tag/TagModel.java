@@ -10,10 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.HomeBean;
 import anime.project.dilidili.bean.HomeHeaderBean;
 import anime.project.dilidili.net.HttpGet;
+import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -53,7 +55,7 @@ public class TagModel implements TagContract.Model{
                         callback.success(list);
                     } else {
                         //解析失败
-                        callback.error("解析方法失效,等待更新");
+                        callback.error(Utils.getString(R.string.parsing_error));
                     }
                 }catch (Exception e){
                     e.printStackTrace();

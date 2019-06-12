@@ -58,10 +58,10 @@ public class HomeModel implements HomeContract.Model {
                         map.put("week", weekObj);
                         callback.success(map);
                     } else
-                        callback.error("解析方法失效,等待更新");
+                        callback.error(Utils.getString(R.string.parsing_error));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    callback.error("解析方法失效,等待更新");
+                    callback.error(e.getMessage());
                 }
             }
         });

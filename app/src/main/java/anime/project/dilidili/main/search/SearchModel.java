@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.net.HttpPost;
+import anime.project.dilidili.util.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -59,11 +61,11 @@ public class SearchModel implements SearchContract.Model {
                             }
                             callback.success(isMain, list);
                         }else
-                            callback.error(isMain, "没有搜索到相关动漫");
+                            callback.error(isMain, "没有搜索到相关信息");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    callback.error(isMain, e.getMessage());
+                    callback.error(isMain, Utils.getString(R.string.parsing_error) + e.getMessage());
                 }
             }
         });

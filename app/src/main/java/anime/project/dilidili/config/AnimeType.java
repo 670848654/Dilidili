@@ -5,10 +5,8 @@ public class AnimeType {
     public final static int TYPE_LEVEL_0 = 0;
     //按钮
     public final static int TYPE_LEVEL_1 = 1;
-    //下载
-    public final static int TYPE_LEVEL_2 = 2;
     //推荐
-    public final static int TYPE_LEVEL_3 = 3;
+    public final static int TYPE_LEVEL_2 = 2;
     //番剧相关
-    public final static int TYPE_LEVEL_4 = 4;
+    public final static int TYPE_LEVEL_3 = 3;
 }

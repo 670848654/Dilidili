@@ -22,14 +22,12 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
         this.context = context;
         addItemType(AnimeType.TYPE_LEVEL_0, R.layout.item_head);
         addItemType(AnimeType.TYPE_LEVEL_1, R.layout.item_btn);
-        addItemType(AnimeType.TYPE_LEVEL_2, R.layout.item_down);
-        addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_favorite);
-        addItemType(AnimeType.TYPE_LEVEL_4, R.layout.item_ova_btn);
+        addItemType(AnimeType.TYPE_LEVEL_2, R.layout.item_favorite);
+        addItemType(AnimeType.TYPE_LEVEL_3, R.layout.item_ova_btn);
     }
 
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemEntity item) {
-        helper.addOnClickListener(R.id.down).addOnLongClickListener(R.id.down);
         switch (helper.getItemViewType()) {
             case AnimeType.TYPE_LEVEL_0:
                 final AnimeHeaderBean mainHeaderBean = (AnimeHeaderBean) item;
@@ -64,15 +62,11 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                     helper.getView(R.id.tag_group).setEnabled(true);
                 break;
             case AnimeType.TYPE_LEVEL_2:
-                final AnimeDescBean animeDescBean2 = (AnimeDescBean) item;
-                helper.setText(R.id.down, animeDescBean2.getTitle());
-                break;
-            case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
                 Utils.setDefaultImage(context, bean.getImg(), helper.getView(R.id.img));
                 break;
-            case AnimeType.TYPE_LEVEL_4:
+            case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean ova = (AnimeDescBean) item;
                 helper.setText(R.id.tag_group, ova.getTitle());
                 break;

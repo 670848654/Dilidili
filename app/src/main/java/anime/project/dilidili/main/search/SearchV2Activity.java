@@ -42,6 +42,7 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
     private int pageCount = 0;
     private boolean isErr = true;
     private SearchView mSearchView;
+    private boolean isSearch = false;
 
     @Override
     protected SearchV2Presenter createPresenter() {
@@ -158,15 +159,19 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                title = query.replaceAll(" ","");
-                if (!title.isEmpty()) {
-                    page = 0;
-                    pageCount = 0;
-                    mPresenter = createPresenter();
-                    mPresenter.loadData(true);
-                    toolbar.setTitle(title);
-                    mSearchView.clearFocus();
-                    Utils.hideKeyboard(mSearchView);
+                if (isSearch) {
+                    application.showToastMsg("正在执行搜索操作，请稍后再试！");
+                }else {
+                    title = query.replaceAll(" ","");
+                    if (!title.isEmpty()) {
+                        page = 0;
+                        pageCount = 0;
+                        mPresenter = createPresenter();
+                        mPresenter.loadData(true);
+                        toolbar.setTitle(title);
+                        mSearchView.clearFocus();
+                        Utils.hideKeyboard(mSearchView);
+                    }
                 }
                 return true;
             }
@@ -186,6 +191,7 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
 
     @Override
     public void showLoadingView() {
+        isSearch = true;
         searchList.clear();
         adapter.setNewData(searchList);
         mSwipe.setRefreshing(true);
@@ -204,6 +210,7 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
     @Override
     public void showSuccessView(boolean isMain, List<SearchBean> list) {
         runOnUiThread(() -> {
+            isSearch = false;
             if (!mActivityFinish) {
                 if (isMain){
                     mSwipe.setRefreshing(false);
@@ -220,6 +227,7 @@ public class SearchV2Activity extends BaseActivity<SearchV2Contract.View, Search
     @Override
     public void showErrorView(boolean isMain, String msg) {
         runOnUiThread(() -> {
+            isSearch = false;
             if (!mActivityFinish) {
                 if (isMain){
                     mSwipe.setRefreshing(false);

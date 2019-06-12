@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -496,5 +497,21 @@ public class Utils {
             return activity.getPackageManager().canRequestPackageInstalls();
         }
         return true;
+    }
+
+    public static void findNewVersion(Context context,
+                                       String version,
+                                       String body,
+                                       DialogInterface.OnClickListener posListener,
+                                       DialogInterface.OnClickListener negListener) {
+        AlertDialog alertDialog;
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        builder.setMessage(body);
+        builder.setTitle("发现新版本 " + version);
+        builder.setPositiveButton("马上更新", posListener);
+        builder.setNegativeButton("暂不更新", negListener);
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 }
