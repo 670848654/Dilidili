@@ -2,6 +2,7 @@ package anime.project.dilidili.main.webview;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.video.VideoContract;
 import anime.project.dilidili.main.video.VideoPresenter;
+import anime.project.dilidili.services.ClearVideoCacheService;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
@@ -441,8 +443,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             mX5WebView.destroy();
         if (null != presenter)
             presenter.detachView();
-        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/cache"));
-        Utils.deleteAllFiles(new File(android.os.Environment.getExternalStorageDirectory() + "/Android/data/anime.project.dilidili/files/VideoCache/main"));
+        startService(new Intent(this, ClearVideoCacheService.class));
         super.onDestroy();
     }
 

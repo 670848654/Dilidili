@@ -24,13 +24,16 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.snackbar.Snackbar;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
@@ -42,10 +45,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
+import androidx.palette.graphics.Palette;
 import anime.project.dilidili.BuildConfig;
 import anime.project.dilidili.R;
 import anime.project.dilidili.custom.CircleImageView;
@@ -419,6 +426,28 @@ public class Utils {
                 .load(url)
                 .apply(options)
                 .into(imageView);
+    }
+
+    /**
+     * 设置Palette
+     * @param context
+     * @param url
+     * @param cardView
+     * @param textView
+     */
+    public static void setCardBg(Context context, String url, CardView cardView, TextView textView) {
+        Glide.with(context).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                Palette.from(resource).generate(palette -> {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                    if (swatch != null) {
+                        cardView.setCardBackgroundColor(swatch.getRgb());
+                        textView.setTextColor(swatch.getBodyTextColor());
+                    }
+                });
+            }
+        });
     }
 
     public static String getASVersionName(){

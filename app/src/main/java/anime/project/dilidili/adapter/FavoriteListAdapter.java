@@ -25,7 +25,12 @@ public class FavoriteListAdapter extends BaseQuickAdapter<AnimeListBean, BaseVie
         if (img.contains("http://www.dilidili.wang")) {
             img = img.replace("http://www.dilidili.wang", DiliDili.DOMAIN);
             Utils.setDefaultImage(context, img, helper.getView(R.id.img));
-        }else Utils.setDefaultImage(context, DiliDili.DOMAIN + item.getImg(), helper.getView(R.id.img));
+            Utils.setCardBg(context, img, helper.getView(R.id.card_view), helper.getView(R.id.title));
+        }else {
+            Utils.setDefaultImage(context, DiliDili.DOMAIN + item.getImg(), helper.getView(R.id.img));
+            Utils.setCardBg(context, DiliDili.DOMAIN + item.getImg(), helper.getView(R.id.card_view), helper.getView(R.id.title));
+        }
         helper.setText(R.id.title, item.getTitle());
+
     }
 }

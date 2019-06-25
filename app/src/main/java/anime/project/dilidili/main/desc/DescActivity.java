@@ -170,6 +170,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     p = Utils.getProDialog(DescActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(mRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
+                    bean.setSelect(true);
                     dramaUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     witchTitle = animeTitle + " - " + bean.getTitle();
                     videoPresenter = new VideoPresenter(animeListBean.getTitle(), dramaUrl, DescActivity.this);
@@ -280,7 +281,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                                 VideoUtils.openPlayer(true, this, witchTitle, url, animeTitle, diliUrl, drama);
                                 break;
                             case 1:
-                                Utils.selectVideoPlayer(DescActivity.this, videoUrlArr[index]);
+                                Utils.selectVideoPlayer(DescActivity.this, url);
                                 break;
                         }
                     } else

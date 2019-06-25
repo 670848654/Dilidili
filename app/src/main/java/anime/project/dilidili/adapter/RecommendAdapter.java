@@ -43,6 +43,7 @@ public class RecommendAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity,
                 final RecommendBean recommendBean = (RecommendBean) item;
                 helper.setText(R.id.title,recommendBean.getTitle());
                 Utils.setDefaultImage(context, recommendBean.getImg(), helper.getView(R.id.img));
+                Utils.setCardBg(context, recommendBean.getImg(), helper.getView(R.id.card_view), helper.getView(R.id.title));
                 break;
         }
     }

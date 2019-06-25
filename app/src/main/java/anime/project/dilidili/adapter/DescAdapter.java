@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 import java.util.List;
 
 import anime.project.dilidili.R;
+import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.config.AnimeType;
@@ -65,6 +66,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                 final AnimeDescBean bean = (AnimeDescBean) item;
                 helper.setText(R.id.title, bean.getTitle());
                 Utils.setDefaultImage(context, bean.getImg(), helper.getView(R.id.img));
+                Utils.setCardBg(context, bean.getImg(), helper.getView(R.id.card_view), helper.getView(R.id.title));
                 break;
             case AnimeType.TYPE_LEVEL_3:
                 final AnimeDescBean ova = (AnimeDescBean) item;

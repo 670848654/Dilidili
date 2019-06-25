@@ -110,6 +110,10 @@
             android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme" />
+        <service
+            android:name=".services.ClearVideoCacheService"
+            android:enabled="true"
+            android:exported="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="anime.project.DiliDili.fileProvider"
