@@ -19,7 +19,6 @@ import anime.project.dilidili.main.home.HomeActivity;
 import anime.project.dilidili.net.DownloadUtil;
 import anime.project.dilidili.net.HttpGet;
 import anime.project.dilidili.util.SharedPreferencesUtils;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 import okhttp3.Call;
@@ -48,7 +47,6 @@ public class StartActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        StatusBarUtil.setColor(StartActivity.this, getResources().getColor(R.color.night), 0);
         SharedPreferencesUtils.setParam(this,"initX5","init");
         Handler handler = new Handler();
         handler.postDelayed(() -> {

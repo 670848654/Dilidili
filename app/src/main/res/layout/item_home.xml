@@ -7,7 +7,7 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/grey900"
+    card_view:cardBackgroundColor="@color/window_bg"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="false">
@@ -20,7 +20,6 @@
             android:id="@+id/tag_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
             android:foreground="?android:attr/selectableItemBackground"
             android:layout_weight="8"
             android:textSize="14sp"

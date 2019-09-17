@@ -22,7 +22,6 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.main.setting.user.ApiActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
@@ -60,7 +59,6 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(SettingActivity.this, getResources().getColor(R.color.night), 0);
         Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         getUserCustomSet();

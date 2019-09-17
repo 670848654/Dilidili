@@ -15,18 +15,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.database.DatabaseUtil;
+import anime.project.dilidili.util.SharedPreferencesUtils;
+import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
-    protected P mPresenter;
+public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
     public View errorView, emptyView;
     public TextView errorTitle;
     public DiliDili application;
-    private Unbinder mUnBinder;
+    protected P mPresenter;
     protected boolean mActivityFinish = false;
+    private Unbinder mUnBinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
             Utils.creatFile();
             DatabaseUtil.CREATE_TABLES();
             init();
+            setStatusBarColor();
             initCustomViews();
             mPresenter = createPresenter();
             loadData();
@@ -51,6 +54,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
                     300, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
+
     protected abstract P createPresenter();
 
     protected abstract void loadData();
@@ -61,7 +65,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
 
     protected abstract void initBeforeView();
 
-    protected void initCustomViews(){
+    protected void initCustomViews() {
         errorView = getLayoutInflater().inflate(R.layout.base_error_view, null);
         errorTitle = errorView.findViewById(R.id.title);
         emptyView = getLayoutInflater().inflate(R.layout.base_emnty_view, null);
@@ -84,14 +88,14 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     /**
      * 虚拟导航按键
      */
-    protected void showNavBar(){
+    protected void showNavBar() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
     /**
      * Android 9 异形屏适配
      */
-    protected void hideGap(){
+    protected void hideGap() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -103,7 +107,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     protected void onDestroy() {
         mActivityFinish = true;
         //取消View的关联
-        if (null != mPresenter )
+        if (null != mPresenter)
             mPresenter.detachView();
         mUnBinder.unbind();
         super.onDestroy();
@@ -124,5 +128,30 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    public boolean gtSdk23() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    private String getRunningActivityName() {
+        String contextString = this.toString();
+        return contextString.substring(contextString.lastIndexOf(".") + 1,
+                contextString.indexOf("@"));
+    }
+
+    public void setStatusBarColor() {
+        if (!getRunningActivityName().equals("HomeActivity") &&
+                !getRunningActivityName().equals("DescActivity") &&
+                !getRunningActivityName().equals("PlayerActivity") &&
+                !getRunningActivityName().equals("DefaultWebActivity") &&
+                !getRunningActivityName().equals("WebActivity")) {
+            if (gtSdk23()) {
+                StatusBarUtil.setColorForSwipeBack(this, getColor(R.color.colorPrimary), 0);
+                if (!(Boolean) SharedPreferencesUtils.getParam(this, "darkTheme", false))
+                    this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else
+                StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.colorPrimaryDark), 0);
+        }
     }
 }

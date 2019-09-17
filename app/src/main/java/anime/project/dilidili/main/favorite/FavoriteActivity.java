@@ -21,7 +21,6 @@ import anime.project.dilidili.bean.AnimeListBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
@@ -54,7 +53,6 @@ public class FavoriteActivity extends BaseActivity<FavoriteContract.View, Favori
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(FavoriteActivity.this, getResources().getColor(R.color.night), 0);
         Slidr.attach(this,Utils.defaultInit());
         initToolbar();
         initSwipe();

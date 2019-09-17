@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardBackgroundColor="@color/night"
+    card_view:cardBackgroundColor="@color/window_bg"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="8dp"
+    card_view:cardElevation="4dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="1dp"
     card_view:cardUseCompatPadding="false"
@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/img"
                 android:src="@drawable/github"
-                android:tint="@color/grey50"
+                android:tint="@color/text_color_primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -36,9 +36,9 @@
                  />
             <TextView
                 android:id="@+id/title"
-                android:layout_toRightOf="@+id/img"
+                android:layout_toEndOf="@+id/img"
                 android:layout_centerVertical="true"
-                android:textColor="@color/grey50"
+                android:textColor="@color/text_color_primary"
                 android:padding="5dp"
                 android:textSize="16sp"
                 android:maxEms="12"
@@ -49,7 +49,7 @@
                 android:id="@+id/author"
                 android:padding="5dp"
                 android:textSize="16sp"
-                android:textColor="@color/grey50"
+                android:textColor="@color/text_color_primary"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:padding="5dp"
             android:id="@+id/desc"
             android:textSize="16sp"
-            android:textColor="@color/grey50"
+            android:textColor="@color/text_color_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

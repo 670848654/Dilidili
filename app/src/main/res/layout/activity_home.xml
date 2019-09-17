@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/night"
+    android:background="@color/window_bg"
     tools:openDrawer="start">
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="6dp"
+            android:theme="@style/ThemeToolbar"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
         </androidx.appcompat.widget.Toolbar>
@@ -39,6 +40,8 @@
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabMaxWidth="0dp"
+            app:tabTextColor="@color/tabTextColor"
+            app:tabSelectedTextColor="@color/tabSelectedTextColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </com.google.android.material.tabs.TabLayout>
@@ -65,6 +68,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@color/navigationview_bg_color"
+        app:itemTextColor="@color/text_color_primary"
+        app:itemIconTint="@color/text_color_primary"
         app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_home_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

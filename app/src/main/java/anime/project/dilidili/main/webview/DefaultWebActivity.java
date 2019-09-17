@@ -27,7 +27,6 @@ import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
 
@@ -71,7 +70,7 @@ public class DefaultWebActivity extends BaseActivity {
 
     @Override
     protected void initBeforeView() {
-        StatusBarUtil.setTranslucent(this, 0);
+
     }
 
     public void getBundle() {

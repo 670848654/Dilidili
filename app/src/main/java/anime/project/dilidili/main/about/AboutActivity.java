@@ -15,8 +15,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.api.Api;
 import anime.project.dilidili.application.DiliDili;
@@ -24,7 +24,7 @@ import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.net.DownloadUtil;
 import anime.project.dilidili.net.HttpGet;
-import anime.project.dilidili.util.StatusBarUtil;
+import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
@@ -63,7 +63,6 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(AboutActivity.this, getResources().getColor(R.color.night), 0);
         Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         initViews();
@@ -89,14 +88,24 @@ public class AboutActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.dilidili)
-    public void openDilidili(){
-        Utils.viewInChrome(this, DiliDili.URL);
+    @OnClick({R.id.dilidili,R.id.github})
+    public void openBrowser(CardView cardView) {
+        switch (cardView.getId()) {
+            case R.id.dilidili:
+                Utils.viewInChrome(this, DiliDili.DOMAIN);
+                break;
+            case R.id.github:
+                Utils.viewInChrome(this, Utils.getString(R.string.github_url));
+                break;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.about_menu, menu);
+        MenuItem checkUpdateItem = menu.findItem(R.id.check_update);
+        if (!(Boolean) SharedPreferencesUtils.getParam(this, "darkTheme", false))
+            checkUpdateItem.setIcon(R.drawable.baseline_update_black_48dp);
         return true;
     }
 

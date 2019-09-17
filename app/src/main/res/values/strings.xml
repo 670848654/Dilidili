@@ -19,7 +19,7 @@
     <string name="search_hint">请输入动漫名/声优</string>
     <!-- 主页dialog文本 -->
     <string name="x5_info_title">注意</string>
-    <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用或卸载重装应用。</string>
+    <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用或卸载重装应用(若是你使用的设备版本太高则需等待官方适配后才能加载成功)。</string>
     <string name="x5_info_positive">OJBK</string>
     <!-- 空文本 -->
     <string name="empty">未能获取到任何信息!</string>
@@ -79,6 +79,8 @@
     <string name="domain_url">http://www.dilidili.name</string>
     <string name="search_title">检索方式</string>
     <string name="search_default">百度搜索</string>
+    <string name="light">亮色主题</string>
+    <string name="dark">暗色主题</string>
     <!-- webViewDialog 文本 -->
     <string name="analysis_line">解析线路</string>
     <string name="anthology">选集</string>
@@ -106,9 +108,11 @@
     <string name="check_update_text">检测更新中&#8230;</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年9月9日11:25:00</string>
+    <string name="final_compile_time">2019年9月11日12:09:44</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
+    <string name="github">Github</string>
+    <string name="github_url">https://github.com/670848654/Dilidili</string>
     <!-- 快捷方式文本 -->
     <string name="disableMsg">不可用</string>
     <string name="tagShortName">条件筛选</string>

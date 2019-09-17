@@ -25,7 +25,6 @@ import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
@@ -65,7 +64,6 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(SearchActivity.this, getResources().getColor(R.color.night), 0);
         Slidr.attach(this, Utils.defaultInit());
         getBundle();
         initToolbar();
@@ -85,7 +83,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     }
 
     public void initToolbar(){
-        toolbar.setTitle(title);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -175,7 +173,10 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
             Utils.hideKeyboard(mSearchView);
         }
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
-        textView.setTextColor(getResources().getColor(R.color.grey50));
+        mSearchView.findViewById(R.id.search_plate).setBackground(null);
+        mSearchView.findViewById(R.id.submit_area).setBackground(null);
+        textView.setTextColor(getResources().getColor(R.color.text_color_primary));
+        textView.setHintTextColor(getResources().getColor(R.color.text_color_primary));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

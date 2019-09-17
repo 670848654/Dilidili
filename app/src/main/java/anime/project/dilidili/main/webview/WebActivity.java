@@ -26,7 +26,6 @@ import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -119,7 +118,9 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     }
 
     @Override
-    protected void initBeforeView() {}
+    protected void initBeforeView() {
+
+    }
 
     public void initToolbar() {
         toolbar.setTitle(witchTitle);
@@ -204,6 +205,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
+                    v.setTextColor(getResources().getColor(R.color.item_selected_color));
+                    bean.setSelect(true);
                     diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, diliUrl, WebActivity.this);

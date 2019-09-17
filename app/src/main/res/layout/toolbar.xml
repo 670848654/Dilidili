@@ -8,9 +8,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/night"
         android:elevation="6dp"
         style="@style/ToolbarStyle"
+        android:theme="@style/ThemeToolbar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_scrollFlags="scroll|enterAlways">
     </androidx.appcompat.widget.Toolbar>

@@ -9,7 +9,7 @@
     android:layout_marginTop="8dp"
     android:foreground="?android:attr/selectableItemBackground"
     app:ignore="NamespaceTypo"
-    card_view:cardBackgroundColor="@color/night"
+    card_view:cardBackgroundColor="@color/window_bg"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="false">

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.player.JZExoPlayer;
 import anime.project.dilidili.util.SharedPreferencesUtils;
@@ -43,6 +44,10 @@ public class DiliDili extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if ((Boolean) SharedPreferencesUtils.getParam(this, "darkTheme", false))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         JzvdStd.setMediaInterface(new JZExoPlayer());
         oList = new ArrayList<>();
         appContext = this;

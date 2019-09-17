@@ -1,6 +1,7 @@
 package anime.project.dilidili.adapter;
 
 import android.content.Context;
+import android.widget.Button;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -9,7 +10,6 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 import java.util.List;
 
 import anime.project.dilidili.R;
-import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.bean.AnimeHeaderBean;
 import anime.project.dilidili.config.AnimeType;
@@ -45,6 +45,7 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
             case AnimeType.TYPE_LEVEL_1:
                 final AnimeDescBean animeDescBean = (AnimeDescBean) item;
                 String title = animeDescBean.getTitle();
+                Button btn = helper.getView(R.id.tag_group);
                 if (animeDescBean.getType().equals("play")) {
                     if (!title.equals(Utils.getString(R.string.no_resources))) {
                         title = title.substring(1, title.length());
@@ -53,10 +54,13 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                     helper.setText(R.id.tag_group, title);
                 } else
                     helper.setText(R.id.tag_group, title);
-                if (animeDescBean.isSelect())
-                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_selected, null));
-                else
-                    helper.getView(R.id.tag_group).setBackground(context.getResources().getDrawable(R.drawable.button_default, null));
+                if (animeDescBean.isSelect()) {
+                    helper.getView(R.id.tag_group).setBackgroundResource(R.drawable.button_selected);
+                    btn.setTextColor(context.getResources().getColor(R.color.item_selected_color));
+                }else {
+                    helper.getView(R.id.tag_group).setBackgroundResource(R.drawable.button_default);
+                    btn.setTextColor(context.getResources().getColor(R.color.text_color_primary));
+                }
                 if (animeDescBean.getTitle().equals(Utils.getString(R.string.no_resources)))
                     helper.getView(R.id.tag_group).setEnabled(false);
                 else

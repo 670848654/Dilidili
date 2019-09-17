@@ -22,7 +22,6 @@ import anime.project.dilidili.adapter.ApiAdapter;
 import anime.project.dilidili.bean.ApiBean;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
@@ -56,8 +55,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.night), 0);
-        Slidr.attach(this, Utils.defaultInit());;
+        Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         initSwipe();
         initAdapter();
@@ -157,11 +155,14 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
                     DatabaseUtil.updateApi(adapter.getData().get(position).getId(), name, api);
                     adapter.getData().get(position).setTitle(name);
                     adapter.getData().get(position).setUrl(api);
+                    apiList.get(position).setTitle(name);
+                    apiList.get(position).setUrl(api);
                     adapter.notifyDataSetChanged();
                 } else {
                     ApiBean bean = new ApiBean(UUID.randomUUID().toString(), name, api);
                     DatabaseUtil.addApi(bean);
                     adapter.addData(0, bean);
+                    apiList.add(bean);
                 }
                 alertDialog.dismiss();
             }

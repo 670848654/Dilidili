@@ -14,5 +14,5 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:padding="5dp"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/text_color_primary" />
 </RelativeLayout>

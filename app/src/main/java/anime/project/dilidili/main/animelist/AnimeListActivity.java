@@ -24,7 +24,6 @@ import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.main.search.SearchActivity;
 import anime.project.dilidili.main.search.SearchV2Activity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
-import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
 import anime.project.dilidili.util.VideoUtils;
@@ -61,7 +60,6 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     @Override
     protected void init() {
-        StatusBarUtil.setColorForSwipeBack(AnimeListActivity.this, getResources().getColor(R.color.night), 0);
         Slidr.attach(this,Utils.defaultInit());
         getBundle();
         initToolbar();

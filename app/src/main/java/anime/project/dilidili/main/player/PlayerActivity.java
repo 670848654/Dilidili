@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,7 +56,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @BindView(R.id.anime_title)
     TextView titleView;
     @BindView(R.id.pic)
-    ImageView pic;
+    TextView pic;
     private VideoPresenter presenter;
 
     @Override
@@ -130,7 +129,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @OnClick(R.id.pic)
     public void startPic() {
         drawerLayout.closeDrawer(GravityCompat.END);
-        enterPicInPic();
+        new Handler().postDelayed(this::enterPicInPic, 500);
     }
 
     public void initAdapter() {
@@ -148,6 +147,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     p = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(recyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
+                    v.setTextColor(getResources().getColor(R.color.item_selected_color));
+                    bean.setSelect(true);
                     diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
                     witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
                     presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
