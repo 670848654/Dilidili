@@ -4,12 +4,12 @@ public class AnimeListBean {
     private String img;
     private String url;
     private String title;
-    private String region;
-    private String year;
-    private String tag;
-    private String play_count;
-    private String show;
-    private String state;
+    private String region = "";
+    private String year = "";
+    private String tag = "";
+    private String play_count = "";
+    private String show = "";
+    private String state = "";
 
     public String getUrl() {
         return url;

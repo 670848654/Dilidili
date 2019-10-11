@@ -2,6 +2,7 @@ package anime.project.dilidili.main.tag;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -79,6 +80,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             tagList.clear();
             adapter.setNewData(tagList);
             mPresenter.loadData(true);
+            adapter.removeAllFooterView();
         });
     }
 
@@ -98,6 +100,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             bundle.putString("url", VideoUtils.getDiliUrl(bean.getUrl()));
             startActivity(new Intent(TagActivity.this, AnimeListActivity.class).putExtras(bundle));
         });
+        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
     }
 

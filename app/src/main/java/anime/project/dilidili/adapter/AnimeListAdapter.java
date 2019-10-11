@@ -13,6 +13,7 @@ import anime.project.dilidili.util.Utils;
 
 public class AnimeListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHolder> {
     private Context context;
+
     public AnimeListAdapter(Context context, List list) {
         super(R.layout.item_anime, list);
         this.context = context;
@@ -20,13 +21,13 @@ public class AnimeListAdapter extends BaseQuickAdapter<AnimeListBean, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder helper, AnimeListBean item) {
-        Utils.setDefaultImage(context, item.getImg(),helper.getView(R.id.img));
+        Utils.setDefaultImage(context, item.getImg(), helper.getView(R.id.img));
         helper.setText(R.id.title, item.getTitle());
         helper.setText(R.id.region, item.getRegion());
         helper.setText(R.id.year, item.getYear());
         helper.setText(R.id.tag, item.getTag());
-        helper.setText(R.id.play_count, item.getPlay_count() == null ? "制作：未知" : item.getPlay_count());
-        helper.setText(R.id.show, item.getShow());
+        helper.setText(R.id.play_count, item.getPlay_count().isEmpty() || item.getPlay_count().equals(Utils.getString(R.string.project_msg)) ? Utils.getString(R.string.no_project_msg) : item.getPlay_count());
+        helper.setText(R.id.show, item.getShow().isEmpty() || item.getShow().equals(Utils.getString(R.string.eye_msg)) ? Utils.getString(R.string.no_eye_msg) : item.getShow());
         helper.setText(R.id.state, item.getState());
     }
 }

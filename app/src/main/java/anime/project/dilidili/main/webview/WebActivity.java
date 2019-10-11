@@ -22,19 +22,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
@@ -70,13 +69,15 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     @BindView(R.id.x5_webview)
     X5WebView mX5WebView;
     private ProgressBar pg;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     private List<AnimeDescBean> dramaList = new ArrayList<>();
     private DramaAdapter dramaAdapter;
     private BottomSheetDialog mBottomSheetDialog;
     private ProgressDialog p;
     private String[] videoUrlArr;
+    @BindView(R.id.drama)
+    FloatingActionButton drama;
+    @BindView(R.id.title)
+    TextView title;
     /**
      * 视频全屏参数
      */
@@ -90,6 +91,8 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     private boolean mModel = false;
     private MenuItem menuItem;
     private Boolean isFullscreen = false;
+    @BindView(R.id.activity_main)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected Presenter createPresenter() {
@@ -110,7 +113,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
     protected void init() {
         hideGap();
         getBundle();
-        initToolbar();
+        initFab();
         initView();
         initApiData();
         initAdapter();
@@ -122,12 +125,15 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     }
 
-    public void initToolbar() {
-        toolbar.setTitle(witchTitle);
-        toolbar.setSubtitle("loading...");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> finish());
+    public void initFab() {
+        if (Utils.checkHasNavigationBar(this)) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) drama.getLayoutParams();
+            params.setMargins(Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.getNavigationBarHeight(this));
+            drama.setLayoutParams(params);
+        }
     }
 
     public void getBundle() {
@@ -143,6 +149,14 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
 
     public void initView() {
         pg = findViewById(R.id.progressBar);
+        if (Utils.checkHasNavigationBar(this)) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coordinatorLayout.getLayoutParams();
+            params.setMargins(0,
+                    0,
+                    0,
+                    Utils.getNavigationBarHeight(this));
+            coordinatorLayout.setLayoutParams(params);
+        }
     }
 
     private void initApiData() {
@@ -201,7 +215,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             final AnimeDescBean bean = (AnimeDescBean) adapter.getItem(position);
             switch (bean.getType()) {
                 case "play":
-                    toolbar.setSubtitle("loading...");
+//                    toolbar.setSubtitle("loading...");
                     p = Utils.getProDialog(WebActivity.this, R.string.parsing);
                     Button v = (Button) adapter.getViewByPosition(dramaRecyclerView, position, R.id.tag_group);
                     v.setBackgroundResource(R.drawable.button_selected);
@@ -213,7 +227,6 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                     presenter.loadData(true);
                     break;
             }
-
         });
         dramaRecyclerView.setAdapter(dramaAdapter);
         mBottomSheetDialog = new BottomSheetDialog(this);
@@ -255,13 +268,13 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             Log.e("WebSettings", "Error calling setMixedContentMode: " + ex.getMessage(), ex);
         }
         //视频源地址
-        java.net.URL urlHost;
-        try {
-            urlHost = new java.net.URL(url);
-            toolbar.setSubtitle(urlHost.getHost());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+//        java.net.URL urlHost;
+//        try {
+//            urlHost = new java.net.URL(url);
+//            toolbar.setSubtitle(urlHost.getHost());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
         if (url.contains("yylep")) {
             newUrl = url;
             Map<String, String> map = new HashMap<>();
@@ -281,7 +294,7 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
             data.putInt("DefaultVideoScreen", 2);
             //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
             mX5WebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams", data);
-        } else application.showToastMsg("X5内核加载失败,切换到系统内核");
+        } else application.showErrorToastMsg("X5内核加载失败");
         mX5WebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -501,15 +514,16 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
      * 加载新地址
      */
     private void loadUrl() {
-        toolbar.setTitle(witchTitle);
-        //视频源地址
-        URL urlHost;
-        try {
-            urlHost = new URL(url);
-            toolbar.setSubtitle(urlHost.getHost());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+//        toolbar.setTitle(witchTitle);
+//        //视频源地址
+//        URL urlHost;
+//        try {
+//            urlHost = new URL(url);
+//            toolbar.setSubtitle(urlHost.getHost());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+        title.setText(witchTitle);
         Map<String, String> map = new HashMap<>();
         map.put(REFERER, diliUrl);
         newUrl = api + url;
@@ -553,5 +567,10 @@ public class WebActivity extends BaseActivity implements VideoContract.View {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.back)
+    public void back() {
+        finish();
     }
 }

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -89,7 +91,15 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     }
 
     @SuppressLint("RestrictedApi")
-    public void initFab(){
+    public void initFab() {
+        if (Utils.checkHasNavigationBar(this)) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) query.getLayoutParams();
+            params.setMargins(Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.getNavigationBarHeight(this));
+            query.setLayoutParams(params);
+        }
         query.setVisibility(View.VISIBLE);
     }
 
@@ -99,6 +109,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
             list.clear();
             adapter.setNewData(list);
             mPresenter.loadData(true);
+            adapter.removeAllFooterView();
         });
     }
 
@@ -116,6 +127,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
             bundle.putString("url", diliUrl);
             startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
         });
+        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
     }
 

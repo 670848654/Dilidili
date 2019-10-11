@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ public class WeekFragment extends LazyFragment {
         }
         errorView = getLayoutInflater().inflate(R.layout.base_error_view, (ViewGroup) recyclerView.getParent(), false);
         errorTitle = errorView.findViewById(R.id.title);
+        if (Utils.checkHasNavigationBar(getActivity())) recyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(getActivity()) - 5);
         if (application == null) application = (DiliDili) getActivity().getApplication();
         initAdapter();
         return view;
@@ -94,14 +96,14 @@ public class WeekFragment extends LazyFragment {
 
     private void initWeekData() {
         loading.setVisibility(View.GONE);
+        adapter.removeAllFooterView();
         if (adapter.getData().isEmpty()) {
             list = getList(week);
             if (list.size() == 0) {
                 errorTitle.setText(application.error);
                 adapter.setEmptyView(errorView);
-            } else {
+            } else
                 adapter.setNewData(list);
-            }
         }
     }
 

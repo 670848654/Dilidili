@@ -14,15 +14,14 @@
     <string name="home_favorite_title">我的收藏</string>
     <string name="huaji">嘤嘤嘤嘤嘤 (。・∀・)ノ</string>
     <string name="menu_load_error">加载失败</string>
-    <string name="exit_app">是否退出应用?</string>
-    <string name="exit">退出</string>
+    <string name="exit_app">再按一次退出程序</string>
     <string name="search_hint">请输入动漫名/声优</string>
     <!-- 主页dialog文本 -->
     <string name="x5_info_title">注意</string>
     <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用或卸载重装应用(若是你使用的设备版本太高则需等待官方适配后才能加载成功)。</string>
     <string name="x5_info_positive">OJBK</string>
     <!-- 空文本 -->
-    <string name="empty">未能获取到任何信息!</string>
+    <string name="empty">未能获取到任何信息</string>
     <!-- 解析相关文本 -->
     <string name="source_title">选择解析线路</string>
     <string name="source_1">线路①</string>
@@ -38,18 +37,31 @@
     <string name="loading">加载中</string>
     <string name="load_error">加载失败</string>
     <string name="load_desc_info">请在番剧详情加载完毕后再进行操作</string>
+    <string name="no_more">数据全部加载完毕</string>
     <!-- btn文本 -->
     <string name="no_resources">暂无资源</string>
     <!-- msg文本 -->
+    <string name="no_region_msg">地区：未知</string>
+    <string name="no_year_msg">年代：未知</string>
+    <string name="no_tag_msg">标签：未知</string>
+    <string name="no_show_msg">简介：未知</string>
+    <string name="no_state_msg">状态：未知</string>
+    <string name="no_project_msg">制作：未知</string>
+    <string name="no_eye_msg">看点：未知</string>
+    <string name="project_msg">制作：</string>
+    <string name="eye_msg">看点：</string>
     <string name="parsing">解析中，请稍后&#8230;</string>
     <string name="has_ban_ip">常规解析失败，尝试新版解析方案</string>
     <string name="error_700">网络错误，请重试!</string>
     <string name="error_800">未能获取到播放地址\n1、解析方法不支持\n2、播放地址不存在\n3、可以尝试打开原页面去播放</string>
-    <string name="join_ok">自己追的番就要好好看完哦 （&gt;▽&lt;）</string>
-    <string name="join_error">哼！竟然真的抛弃了人家（＝。＝）</string>
+    <string name="join_ok">自己追的番就要好好看完哦</string>
+    <string name="join_error">哼！竟然真的抛弃了人家</string>
     <string name="parsing_error">OH~解析出错了\n代码无法解析该界面信息~\n</string>
     <!--<string name="no_playlist_error">根据国家相关部门规定\n本动画不准上架</string>-->
     <string name="no_playlist_error">该番剧暂时无法观看。</string>
+    <!-- downDialog -->
+    <string name="down_title">选择目标源</string>
+    <string name="down_copy">已复制到剪切板</string>
     <!-- 播放地址未找到 -->
     <string name="play_not_found_title">解析失败</string>
     <string name="play_not_found_positive">访问原页面</string>
@@ -104,11 +116,12 @@
     <string name="test_model">测试</string>
     <string name="test_model_desc">OnePlus 7 Pro : Android 10</string>
     <string name="now_version">当前版本</string>
+    <string name="update_log">更新日志</string>
     <string name="check_update">检测更新</string>
     <string name="check_update_text">检测更新中&#8230;</string>
     <string name="download">下载中,请等待</string>
-    <string name="final_compile">最后编译</string>
-    <string name="final_compile_time">2019年9月11日12:09:44</string>
+    <string name="final_compile">最后编译日期</string>
+    <string name="final_compile_time">2019年10月11日</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <string name="github">Github</string>

@@ -1,5 +1,7 @@
 package anime.project.dilidili.main.about;
 
+import android.widget.LinearLayout;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.r0adkll.slidr.Slidr;
 
@@ -82,6 +84,7 @@ public class OpenSourceActivity extends BaseActivity {
         list.add(new SourceBean("butterknife","JakeWharton","Bind Android views and callbacks to fields and methods.","https://github.com/JakeWharton/butterknife"));
         list.add(new SourceBean("okhttp","square","An HTTP+HTTP/2 client for Android and Java applications.","https://github.com/square/okhttp"));
         list.add(new SourceBean("customtabs","GoogleChrome","mirrored from https://chromium.googlesource.com/custom-tabs-client","https://github.com/GoogleChrome/custom-tabs-client"));
+        list.add(new SourceBean("Toasty","GrenderG","The usual Toast, but with steroids","https://github.com/GrenderG/Toasty"));
     }
 
     public void initAdapter(){
@@ -92,6 +95,7 @@ public class OpenSourceActivity extends BaseActivity {
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) Utils.viewInChrome(this, list.get(position).getUrl());
         });
+        if (Utils.checkHasNavigationBar(this)) recyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         recyclerView.setAdapter(adapter);
     }
 }

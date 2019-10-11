@@ -2,6 +2,7 @@ package anime.project.dilidili.main.desc;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,11 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
@@ -113,6 +115,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     protected void init() {
         StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.colorPrimaryDark), 0);
+        StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
         Slidr.attach(this, Utils.defaultInit());
         getBundle();
         initToolbar();
@@ -203,8 +206,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     break;
             }
         });
+        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
-        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
     }
 
     @SuppressLint("RestrictedApi")
@@ -318,10 +321,12 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         isFavorite = DatabaseUtil.favorite(animeListBean);
         if (isFavorite) {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_white_48dp).into(favorite);
-            Utils.showSnackbar(toolbar, Utils.getString(R.string.join_ok));
+            application.showCustomToastMsg(Utils.getString(R.string.join_ok),
+                    R.drawable.ic_add_favorite_48dp, R.color.green300);
         } else {
             Glide.with(DescActivity.this).load(R.drawable.baseline_favorite_border_white_48dp).into(favorite);
-            Utils.showSnackbar(toolbar, Utils.getString(R.string.join_error));
+            application.showCustomToastMsg(Utils.getString(R.string.join_error),
+                    R.drawable.ic_remove_favorite_48dp, R.color.red300);
         }
     }
 
@@ -339,11 +344,11 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         });
         toolbar.setTitle(animeListBean.getTitle());
         Utils.setDefaultImage(this, animeListBean.getImg(), animeImg);
-        region.setText(animeListBean.getRegion());
-        year.setText(animeListBean.getYear());
-        tag.setText(animeListBean.getTag());
-        show.setText(animeListBean.getShow());
-        state.setText(animeListBean.getState());
+        region.setText(animeListBean.getRegion().isEmpty() ? Utils.getString(R.string.no_region_msg) : animeListBean.getRegion());
+        year.setText(animeListBean.getYear().isEmpty() ? Utils.getString(R.string.no_year_msg) : animeListBean.getYear());
+        tag.setText(animeListBean.getTag().isEmpty() ? Utils.getString(R.string.no_tag_msg) : animeListBean.getTag());
+        show.setText(animeListBean.getShow().isEmpty() ? Utils.getString(R.string.no_show_msg) : animeListBean.getShow());
+        state.setText(animeListBean.getState().isEmpty() ? Utils.getString(R.string.no_state_msg) : animeListBean.getState());
     }
 
     @Override
@@ -414,10 +419,9 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        View view = findViewById(R.id.down);
         switch (item.getItemId()) {
             case R.id.down:
-                showDownPop(view);
+                showDownDialog();
                 break;
             case R.id.open_in_browser:
                 Utils.viewInChrome(this, diliUrl);
@@ -433,19 +437,21 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         return true;
     }
 
-    private void showDownPop(View view) {
-        final PopupMenu popupMenu = new PopupMenu(this, view);
-        Menu menu_more = popupMenu.getMenu();
+    private void showDownDialog() {
+        AlertDialog alertDialog;
+        String[] downArr = new String[downBeanList.size()];
         for (int i = 0; i < downBeanList.size(); i++) {
-            menu_more.add(Menu.NONE, i, i, downBeanList.get(i).getTitle());
+            downArr[i] = downBeanList.get(i).getTitle();
         }
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            Utils.putTextIntoClip(downBeanList.get(menuItem.getItemId()).getTitle());
-            application.showToastMsg(downBeanList.get(menuItem.getItemId()).getTitle() + "已复制到剪切板");
-            Utils.viewInChrome(DescActivity.this, downBeanList.get(menuItem.getItemId()).getUrl());
-            return true;
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle(Utils.getString(R.string.down_title));
+        builder.setItems(downArr, (dialogInterface, i) -> {
+            Utils.putTextIntoClip(downBeanList.get(i).getTitle());
+            application.showSuccessToastMsg(downBeanList.get(i).getTitle() + Utils.getString(R.string.down_copy));
+            Utils.viewInChrome(DescActivity.this, downBeanList.get(i).getUrl());
         });
-        popupMenu.show();
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -461,7 +467,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     public void hasBanIp() {
         Log.e("ban", "发现禁止IP");
         runOnUiThread(() -> {
-            application.showToastMsg((Utils.getString(R.string.has_ban_ip)));
+            application.showErrorToastMsg((Utils.getString(R.string.has_ban_ip)));
             videoPresenter = new VideoPresenter(animeListBean.getTitle(), diliUrl + DiliDili.NEW_VERSION, this);
             videoPresenter.loadData(true);
         });
@@ -518,7 +524,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void getVideoError() {
         //网络出错
-        runOnUiThread(() -> application.showToastMsg(Utils.getString(R.string.error_700)));
+        runOnUiThread(() -> application.showErrorToastMsg(Utils.getString(R.string.error_700)));
     }
 
     @Override

@@ -2,6 +2,7 @@ package anime.project.dilidili.main.recommend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -77,6 +78,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
             recommendList.clear();
             adapter.setNewData(recommendList);
             mPresenter.loadData(true);
+            adapter.removeAllFooterView();
         });
     }
 
@@ -93,6 +95,7 @@ public class RecommendActivity extends BaseActivity<RecommendContract.View, Reco
             bundle.putString("name", bean.getTitle());
             startActivity(new Intent(RecommendActivity.this, DescActivity.class).putExtras(bundle));
         });
+        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
     }
 

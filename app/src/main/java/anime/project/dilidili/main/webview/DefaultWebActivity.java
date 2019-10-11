@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
@@ -23,12 +23,12 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import androidx.appcompat.widget.Toolbar;
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
 import anime.project.dilidili.util.Utils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class DefaultWebActivity extends BaseActivity {
     private String url;
@@ -36,8 +36,6 @@ public class DefaultWebActivity extends BaseActivity {
     X5WebView mX5WebView;
     @BindView(R.id.progressBar)
     ProgressBar pg;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     /**
      * 视频全屏参数
      */
@@ -46,6 +44,8 @@ public class DefaultWebActivity extends BaseActivity {
     private FrameLayout fullscreenContainer;
     private IX5WebChromeClient.CustomViewCallback customViewCallback;
     private Boolean isFullscreen = false;
+    @BindView(R.id.activity_main)
+    LinearLayout linearLayout;
 
     @Override
     protected Presenter createPresenter() {
@@ -64,7 +64,6 @@ public class DefaultWebActivity extends BaseActivity {
     protected void init() {
         hideGap();
         getBundle();
-        initView();
         initWebView();
     }
 
@@ -80,14 +79,15 @@ public class DefaultWebActivity extends BaseActivity {
         }
     }
 
-    public void initView() {
-        toolbar.setTitle("加载中");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> finish());
-    }
-
     public void initWebView() {
+        if (Utils.checkHasNavigationBar(this)) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) linearLayout.getLayoutParams();
+            params.setMargins(0,
+                    0,
+                    0,
+                    Utils.getNavigationBarHeight(this));
+            linearLayout.setLayoutParams(params);
+        }
         getWindow().getDecorView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             ArrayList<View> outView = new ArrayList<>();
             getWindow().getDecorView().findViewsWithText(outView, "下载该视频", View.FIND_VIEWS_WITH_TEXT);
@@ -121,7 +121,7 @@ public class DefaultWebActivity extends BaseActivity {
             data.putInt("DefaultVideoScreen", 2);
             //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
             mX5WebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams", data);
-        } else application.showToastMsg("X5内核加载失败,切换到系统内核");
+        } else application.showErrorToastMsg("X5内核加载失败");
         mX5WebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -155,10 +155,10 @@ public class DefaultWebActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                String title = view.getTitle();
-                if (!TextUtils.isEmpty(title)) {
-                    toolbar.setTitle(title);
-                }
+//                String title = view.getTitle();
+//                if (!TextUtils.isEmpty(title)) {
+//                    toolbar.setTitle(title);
+//                }
             }
         });
     }
@@ -254,5 +254,10 @@ public class DefaultWebActivity extends BaseActivity {
         super.onResume();
         if (isFullscreen) hideNavBar();
         else showNavBar();
+    }
+
+    @OnClick(R.id.back)
+    public void back() {
+        finish();
     }
 }

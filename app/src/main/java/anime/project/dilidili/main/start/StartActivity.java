@@ -56,16 +56,16 @@ public class StartActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforeView() {
-
-    }
+    protected void initBeforeView() {}
 
     private void checkUpdate() {
         new HttpGet(Api.CHECK_UPDATE, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                application.showToastMsg("网络连接超时，检测更新失败");
-                openMain();
+                runOnUiThread(() -> {
+                    application.showErrorToastMsg("网络连接超时，检测更新失败");
+                    openMain();
+                });
             }
 
             @Override
@@ -127,7 +127,7 @@ public class StartActivity extends BaseActivity {
             public void onDownloadFailed() {
                 runOnUiThread(() -> {
                     Utils.cancelProDialog(p);
-                    application.showToastMsg("下载失败~");
+                    application.showErrorToastMsg("下载失败~");
                     openMain();
                 });
             }

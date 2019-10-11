@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ public class SettingActivity extends BaseActivity {
     TextView player_default;
     @BindView(R.id.api)
     TextView api;
+    @BindView(R.id.footer)
+    LinearLayout footer;
     private String url;
     private String [] searchItems = {"官方搜索","百度搜索"};
     private String [] playerItems = {"内置","外置"};
@@ -61,6 +64,7 @@ public class SettingActivity extends BaseActivity {
     protected void init() {
         Slidr.attach(this, Utils.defaultInit());
         initToolbar();
+        initViews();
         getUserCustomSet();
     }
 
@@ -75,6 +79,11 @@ public class SettingActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
+    }
+
+    public void initViews() {
+        LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.getNavigationBarHeight(this));
+        footer.findViewById(R.id.footer).setLayoutParams(Params);
     }
 
     public void getUserCustomSet() {
@@ -152,7 +161,7 @@ public class SettingActivity extends BaseActivity {
                     DiliDili.setApi();
                     domain_default.setText(url);
                     alertDialog.dismiss();
-                    Utils.showSnackbar(toolbar, Utils.getString(R.string.set_domain_ok));
+                    application.showSuccessToastMsg(Utils.getString(R.string.set_domain_ok));
                 }else editText.setError(Utils.getString(R.string.set_domain_error2));
             } else editText.setError(Utils.getString(R.string.set_domain_error1));
         });

@@ -1,9 +1,12 @@
 package anime.project.dilidili.main.desc;
 
+import android.util.Log;
+
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -56,12 +59,23 @@ public class DescModel implements DescContract.Model {
                         Elements desc1 = detail.get(0).getElementsByClass("d_label");
                         Elements desc2 = detail.get(0).getElementsByClass("d_label2");
                         bean.setUrl(url);
-                        bean.setRegion(desc1.get(0).text());
-                        bean.setYear(desc1.get(1).text());
-                        bean.setTag(desc1.get(2).text());
-                        bean.setState(desc1.get(3).text());
-                        bean.setShow(desc2.get(0).text());
-                        bean.setPlay_count("播放：未统计");
+                        for (Element desc : desc1) {
+                            if (desc.text().contains("地区")) {
+                                bean.setRegion(desc.text());
+                            }else if (desc.text().contains("年代")) {
+                                bean.setYear(desc.text());
+                            }else if (desc.text().contains("标签")) {
+                                bean.setTag(desc.text());
+                            }else if (desc.text().contains("状态")) {
+                                bean.setState(desc.text());
+                            }
+                        }
+                        for (Element desc : desc2) {
+                            if (desc.text().contains("简介")) {
+                                bean.setShow(desc.text());
+                            }
+                        }
+//                        bean.setPlay_count("播放：未统计");
 //                        desc_t = desc2.get(1).text();
                         callback.successDesc(bean);
                         Elements playDesc = doc.getElementsByClass("stitle").get(0).select("span >a");

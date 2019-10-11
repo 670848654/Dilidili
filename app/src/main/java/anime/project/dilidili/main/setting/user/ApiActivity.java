@@ -3,9 +3,12 @@ package anime.project.dilidili.main.setting.user;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
@@ -37,6 +40,8 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
     private ApiAdapter adapter;
     private List<ApiBean> apiList = new ArrayList<>();
     private AlertDialog alertDialog;
+    @BindView(R.id.add)
+    FloatingActionButton add;
 
     @Override
     protected ApiPresenter createPresenter() {
@@ -59,6 +64,7 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
         initToolbar();
         initSwipe();
         initAdapter();
+        initFab();
     }
 
     @Override
@@ -88,7 +94,19 @@ public class ApiActivity extends BaseActivity<ApiContract.View, ApiPresenter> im
         adapter.setOnItemChildClickListener((adapter, view, position) -> {
             if (Utils.isFastClick()) delete(position);
         });
+        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
+    }
+
+    public void initFab() {
+        if (Utils.checkHasNavigationBar(this)) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) add.getLayoutParams();
+            params.setMargins(Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.dpToPx(this, 16),
+                    Utils.getNavigationBarHeight(this));
+            add.setLayoutParams(params);
+        }
     }
 
     public void delete(int position) {

@@ -74,6 +74,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     @Override
     protected void init() {
+        StatusBarUtil.setTranslucent(this, 0);
         DiliDili.addDestoryActivity(this, "player");
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         hideGap();
@@ -106,11 +107,11 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         player.setListener(this, this);
         player.backButton.setOnClickListener(v -> finish());
 //        if (Utils.isPad()) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                pic.setVisibility(View.GONE);
-            } else {
-                pic.setVisibility(View.VISIBLE);
-            }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            pic.setVisibility(View.GONE);
+        } else {
+            pic.setVisibility(View.VISIBLE);
+        }
 //        } else
 //            pic.setVisibility(View.GONE);
         player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
@@ -316,7 +317,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         //网络出错
         runOnUiThread(() -> {
             hideNavBar();
-            application.showToastMsg(Utils.getString(R.string.error_700));
+            application.showErrorToastMsg(Utils.getString(R.string.error_700));
         });
     }
 
@@ -329,14 +330,14 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     @Override
     public void errorDramaView() {
-        runOnUiThread(() -> application.showToastMsg("获取剧集信息出错"));
+        runOnUiThread(() -> application.showErrorToastMsg("获取剧集信息出错"));
     }
 
     @Override
     public void hasBanIp() {
         Log.e("ban", "发现禁止IP");
         runOnUiThread(() -> {
-            application.showToastMsg((Utils.getString(R.string.has_ban_ip)));
+            application.showErrorToastMsg((Utils.getString(R.string.has_ban_ip)));
             presenter = new VideoPresenter(animeTitle, diliUrl + DiliDili.NEW_VERSION, this);
             presenter.loadData(true);
         });
@@ -350,7 +351,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     @Override
     public void complete() {
-        application.showToastMsg("播放完毕");
+        application.showSuccessToastMsg("播放完毕");
         if (!drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.openDrawer(GravityCompat.END);
     }
 }
