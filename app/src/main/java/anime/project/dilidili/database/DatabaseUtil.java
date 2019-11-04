@@ -78,7 +78,7 @@ public class DatabaseUtil {
      * @param url 播放地址
      */
     public static void addIndex(String fid, String url){
-        if (!checkIndex(fid, url.substring(DiliDili.DOMAIN.length())))
+        if (!checkIndex(fid, url))
             db.execSQL("insert into f_index values(?,?,?)",
                     new Object[] { null, fid, url.substring(DiliDili.DOMAIN.length()) });
     }
@@ -90,8 +90,8 @@ public class DatabaseUtil {
      * @return
      */
     private static boolean checkIndex(String fid, String url){
-        String Query = "select * from f_index where f_pid =? and f_url =?";
-        Cursor cursor = db.rawQuery(Query, new String[] { fid, url });
+        String Query = "select * from f_index where f_pid =? and f_url like ?";
+        Cursor cursor = db.rawQuery(Query, new String[] { fid, "%" + url + "%" });
         if (cursor.getCount() > 0) {
             cursor.close();
             return true;

@@ -163,6 +163,7 @@ public class AboutActivity extends BaseActivity {
 
     public List createUpdateLogList() {
         List logsList = new ArrayList();
+        logsList.add(new LogBean("版本：2.3","修复更换嘀哩嘀哩域名后导致剧集播放记录消失的问题"));
         logsList.add(new LogBean("版本：2.2","修复一些Bugs\n修正部分界面布局\n适配沉浸式导航栏《仅支持原生导航栏，第三方魔改UI无效》（Test）"));
         logsList.add(new LogBean("版本：2.1","修复一些Bugs\n修正部分界面布局\n新增亮色主题（Test）"));
         logsList.add(new LogBean("版本：2.0","修复更新SDK后导致崩溃的严重问题"));

@@ -12,6 +12,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
@@ -31,7 +33,7 @@ public class DescModel implements DescContract.Model {
     private String fid;
     private List<MultiItemEntity> list;
     private String dramaStr = "";
-
+    private final static Pattern WATCH_PATTERN = Pattern.compile("\\/[0-9]+");
     @Override
     public void getData(String url, DescContract.LoadDataCallback callback) {
         new HttpGet(url, new Callback() {
@@ -143,7 +145,12 @@ public class DescModel implements DescContract.Model {
             String watchUrl = els.get(i).select("a").attr("href");
             if (!watchUrl.isEmpty()) {
                 k++;
-                watchUrl = watchUrl.substring(DiliDili.DOMAIN.length());
+                Matcher m = WATCH_PATTERN.matcher(watchUrl);
+                while (m.find()) {
+                    watchUrl = m.group().replace("/","");
+                    break;
+                }
+                Log.e("watchUrl",watchUrl);
                 if (dramaStr.contains(watchUrl))
                     select = true;
                 else

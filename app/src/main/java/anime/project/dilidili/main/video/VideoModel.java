@@ -27,11 +27,12 @@ public class VideoModel implements VideoContract.Model {
     private final static Pattern BAN_IP = Pattern.compile("禁止ip");
     private final static Pattern SCRIPT_PATTERN = Pattern.compile("sourceUrl = (.*?);");
     private final static Pattern NEW_PATTERN = Pattern.compile("Url = (.*?);");
+    private final static Pattern WATCH_PATTERN = Pattern.compile("\\/[0-9]+");
     private String videoUrl;
 
     @Override
     public void getData(String title, String HTML_url, VideoContract.LoadDataCallback callback) {
-
+        Log.e("HTML_url",HTML_url);
         new HttpGet(HTML_url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -42,7 +43,12 @@ public class VideoModel implements VideoContract.Model {
             public void onResponse(Call call, Response response) throws IOException {
                 Document doc = Jsoup.parse(response.body().string());
                 String fid = DatabaseUtil.getAnimeID(title);
-                DatabaseUtil.addIndex(fid, HTML_url);
+                Matcher m = WATCH_PATTERN.matcher(HTML_url);
+                while (m.find()) {
+                    String url = m.group().replace("/","");
+                    DatabaseUtil.addIndex(fid, url);
+                    break;
+                }
                 callback.successDrama(getAllDrama(fid, doc.select("div.aside_cen2 > div.con24 >a")));
                 Elements script = doc.select("script");
                 //第一种方式
