@@ -80,7 +80,7 @@ public class DatabaseUtil {
     public static void addIndex(String fid, String url){
         if (!checkIndex(fid, url))
             db.execSQL("insert into f_index values(?,?,?)",
-                    new Object[] { null, fid, url.substring(DiliDili.DOMAIN.length()) });
+                    new Object[] { null, fid, url});
     }
 
     /**
