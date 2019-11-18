@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.bumptech.glide.Glide;
 import com.tencent.smtt.sdk.QbSdk;
 
@@ -15,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.app.AppCompatDelegate;
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.player.JZExoPlayer;
 import anime.project.dilidili.util.SharedPreferencesUtils;
@@ -86,8 +87,8 @@ public class DiliDili extends Application {
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
             @Override
             public void onViewInitFinished(boolean arg0) {
-                if (arg0) showSuccessToastMsg("X5内核加载成功");
-                else showErrorToastMsg("X5内核加载失败");
+//                if (arg0) showSuccessToastMsg("X5内核加载成功");
+//                else showErrorToastMsg("X5内核加载失败");
             }
             @Override
             public void onCoreInitFinished() {

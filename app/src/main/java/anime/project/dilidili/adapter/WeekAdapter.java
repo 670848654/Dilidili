@@ -2,12 +2,13 @@ package anime.project.dilidili.adapter;
 
 import android.view.ViewGroup;
 
-import java.util.HashMap;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import java.util.HashMap;
+
 import anime.project.dilidili.R;
 import anime.project.dilidili.main.home.WeekFragment;
 import anime.project.dilidili.util.Utils;

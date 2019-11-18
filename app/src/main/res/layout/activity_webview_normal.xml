@@ -56,8 +56,8 @@
                 android:visibility="gone"/>
 
             <!--显示网页区域-->
-            <anime.project.dilidili.main.webview.X5WebView
-                android:id="@+id/x5_webview"
+            <anime.project.dilidili.main.webview.normal.NormalWebView
+                android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

@@ -1,23 +1,19 @@
 package anime.project.dilidili.main.base;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
+
 import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.database.DatabaseUtil;
@@ -161,8 +157,10 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         if (!getRunningActivityName().equals("HomeActivity") &&
                 !getRunningActivityName().equals("DescActivity") &&
                 !getRunningActivityName().equals("PlayerActivity") &&
-                !getRunningActivityName().equals("DefaultWebActivity") &&
-                !getRunningActivityName().equals("WebActivity")) {
+                !getRunningActivityName().equals("DefaultX5WebActivity") &&
+                !getRunningActivityName().equals("X5WebActivity") &&
+                !getRunningActivityName().equals("DefaultNormalWebActivity") &&
+                !getRunningActivityName().equals("NormalWebActivity")) {
             if (gtSdk23()) {
                 StatusBarUtil.setColorForSwipeBack(this, getColor(R.color.colorPrimary), 0);
                 if (!(Boolean) SharedPreferencesUtils.getParam(this, "darkTheme", false))

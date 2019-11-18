@@ -13,6 +13,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.r0adkll.slidr.Slidr;
 
 import org.json.JSONException;
@@ -22,11 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.LogAdapter;
 import anime.project.dilidili.api.Api;
@@ -163,6 +164,7 @@ public class AboutActivity extends BaseActivity {
 
     public List createUpdateLogList() {
         List logsList = new ArrayList();
+        logsList.add(new LogBean("版本：2.3.1","修复更换嘀哩嘀哩域名后剧集某些异常的问题\n默认禁用X5内核，X5内核更新后会导致应用闪退（Android 10)，你可以在自定义设置中打开，若发生闪退则关闭该选项"));
         logsList.add(new LogBean("版本：2.3","修复更换嘀哩嘀哩域名后导致剧集播放记录消失的问题"));
         logsList.add(new LogBean("版本：2.2","修复一些Bugs\n修正部分界面布局\n适配沉浸式导航栏《仅支持原生导航栏，第三方魔改UI无效》（Test）"));
         logsList.add(new LogBean("版本：2.1","修复一些Bugs\n修正部分界面布局\n新增亮色主题（Test）"));

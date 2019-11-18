@@ -3,12 +3,13 @@ package anime.project.dilidili.adapter;
 import android.content.Context;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
-import androidx.annotation.Nullable;
 import anime.project.dilidili.R;
 import anime.project.dilidili.bean.AnimeDescBean;
 

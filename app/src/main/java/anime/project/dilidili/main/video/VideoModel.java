@@ -49,7 +49,7 @@ public class VideoModel implements VideoContract.Model {
                     DatabaseUtil.addIndex(fid, url);
                     break;
                 }
-                callback.successDrama(getAllDrama(fid, doc.select("div.aside_cen2 > div.con24 >a")));
+                callback.successDrama(getAllDrama(fid, doc.select("div.aside_cen2 > div.con24 >a"), HTML_url));
                 Elements script = doc.select("script");
                 //第一种方式
                 videoUrl = getSourceUrl(script);
@@ -67,19 +67,25 @@ public class VideoModel implements VideoContract.Model {
         });
     }
 
-    private static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList) {
+    private static List<AnimeDescBean> getAllDrama(String fid, Elements dramaList, String me) {
         List<AnimeDescBean> list = new ArrayList<>();
         try {
             String dataBaseDrama = DatabaseUtil.queryAllIndex(fid);
             String dramaTitle;
-            String dramaUrl;
+            String dramaUrl = "";
             for (int i = 0; i < dramaList.size(); i++) {
-                dramaUrl = dramaList.get(i).attr("href").substring(DiliDili.DOMAIN.length());
+                String href = dramaList.get(i).attr("href");
+                if (href.equals("javascript:void(0)")) href = me;
+                Matcher m = WATCH_PATTERN.matcher(href);
+                while (m.find()) {
+                    dramaUrl = m.group().replace("/","");
+                    break;
+                }
                 dramaTitle = dramaList.get(i).text();
                 if (dataBaseDrama.contains(dramaUrl))
-                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, true, dramaTitle, dramaUrl, "play"));
+                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, true, dramaTitle, href, "play"));
                 else
-                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, dramaTitle, dramaUrl, "play"));
+                    list.add(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, false, dramaTitle, href, "play"));
             }
         } catch (Exception e) {
             e.printStackTrace();
