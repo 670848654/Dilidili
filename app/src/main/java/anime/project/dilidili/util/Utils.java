@@ -444,6 +444,11 @@ public class Utils {
         });
     }
 
+    public static void setCardDefaultBg(Context context, CardView cardView, TextView textView) {
+        cardView.setCardBackgroundColor(context.getResources().getColor(R.color.window_bg));
+        textView.setTextColor(context.getResources().getColor(R.color.text_color_primary));
+    }
+
     public static String getASVersionName(){
         return BuildConfig.VERSION_NAME;
     }

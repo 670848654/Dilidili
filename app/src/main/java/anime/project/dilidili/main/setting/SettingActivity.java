@@ -1,6 +1,5 @@
 package anime.project.dilidili.main.setting;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Patterns;
 import android.view.LayoutInflater;

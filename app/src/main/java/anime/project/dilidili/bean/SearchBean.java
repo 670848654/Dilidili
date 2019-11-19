@@ -12,13 +12,11 @@ public class SearchBean {
 
     }
 
-    public SearchBean(String title,String url,String img,String tags,String desc,String state){
+    public SearchBean(String title,String url,String img,String desc){
         this.title = title;
         this.url = url;
         this.img = img;
-        this.tags = tags;
         this.desc = desc;
-        this.state = state;
     }
 
     public SearchBean(String title, String url, String desc){

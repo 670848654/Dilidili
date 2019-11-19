@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -17,14 +17,11 @@ import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.adapter.SearchAdapter;
 import anime.project.dilidili.bean.SearchBean;
 import anime.project.dilidili.custom.CustomLoadMoreView;
-import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.desc.DescActivity;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
@@ -33,7 +30,6 @@ import anime.project.dilidili.util.VideoUtils;
 import butterknife.BindView;
 
 public class SearchActivity extends BaseActivity<SearchContract.View, SearchPresenter> implements SearchContract.View {
-    private final static Pattern NUM_PATTERN = Pattern.compile("^[0-9]*$");
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_list)
@@ -43,7 +39,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     private SearchAdapter adapter;
     private List<SearchBean> searchList = new ArrayList<>();
     private String title = "";
-    private int page = 0;
+    private int page = 1;
     private int pageCount;
     private boolean isErr = true;
     private SearchView mSearchView;
@@ -98,26 +94,17 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     }
 
     public void initAdapter() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         adapter = new SearchAdapter(this, searchList);
         adapter.openLoadAnimation();
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             if (!Utils.isFastClick()) return;
             SearchBean bean = (SearchBean) adapter.getItem(position);
-            String url = VideoUtils.getDiliUrl(bean.getUrl());
-            String title = bean.getTitle();
-            if (url.contains("/anime/")) {
-                String[] arr = bean.getUrl().split("/");
-                Matcher m = NUM_PATTERN.matcher(arr[arr.length - 1]);
-                boolean isAnimeList = false;
-                while (m.find()) {
-                    isAnimeList = true;
-                    break;
-                }
-                if (isAnimeList) openAnimeList(title, url);
-                else openAnimeDesc(title, url);
-            } else openAnimeList(title, url);
+            Bundle bundle = new Bundle();
+            bundle.putString("title", bean.getTitle());
+            bundle.putString("url", VideoUtils.getDiliUrl(bean.getUrl()));
+            startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
         });
         adapter.setLoadMoreView(new CustomLoadMoreView());
         adapter.setOnLoadMoreListener(() -> {
@@ -142,20 +129,6 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
         }, mRecyclerView);
         if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this) - 5);
         mRecyclerView.setAdapter(adapter);
-    }
-
-    public void openAnimeDesc(String title, String url) {
-        Bundle bundle = new Bundle();
-        bundle.putString("name", title);
-        bundle.putString("url", url);
-        startActivity(new Intent(SearchActivity.this, DescActivity.class).putExtras(bundle));
-    }
-
-    public void openAnimeList(String title, String url) {
-        Bundle bundle = new Bundle();
-        bundle.putString("title", title);
-        bundle.putString("url", url);
-        startActivity(new Intent(SearchActivity.this, AnimeListActivity.class).putExtras(bundle));
     }
 
     @Override
@@ -193,7 +166,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                 }else {
                     title = query.replaceAll(" ", "");
                     if (!title.isEmpty()) {
-                        page = 0;
+                        page = 1;
                         mPresenter = createPresenter();
                         mPresenter.loadData(true);
                         toolbar.setTitle(title);

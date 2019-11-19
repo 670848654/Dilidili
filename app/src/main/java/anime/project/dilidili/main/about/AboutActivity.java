@@ -164,6 +164,7 @@ public class AboutActivity extends BaseActivity {
 
     public List createUpdateLogList() {
         List logsList = new ArrayList();
+        logsList.add(new LogBean("版本：2.3.2","修复官方搜索，你可以在自定义设置中更改检索方式"));
         logsList.add(new LogBean("版本：2.3.1","修复更换嘀哩嘀哩域名后剧集某些异常的问题\n默认禁用X5内核，X5内核更新后会导致应用闪退（Android 10)，你可以在自定义设置中打开，若发生闪退则关闭该选项"));
         logsList.add(new LogBean("版本：2.3","修复更换嘀哩嘀哩域名后导致剧集播放记录消失的问题"));
         logsList.add(new LogBean("版本：2.2","修复一些Bugs\n修正部分界面布局\n适配沉浸式导航栏《仅支持原生导航栏，第三方魔改UI无效》（Test）"));

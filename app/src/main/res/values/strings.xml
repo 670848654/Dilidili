@@ -15,7 +15,7 @@
     <string name="huaji">嘤嘤嘤嘤嘤 (。・∀・)ノ</string>
     <string name="menu_load_error">加载失败</string>
     <string name="exit_app">再按一次退出程序</string>
-    <string name="search_hint">请输入动漫名/声优</string>
+    <string name="search_hint">请输入动漫名</string>
     <!-- 主页dialog文本 -->
     <string name="x5_info_title">注意</string>
     <string name="x5_info">WebView使用腾讯x5内核。\n64位手机首次可能会加载失败，尝试杀进程重启应用或卸载重装应用(若是你使用的设备版本太高则需等待官方适配后才能加载成功)。</string>
@@ -124,7 +124,7 @@
     <string name="check_update_text">检测更新中&#8230;</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译日期</string>
-    <string name="final_compile_time">2019年11月12日</string>
+    <string name="final_compile_time">2019年11月19日</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <string name="github">Github</string>
