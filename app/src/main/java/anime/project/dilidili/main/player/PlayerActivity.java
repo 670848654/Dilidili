@@ -75,7 +75,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     @Override
     protected void init() {
-        StatusBarUtil.setTranslucent(this, 0);
         DiliDili.addDestoryActivity(this, "player");
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         hideGap();

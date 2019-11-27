@@ -1,6 +1,7 @@
 package anime.project.dilidili.main.setting;
 
 import android.content.Intent;
+import android.text.Html;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ public class SettingActivity extends BaseActivity {
     TextView player_default;
     @BindView(R.id.api)
     TextView api;
+    @BindView(R.id.x5_state_title)
+    TextView x5_state_title;
     @BindView(R.id.x5_state)
     TextView x5_state;
     @BindView(R.id.footer)
@@ -108,8 +111,13 @@ public class SettingActivity extends BaseActivity {
                 player_default.setText(playerItems[1]);
                 break;
         }
-        if (Utils.loadX5()) x5_state.setText(x5Items[0]);
-        else x5_state.setText(x5Items[1]);
+        if (Utils.loadX5()) {
+            x5_state_title.append(Html.fromHtml("<font color=\"#259b24\">加载成功</font>"));
+            x5_state.setText(x5Items[0]);
+        } else {
+            x5_state_title.append(Html.fromHtml("<font color=\"#e51c23\">加载失败</font>"));
+            x5_state.setText(x5Items[1]);
+        }
         domain_default.setText(DiliDili.DOMAIN);
     }
 
