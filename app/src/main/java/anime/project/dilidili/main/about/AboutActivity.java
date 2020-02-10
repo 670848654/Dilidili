@@ -164,6 +164,7 @@ public class AboutActivity extends BaseActivity {
 
     public List createUpdateLogList() {
         List logsList = new ArrayList();
+        logsList.add(new LogBean("版本：2.3.5","修复一些错误\n修复内置视频播放器存在的一些问题"));
         logsList.add(new LogBean("版本：2.3.4","修复视频播放器白额头的Bug"));
         logsList.add(new LogBean("版本：2.3.3","修复一些Bug"));
         logsList.add(new LogBean("版本：2.3.2","修复官方搜索，你可以在自定义设置中更改检索方式"));

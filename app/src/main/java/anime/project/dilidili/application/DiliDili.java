@@ -20,10 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import anime.project.dilidili.R;
-import anime.project.dilidili.main.player.JZExoPlayer;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.Utils;
-import cn.jzvd.JzvdStd;
 import es.dmoral.toasty.Toasty;
 
 public class DiliDili extends Application {
@@ -50,7 +48,6 @@ public class DiliDili extends Application {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        JzvdStd.setMediaInterface(new JZExoPlayer());
         oList = new ArrayList<>();
         appContext = this;
         Utils.init(this);

@@ -39,7 +39,7 @@ import butterknife.OnClick;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener{
+public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener {
     @BindView(R.id.player)
     JZPlayer player;
     private String witchTitle, url, diliUrl;
@@ -104,7 +104,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         linearLayout.setOnClickListener(view -> { return;});
         linearLayout.getBackground().mutate().setAlpha(150);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        player.setListener(this, this);
+        player.setListener(this, this, this);
         player.backButton.setOnClickListener(v -> finish());
 //        if (Utils.isPad()) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -114,7 +114,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         }
 //        } else
 //            pic.setVisibility(View.GONE);
-        player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+        player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
         player.fullscreenButton.setOnClickListener(view -> {
             if (!Utils.isFastClick()) return;
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END);
@@ -179,7 +179,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                 case 0:
                     //调用播放器
                     Jzvd.releaseAllVideos();
-                    player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                    player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
                     player.startVideo();
                     break;
                 case 1:
@@ -208,7 +208,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                             case 0:
                                 //调用播放器
                                 Jzvd.releaseAllVideos();
-                                player.setUp(url, witchTitle, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+                                player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
                                 player.startVideo();
                                 break;
                             case 1:
@@ -249,12 +249,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         super.onResume();
         hideNavBar();
         if (!inMultiWindow()) JzvdStd.goOnPlayOnResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        JzvdStd.releaseAllVideos();
     }
 
     /**
@@ -346,6 +340,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @Override
     protected void onDestroy() {
         if (null != presenter) presenter.detachView();
+        JzvdStd.releaseAllVideos();
         super.onDestroy();
     }
 
@@ -353,5 +348,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     public void complete() {
         application.showSuccessToastMsg("播放完毕");
         if (!drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    @Override
+    public void touch() {
+        hideNavBar();
     }
 }
