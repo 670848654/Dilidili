@@ -211,7 +211,10 @@ public class AboutActivity extends BaseActivity {
         new Handler().postDelayed(() -> new HttpGet(Api.CHECK_UPDATE, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> application.showErrorToastMsg("连接服务器超时，请重试"));
+                runOnUiThread(() -> {
+                    Utils.cancelProDialog(p);
+                    application.showErrorToastMsg("连接服务器超时，请重试");
+                });
             }
 
             @Override
