@@ -71,7 +71,7 @@ public class TagModel implements TagContract.Model{
         for (int j = 0; j < els.size(); j++) {
             if (j != 0){
                 HomeBean homeBean = new HomeBean( els.get(j).text(),
-                        DiliDili.URL + els.get(j).attr("href"),
+                        DiliDili.DOMAIN + els.get(j).attr("href"),
                         title + " - ",
                         true);
                 homeHeaderBean.addSubItem(homeBean);
@@ -109,7 +109,7 @@ public class TagModel implements TagContract.Model{
 //        homeHeaderBean.addSubItem(new HomeBean("肉番", DiliDili.DOMAIN + "/roufan/", title + " - ", true));
         for (int i = 0; i < tag.size(); i++) {
             if (!tag.get(i).text().equals(""))
-                homeHeaderBean.addSubItem(new HomeBean(tag.get(i).text(), DiliDili.URL + tag.get(i).attr("href"), title + " - ", true));
+                homeHeaderBean.addSubItem(new HomeBean(tag.get(i).text(), DiliDili.DOMAIN + tag.get(i).attr("href"), title + " - ", true));
         }
         homeHeaderBean.addSubItem(new HomeBean("日剧", DiliDili.DOMAIN + "/anime/riju/", title + " - ", true));
         list.add(homeHeaderBean);

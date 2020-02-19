@@ -24,7 +24,6 @@ public class DatabaseUtil {
         db.execSQL("create table if not exists f_favorite(id integer primary key autoincrement, f_title text, f_url text, f_img text, f_region text, f_year text, f_tag text, f_play text, f_show text, f_state text)");
         db.execSQL("create table if not exists f_anime(id integer primary key autoincrement, f_id text, f_title text)");
         db.execSQL("create table if not exists f_index(id integer primary key autoincrement, f_pid text, f_url text)");
-        db.execSQL("create table if not exists f_api(id integer primary key autoincrement, f_id text, f_title text, f_url text)");
     }
 
     /**
@@ -113,7 +112,7 @@ public class DatabaseUtil {
             buffer.append(c.getString(2));
         }
         c.close();
-        return buffer.toString();
+        return buffer.toString().replaceAll(" ","");
     }
 
     /**
@@ -163,7 +162,7 @@ public class DatabaseUtil {
                 new Object[] { null,
                 bean.getTitle(),
                 bean.getUrl().substring(DiliDili.DOMAIN.length()),
-                bean.getImg().substring(DiliDili.DOMAIN.length()),
+                bean.getImg().contains(DiliDili.DOMAIN) ? bean.getImg().substring(DiliDili.DOMAIN.length()) : bean.getImg(),
                 bean.getRegion(),
                 bean.getYear(),
                 bean.getTag(),
@@ -194,53 +193,5 @@ public class DatabaseUtil {
         }
         cursor.close();
         return false;
-    }
-
-    /**
-     * 查询用户自定义api
-     * @return
-     */
-    public static List<ApiBean> queryAllApi(){
-        List<ApiBean> list = new ArrayList<>();
-        Cursor c = db.rawQuery("select * from f_api order by id desc", null);
-        while (c.moveToNext()) {
-            ApiBean bean = new ApiBean();
-            bean.setId(c.getString(1));
-            bean.setTitle(c.getString(2));
-            bean.setUrl(c.getString(3));
-            list.add(bean);
-        }
-        c.close();
-        return list;
-    }
-
-    /**
-     * 新增api
-     * @param bean
-     */
-    public static void addApi(ApiBean bean){
-        db.execSQL("insert into f_api values(?,?,?,?)",
-                new Object[] { null,
-                        bean.getId(),
-                        bean.getTitle(),
-                        bean.getUrl()});
-    }
-
-    /**
-     * 删除api
-     * @param id
-     */
-    public static void deleteApi(String id){
-        db.execSQL("delete from f_api where f_id=?", new String[]{id});
-    }
-
-    /**
-     * 修改api
-     * @param id
-     * @param title
-     * @param url
-     */
-    public static void updateApi(String id, String title, String url){
-        db.execSQL("update f_api set f_title=?,f_url=? where f_id=?", new String[]{title,url,id});
     }
 }

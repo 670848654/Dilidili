@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,8 +17,8 @@ import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.bean.AnimeDescBean;
 import anime.project.dilidili.main.player.PlayerActivity;
-import anime.project.dilidili.main.webview.normal.NormalWebActivity;
-import anime.project.dilidili.main.webview.x5.X5WebActivity;
+import anime.project.dilidili.main.webview.normal.DefaultNormalWebActivity;
+import anime.project.dilidili.main.webview.x5.DefaultX5WebActivity;
 
 public class VideoUtils {
     private static AlertDialog alertDialog;
@@ -70,36 +68,23 @@ public class VideoUtils {
      * 发现多个播放地址时弹窗
      *
      * @param context
-     * @param arr
-     * @param videoTitleArr
-     * @param videoUrlArr
+     * @param list
      * @param listener
+     * @param type 0 old 1 new
      */
     public static void showMultipleVideoSources(Context context,
-                                                String[] arr,
-                                                String[] videoTitleArr,
-                                                String[] videoUrlArr,
-                                                DialogInterface.OnClickListener listener) {
-        for (int i = 0; i < arr.length; i++) {
-            String str = "http" + arr[i];
-            Log.e("video", str);
-            videoUrlArr[i] = str;
-            java.net.URL urlHost;
-            try {
-                urlHost = new java.net.URL(str);
-                if (str.contains(".mp4")) videoTitleArr[i] = urlHost.getHost() + " <MP4> <播放器>";
-                else if (str.contains(".m3u8"))
-                    videoTitleArr[i] = urlHost.getHost() + " <M3U8> <播放器>";
-                else videoTitleArr[i] = urlHost.getHost() + " <HTML>";
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+                                                List<String> list,
+                                                DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listener2, int type) {
+        String[] items = new String[list.size()];
+        for (int i = 0, size = list.size(); i < size; i++) {
+            if (type == 0) items[i] = getDiliUrl(list.get(i));
+            else items[i] = list.get(i);
         }
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        builder.setTitle("选择视频源");
+        builder.setTitle(Utils.getString(R.string.select_video_source));
         builder.setCancelable(false);
-        builder.setItems(videoTitleArr, listener);
-        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        builder.setItems(items, listener);
+        builder.setNegativeButton(Utils.getString(R.string.play_not_found_negative), listener2);
         alertDialog = builder.create();
         alertDialog.show();
     }
@@ -132,48 +117,25 @@ public class VideoUtils {
     }
 
     /**
-     * 打开webview
-     *
-     * @param isDescActivity
-     * @param activity
-     * @param witchTitle
-     * @param animeTitle
-     * @param url
-     * @param diliUrl
-     * @param list
-     */
-    public static void openWebview(boolean isDescActivity, Activity activity, String witchTitle, String animeTitle, String url, String diliUrl, List<AnimeDescBean> list) {
-        Bundle bundle = new Bundle();
-        bundle.putString("witchTitle", witchTitle);
-        bundle.putString("title", animeTitle);
-        bundle.putString("url", url);
-        bundle.putString("dili", diliUrl);
-        bundle.putSerializable("list", (Serializable) list);
-        if (isDescActivity) {
-            if (Utils.loadX5())
-                activity.startActivityForResult(new Intent(activity, X5WebActivity.class).putExtras(bundle), 0x10);
-            else
-                activity.startActivityForResult(new Intent(activity, NormalWebActivity.class).putExtras(bundle), 0x10);
-        } else {
-            if (Utils.loadX5())
-                activity.startActivity(new Intent(activity, X5WebActivity.class).putExtras(bundle));
-            else
-                activity.startActivity(new Intent(activity, NormalWebActivity.class).putExtras(bundle));
-            activity.finish();
-        }
-    }
-
-    /**
      * 获取链接
      *
      * @param url
      * @return
      */
     public static String getDiliUrl(String url) {
-        if (url.contains("http://www.dilidili.wang"))
-            url = url.replace("http://www.dilidili.wang", DiliDili.DOMAIN);
+        return url.startsWith("http") ? url : DiliDili.DOMAIN + url;
+    }
+
+    /**
+     * 打开常规webview
+     *
+     * @param activity
+     * @param url
+     */
+    public static void openDefaultWebview(Activity activity, String url) {
+        if (Utils.loadX5())
+            activity.startActivity(new Intent(activity, DefaultX5WebActivity.class).putExtra("url",url));
         else
-            url = url.startsWith("http") ? url : DiliDili.DOMAIN + url;
-        return url;
+            activity.startActivity(new Intent(activity, DefaultNormalWebActivity.class).putExtra("url",url));
     }
 }

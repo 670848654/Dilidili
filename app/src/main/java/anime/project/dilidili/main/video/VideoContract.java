@@ -17,11 +17,9 @@ public interface VideoContract {
         void getVideoError();
         void showSuccessDramaView(List<AnimeDescBean> list);
         void errorDramaView();
-        void hasBanIp();
     }
 
     interface LoadDataCallback extends BaseLoadDataCallback {
-        void ban();
         void success(String url);
         void error();
         void empty();

@@ -22,7 +22,6 @@ import anime.project.dilidili.application.DiliDili;
 import anime.project.dilidili.database.DatabaseUtil;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.base.Presenter;
-import anime.project.dilidili.main.setting.user.ApiActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.SwipeBackLayoutUtil;
 import anime.project.dilidili.util.Utils;
@@ -38,8 +37,6 @@ public class SettingActivity extends BaseActivity {
     TextView search_default;
     @BindView(R.id.player_default)
     TextView player_default;
-    @BindView(R.id.api)
-    TextView api;
     @BindView(R.id.x5_state_title)
     TextView x5_state_title;
     @BindView(R.id.x5_state)
@@ -93,7 +90,6 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void getUserCustomSet() {
-        api.setText(DatabaseUtil.queryAllApi().size() + "");
         switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "search", 1)) {
             case 0:
                 search_default.setText(searchItems[0]);
@@ -121,7 +117,7 @@ public class SettingActivity extends BaseActivity {
         domain_default.setText(DiliDili.DOMAIN);
     }
 
-    @OnClick({R.id.set_domain, R.id.set_player, R.id.set_api_source, R.id.set_search,R.id.set_x5})
+    @OnClick({R.id.set_domain, R.id.set_player, R.id.set_search,R.id.set_x5})
     public void onClick(RelativeLayout layout) {
         switch (layout.getId()) {
             case R.id.set_domain:
@@ -129,9 +125,6 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.set_player:
                 setDefaultPlayer();
-                break;
-            case R.id.set_api_source:
-                startActivity(new Intent(this,ApiActivity.class));
                 break;
             case R.id.set_search:
                 setSearch_default();
@@ -253,11 +246,5 @@ public class SettingActivity extends BaseActivity {
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        api.setText(DatabaseUtil.queryAllApi().size() + "");
     }
 }

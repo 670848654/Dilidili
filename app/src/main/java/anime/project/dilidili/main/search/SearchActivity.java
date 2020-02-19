@@ -40,7 +40,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     private List<SearchBean> searchList = new ArrayList<>();
     private String title = "";
     private int page = 1;
-    private int pageCount;
+    private int pageCount = 1;
     private boolean isErr = true;
     private SearchView mSearchView;
     private boolean isSearch = false;

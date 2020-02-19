@@ -29,13 +29,10 @@ public class DiliDili extends Application {
     private List<Activity> oList;
     private static Map<String, Activity> destoryMap = new HashMap<>();
     public static String DOMAIN;
-    public static String URL;
-    public static String HOME_API;
     public static String TAG_API;
     public static String RECOMMEND_API;
     public String error;
     public JSONObject week = new JSONObject();
-    public final static String NEW_VERSION = "home.html";
 
     public static DiliDili getInstance() {
         return appContext;
@@ -51,7 +48,13 @@ public class DiliDili extends Application {
         oList = new ArrayList<>();
         appContext = this;
         Utils.init(this);
-        DOMAIN = (String) SharedPreferencesUtils.getParam(this, "domain", Utils.getString(R.string.domain_url));
+        if (!(boolean) SharedPreferencesUtils.getParam(this, "v2.3.6", false)) {
+            DOMAIN = Utils.getString(R.string.domain_url);
+            SharedPreferencesUtils.setParam(this, "domain", DOMAIN);
+            Utils.deleteDataBase();
+            SharedPreferencesUtils.setParam(this,"search", 0);
+        }else
+            DOMAIN = (String) SharedPreferencesUtils.getParam(this, "domain", Utils.getString(R.string.domain_url));
         setApi();
         initTBS();
     }
@@ -72,8 +75,6 @@ public class DiliDili extends Application {
     }
 
     public static void setApi() {
-        URL = DiliDili.DOMAIN;
-        HOME_API = DiliDili.DOMAIN;
         TAG_API = DiliDili.DOMAIN + "/anime/201510/";
         RECOMMEND_API = DiliDili.DOMAIN + "/zttj.html";
     }

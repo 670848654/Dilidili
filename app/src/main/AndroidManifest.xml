@@ -75,11 +75,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme" />
         <activity
-            android:name=".main.setting.user.ApiActivity"
-            android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode"
-            android:screenOrientation="portrait"
-            android:theme="@style/TranslucentTheme" />
-        <activity
             android:name=".main.about.AboutActivity"
             android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode"
             android:screenOrientation="portrait"
@@ -100,19 +95,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme" />
         <activity
-            android:name=".main.webview.x5.X5WebActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode"
-            android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".main.webview.x5.DefaultX5WebActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode"
-            android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".main.webview.normal.NormalWebActivity"
             android:screenOrientation="portrait"
             android:configChanges="screenLayout|orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode"
             android:hardwareAccelerated="true"

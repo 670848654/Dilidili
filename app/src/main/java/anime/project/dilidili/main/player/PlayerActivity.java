@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +17,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.fanchen.sniffing.SniffingUICallback;
+import com.fanchen.sniffing.SniffingVideo;
+import com.fanchen.sniffing.web.SniffingUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,7 @@ import butterknife.OnClick;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener {
+public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener, SniffingUICallback {
     @BindView(R.id.player)
     JZPlayer player;
     private String witchTitle, url, diliUrl;
@@ -151,7 +154,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     v.setTextColor(getResources().getColor(R.color.item_selected_color));
                     bean.setSelect(true);
                     diliUrl = VideoUtils.getDiliUrl(bean.getUrl());
-                    witchTitle = animeTitle + " - 第" + bean.getTitle()+"话";
+                    witchTitle = animeTitle + " - " + bean.getTitle();
                     presenter = new VideoPresenter(animeTitle, diliUrl, PlayerActivity.this);
                     presenter.loadData(true);
                     break;
@@ -160,21 +163,14 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         });
     }
 
-    public void goToPlay(String videoUrl) {
-        new Handler().postDelayed(() -> {
-            String[] arr = VideoUtils.removeByIndex(videoUrl.split("http"), 0);
-            if (arr.length == 1) oneSource(arr);
-            else multipleSource(arr);
-        }, 200);
-    }
-
     /**
-     * 只有一个播放地址
-     * @param arr
+     * 播放视频
+     * @param animeUrl
      */
-    private void oneSource(String[] arr) {
-        url = "http" + arr[0];
-        if (url.contains(".m3u8") || url.contains(".mp4")) {
+    private void playAnime(String animeUrl) {
+        url = animeUrl;
+        if (url.contains(".mp4") || url.contains(".m3u8")) {
+            cancelDialog();
             switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
                 case 0:
                     //调用播放器
@@ -187,37 +183,10 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                     Utils.selectVideoPlayer(PlayerActivity.this, url);
                     break;
             }
-        } else VideoUtils.openWebview(false, this, witchTitle, animeTitle, url, diliUrl, list);
-    }
-
-    /**
-     * 多个播放地址
-     * @param arr
-     */
-    private void multipleSource(String[] arr) {
-        videoUrlArr = new String[arr.length];
-        String[] videoTitleArr = new String[arr.length];
-        VideoUtils.showMultipleVideoSources(this,
-                arr,
-                videoTitleArr,
-                videoUrlArr,
-                (dialog, index) -> {
-                    url = videoUrlArr[index];
-                    if (url.contains(".m3u8") || url.contains(".mp4")) {
-                        switch ((Integer) SharedPreferencesUtils.getParam(getApplicationContext(), "player", 0)) {
-                            case 0:
-                                //调用播放器
-                                Jzvd.releaseAllVideos();
-                                player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
-                                player.startVideo();
-                                break;
-                            case 1:
-                                Jzvd.releaseAllVideos();
-                                Utils.selectVideoPlayer(PlayerActivity.this, videoUrlArr[index]);
-                                break;
-                        }
-                    } else VideoUtils.openWebview(false, this, witchTitle, animeTitle, url, diliUrl, list);
-                });
+        }else {
+            DiliDili.getInstance().showToastMsg(Utils.getString(R.string.should_be_used_web));
+            SniffingUtil.get().activity(this).referer(animeUrl).callback(this).url(animeUrl).start();
+        }
     }
 
     @OnClick({R.id.select_player, R.id.open_in_browser})
@@ -293,16 +262,16 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     public void getVideoSuccess(String url) {
         runOnUiThread(() -> {
             hideNavBar();
-            goToPlay(url);
+            playAnime(url);
         });
     }
 
     @Override
     public void getVideoEmpty() {
         runOnUiThread(() -> {
-            hideNavBar();
-            VideoUtils.showErrorInfo(PlayerActivity.this, diliUrl);
-
+            DiliDili.getInstance().showToastMsg(Utils.getString(R.string.open_web_view));
+            VideoUtils.openDefaultWebview(this, diliUrl);
+            this.finish();
         });
     }
 
@@ -328,16 +297,6 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     }
 
     @Override
-    public void hasBanIp() {
-        Log.e("ban", "发现禁止IP");
-        runOnUiThread(() -> {
-            application.showErrorToastMsg((Utils.getString(R.string.has_ban_ip)));
-            presenter = new VideoPresenter(animeTitle, diliUrl + DiliDili.NEW_VERSION, this);
-            presenter.loadData(true);
-        });
-    }
-
-    @Override
     protected void onDestroy() {
         if (null != presenter) presenter.detachView();
         JzvdStd.releaseAllVideos();
@@ -353,5 +312,37 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @Override
     public void touch() {
         hideNavBar();
+    }
+
+    @Override
+    public void onSniffingStart(View webView, String url) {
+
+    }
+
+    @Override
+    public void onSniffingFinish(View webView, String url) {
+        SniffingUtil.get().releaseWebView();
+        cancelDialog();
+    }
+
+    @Override
+    public void onSniffingSuccess(View webView, String url, List<SniffingVideo> videos) {
+        List<String> urls = new ArrayList<>();
+        for (SniffingVideo video : videos) {
+            urls.add(video.getUrl());
+        }
+        VideoUtils.showMultipleVideoSources(this,
+                urls,
+                (dialog, index) -> playAnime(urls.get(index)), (dialog, which) -> {
+                    cancelDialog();
+                    dialog.dismiss();
+                }, 1);
+    }
+
+    @Override
+    public void onSniffingError(View webView, String url, int errorCode) {
+        DiliDili.getInstance().showToastMsg(Utils.getString(R.string.open_web_view));
+        VideoUtils.openDefaultWebview(this, diliUrl);
+        this.finish();
     }
 }

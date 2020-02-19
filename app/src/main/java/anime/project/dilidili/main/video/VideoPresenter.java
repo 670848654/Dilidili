@@ -26,11 +26,6 @@ public class VideoPresenter extends Presenter<VideoContract.View> implements Bas
     }
 
     @Override
-    public void ban() {
-        view.hasBanIp();
-    }
-
-    @Override
     public void success(String url) {
         view.cancelDialog();
         view.getVideoSuccess(url);

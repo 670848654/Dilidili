@@ -234,6 +234,7 @@ public class Utils {
         });
     }
 
+
     public static void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -606,5 +607,30 @@ public class Utils {
      */
     public static boolean loadX5() {
         return (boolean) SharedPreferencesUtils.getParam(getContext(), "loadX5", false);
+    }
+
+    public static void deleteDataBase() {
+        File dataBase = new File(Environment.getExternalStorageDirectory() + "/DiliDiliAnime/Database/dilidili.db");
+        if (dataBase.exists())
+            dataBase.delete();
+    }
+
+    /**
+     * 新版本更新信息
+     * @param context
+     */
+    public static void showNewVersionInfo(Context context) {
+        AlertDialog alertDialog;
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        builder.setPositiveButton(getString(R.string.x5_info_positive), null);
+        builder.setMessage(getString(R.string.nwe_version_info));
+        builder.setTitle(getString(R.string.x5_info_title));
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            SharedPreferencesUtils.setParam(getContext(), "v2.3.6", true);
+            alertDialog.dismiss();
+        });
     }
 }

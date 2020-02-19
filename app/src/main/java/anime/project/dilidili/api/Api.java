@@ -9,10 +9,11 @@ public class Api {
     public final static String SOURCE_4_API = "https://sg.hackmg.com/index.php?url=";
     public final static String SOURCE_5_API = "http://jqaaa.com/jx.php?url=";
     public final static String SOURCE_6_API = "http://jx.skyfollowsnow.pro/?url=";
+    public final static String TAG_API = DiliDili.DOMAIN + "/dm/20-%s----%s---%s---%s-/";
     //百度站内搜索
     public final static String BAIDU_SEARCH_API = "http://zhannei.baidu.com/cse/site?q=%s&p=%s&nsid=&cc=%s";
     //新站点搜索
-    public static String NEW_SEARCH_API = DiliDili.DOMAIN + "/search.php?keyword=%s&PageNo=%s";
+    public static String NEW_SEARCH_API = DiliDili.DOMAIN + "/vod/search/page/%s/wd/%s/";
     //检测更新
     public final static String CHECK_UPDATE = "https://api.github.com/repos/670848654/Dilidili/releases/latest";
 }

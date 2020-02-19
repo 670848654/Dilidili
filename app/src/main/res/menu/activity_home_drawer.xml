@@ -9,11 +9,6 @@
             android:icon="@drawable/ic_ondemand_video_white_48dp"
             android:title="加载中..." />
         <item
-            android:id="@+id/recommend_anime"
-            android:icon="@drawable/baseline_thumb_up_white_48dp"
-            android:title="动漫推荐"
-            />
-        <item
             android:id="@+id/find_anim"
             android:icon="@drawable/baseline_filter_white_48dp"
             android:title="条件筛选" />

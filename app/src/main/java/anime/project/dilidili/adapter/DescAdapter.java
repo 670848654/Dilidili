@@ -49,10 +49,6 @@ public class DescAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, Base
                 String title = animeDescBean.getTitle();
                 Button btn = helper.getView(R.id.tag_group);
                 if (animeDescBean.getType().equals("play")) {
-                    if (!title.equals(Utils.getString(R.string.no_resources))) {
-                        title = title.substring(1, title.length());
-                        title = title.substring(0, title.length() - 1);
-                    }
                     helper.setText(R.id.tag_group, title);
                 } else
                     helper.setText(R.id.tag_group, title);

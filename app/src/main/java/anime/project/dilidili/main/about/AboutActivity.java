@@ -164,6 +164,7 @@ public class AboutActivity extends BaseActivity {
 
     public List createUpdateLogList() {
         List logsList = new ArrayList();
+        logsList.add(new LogBean("版本：2.3.6-beta1","更改域名为http://www.dilidili.co\n由于网站改动幅度较大且不稳定，导致收藏的番剧链接异常，更新后收藏夹将被清空\n部分功能因网站原理暂不可用"));
         logsList.add(new LogBean("版本：2.3.5_b","修复内置播放器播放完毕后程序崩溃的问题"));
         logsList.add(new LogBean("版本：2.3.5_a","修复内置播放器使用Exo内核无限加载的问题"));
         logsList.add(new LogBean("版本：2.3.5","修复一些错误\n修复内置视频播放器存在的一些问题"));

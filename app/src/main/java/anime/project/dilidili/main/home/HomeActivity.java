@@ -41,11 +41,9 @@ import anime.project.dilidili.main.about.AboutActivity;
 import anime.project.dilidili.main.animelist.AnimeListActivity;
 import anime.project.dilidili.main.base.BaseActivity;
 import anime.project.dilidili.main.favorite.FavoriteActivity;
-import anime.project.dilidili.main.recommend.RecommendActivity;
 import anime.project.dilidili.main.search.SearchActivity;
 import anime.project.dilidili.main.search.SearchV2Activity;
 import anime.project.dilidili.main.setting.SettingActivity;
-import anime.project.dilidili.main.tag.TagActivity;
 import anime.project.dilidili.util.SharedPreferencesUtils;
 import anime.project.dilidili.util.StatusBarUtil;
 import anime.project.dilidili.util.Utils;
@@ -97,6 +95,8 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         initDrawer();
         initSwipe();
         initFragment();
+        if (!(boolean) SharedPreferencesUtils.getParam(this, "v2.3.6", false))
+            Utils.showNewVersionInfo(this);
     }
 
     @Override
@@ -249,13 +249,10 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
         if (!Utils.isFastClick()) return false;
         switch (item.getItemId()) {
             case R.id.new_anim:
-                goToNewAnime(animeUrl, title);
-                break;
-            case R.id.recommend_anime:
-                startActivity(new Intent(this, RecommendActivity.class));
-                break;
+                // goToNewAnime(animeUrl, title);
             case R.id.find_anim:
-                startActivity(new Intent(this, TagActivity.class));
+                application.showErrorToastMsg("维护中...");
+                // startActivity(new Intent(this, TagActivity.class));
                 break;
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));

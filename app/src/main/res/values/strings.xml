@@ -4,6 +4,7 @@
     <string name="search">搜索</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nwe_version_info">域名更改为http://www.dilidili.co\n由于网站改动幅度较大且不稳定，导致收藏的番剧链接异常，已清空收藏夹且某些功能暂不可用，等该网站稳定后再进行维护更新。</string>
     <!-- 权限文本 -->
     <string name="permissions">为了正常使用，需要以下权限!</string>
     <string name="permissions_error">未能获取到相关权限!</string>
@@ -57,6 +58,9 @@
     <string name="join_ok">自己追的番就要好好看完哦</string>
     <string name="join_error">哼！竟然真的抛弃了人家</string>
     <string name="parsing_error">OH~解析出错了\n代码无法解析该界面信息~\n</string>
+    <string name="should_be_used_web">常规解析失败,尝试嗅探获取播放地址&#8230;</string>
+    <string name="open_web_view">解析视频地址失败，尝试使用WebView打开</string>
+    <string name="select_video_source">选择播放源</string>
     <!--<string name="no_playlist_error">根据国家相关部门规定\n本动画不准上架</string>-->
     <string name="no_playlist_error">该番剧暂时无法观看。</string>
     <!-- downDialog -->
@@ -91,7 +95,7 @@
     <string name="player">视频播放器</string>
     <string name="player_default">内置</string>
     <string name="domain">域名设置 (备用)</string>
-    <string name="domain_url">http://www.dilidili.name</string>
+    <string name="domain_url">http://www.dilidili.co</string>
     <string name="search_title">检索方式</string>
     <string name="search_default">百度搜索</string>
     <string name="light">亮色主题</string>
@@ -124,7 +128,7 @@
     <string name="check_update_text">检测更新中&#8230;</string>
     <string name="download">下载中,请等待</string>
     <string name="final_compile">最后编译日期</string>
-    <string name="final_compile_time">2020年2月13日</string>
+    <string name="final_compile_time">2020年2月19日</string>
     <string name="cache">缓存目录</string>
     <string name="cache_text">/DiliDiliAnime/\n卸载后自行删除此目录</string>
     <string name="github">Github</string>

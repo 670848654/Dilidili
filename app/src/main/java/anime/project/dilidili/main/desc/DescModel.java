@@ -1,7 +1,5 @@
 package anime.project.dilidili.main.desc;
 
-import android.util.Log;
-
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.jsoup.Jsoup;
@@ -12,8 +10,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import anime.project.dilidili.R;
 import anime.project.dilidili.application.DiliDili;
@@ -33,7 +29,6 @@ public class DescModel implements DescContract.Model {
     private String fid;
     private List<MultiItemEntity> list;
     private String dramaStr = "";
-    private final static Pattern WATCH_PATTERN = Pattern.compile("\\/[0-9]+");
     @Override
     public void getData(String url, DescContract.LoadDataCallback callback) {
         new HttpGet(url, new Callback() {
@@ -142,20 +137,14 @@ public class DescModel implements DescContract.Model {
         boolean select;
         for (int i = 0; i < els.size(); i++) {
             String name = els.get(i).select("a>em>span").text();
-            String watchUrl = els.get(i).select("a").attr("href");
+            String watchUrl = els.get(i).select("a").attr("href").replaceAll(" ","");
             if (!watchUrl.isEmpty()) {
                 k++;
-                Matcher m = WATCH_PATTERN.matcher(watchUrl);
-                while (m.find()) {
-                    watchUrl = m.group().replace("/","");
-                    break;
-                }
-                Log.e("watchUrl",watchUrl);
                 if (dramaStr.contains(watchUrl))
                     select = true;
                 else
                     select = false;
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, els.get(i).select("a").attr("href"), type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_1, select, name, watchUrl, type));
             }
         }
         if (k == 0)
@@ -178,7 +167,7 @@ public class DescModel implements DescContract.Model {
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).text();
             if (!str.equals(""))
-                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, els.get(i).select("p").text(), DiliDili.URL + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
+                animeHeaderBean.addSubItem(new AnimeDescBean(AnimeType.TYPE_LEVEL_2, els.get(i).select("p").text(), DiliDili.DOMAIN + els.get(i).select("a").attr("href"), els.get(i).select("img").attr("src"),type));
         }
         list.add(animeHeaderBean);
     }
